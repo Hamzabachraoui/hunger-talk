@@ -1,0 +1,5 @@
+# Fichier requirements.txt à la racine pour aider Railway à détecter Python
+# Le vrai fichier est dans backend/requirements.txt
+# Ce fichier est juste pour la détection automatique
+
+# Railway va utiliser backend/requirements.txt grâce à nixpacks.toml
