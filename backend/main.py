@@ -52,13 +52,21 @@ async def startup_event():
     
     # Initialiser la base de données (créer les tables si elles n'existent pas)
     try:
+        # Vérifier si DATABASE_URL est configuré (pas la valeur par défaut localhost)
+        if "localhost" in settings.DATABASE_URL or "127.0.0.1" in settings.DATABASE_URL:
+            logger.error("❌ DATABASE_URL n'est pas configuré dans Railway !")
+            logger.error("⚠️ L'application utilise la valeur par défaut (localhost) qui ne fonctionne pas sur Railway")
+            logger.error("📋 Pour corriger : Railway → Service → Variables → Ajouter DATABASE_URL = ${{Postgres.DATABASE_URL}}")
         init_db()
         logger.info("✅ Base de données initialisée")
     except Exception as e:
         # Ne pas bloquer le démarrage si la connexion échoue
         logger.error(f"❌ Erreur lors de l'initialisation de la base de données: {e}")
+        if "localhost" in str(e) or "127.0.0.1" in str(e):
+            logger.error("📋 SOLUTION : Ajoute DATABASE_URL dans Railway → Variables")
+            logger.error("   Nom: DATABASE_URL")
+            logger.error("   Valeur: Clique 'Add Reference' → Sélectionne PostgreSQL → DATABASE_URL")
         logger.warning("⚠️ L'application démarre mais la base de données n'est pas accessible")
-        logger.warning("⚠️ Vérifie que DATABASE_URL est correctement configuré dans Railway")
     
     # Initialiser les données de base (catégories, recettes) si nécessaire
     # Cette initialisation est idempotente (peut être exécutée plusieurs fois)
