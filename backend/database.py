@@ -47,8 +47,11 @@ def init_db():
     """
     try:
         # Tester la connexion avant de créer les tables
+        from sqlalchemy import text
         with engine.connect() as conn:
-            conn.execute("SELECT 1")
+            conn.execute(text("SELECT 1"))
+            conn.commit()
+        # Créer toutes les tables
         Base.metadata.create_all(bind=engine)
     except Exception as e:
         # Relancer l'erreur pour qu'elle soit gérée par le startup event
