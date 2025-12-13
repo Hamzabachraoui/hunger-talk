@@ -46,12 +46,20 @@ def init_db():
     Crée toutes les tables définies dans les modèles.
     """
     try:
+        # Importer tous les modèles pour qu'ils soient enregistrés avec Base.metadata
+        # Ceci est nécessaire pour que create_all() crée toutes les tables
+        from app.models import (
+            User, Category, StockItem, Recipe, RecipeIngredient, RecipeStep,
+            NutritionData, UserPreferences, ChatMessage, ShoppingListItem,
+            Notification, CookingHistory
+        )
+        
         # Tester la connexion avant de créer les tables
         from sqlalchemy import text
         with engine.connect() as conn:
             conn.execute(text("SELECT 1"))
             conn.commit()
-        # Créer toutes les tables
+        # Créer toutes les tables (tous les modèles doivent être importés avant)
         Base.metadata.create_all(bind=engine)
     except Exception as e:
         # Relancer l'erreur pour qu'elle soit gérée par le startup event
