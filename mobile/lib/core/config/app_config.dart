@@ -20,7 +20,7 @@ class AppConfig {
     if (_baseUrl.isEmpty) {
       _baseUrl = const String.fromEnvironment(
         'API_BASE_URL',
-        defaultValue: 'http://192.168.11.108:8000',
+        defaultValue: 'https://hunger-talk-production.up.railway.app', // Railway par défaut même en dev
       );
     }
     return _baseUrl;
