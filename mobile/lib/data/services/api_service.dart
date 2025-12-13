@@ -86,8 +86,12 @@ class ApiService {
       final headers = await _getHeaders(requiresAuth: requiresAuth);
 
       debugPrint('🌐 [API] GET $url');
-      if (kDebugMode) {
-        debugPrint('   Headers: ${headers.keys.join(", ")}');
+      debugPrint('   Headers: ${headers.keys.join(", ")}');
+      if (headers.containsKey('Authorization')) {
+        final authHeader = headers['Authorization']!;
+        debugPrint('   🔑 Authorization: ${authHeader.substring(0, authHeader.length > 30 ? 30 : authHeader.length)}...');
+      } else {
+        debugPrint('   ⚠️ Authorization header manquant !');
       }
 
       final response = await http
