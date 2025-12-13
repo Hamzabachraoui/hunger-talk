@@ -16,7 +16,8 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = "development"
     
     # Base de données
-    DATABASE_URL: str = "postgresql://user:password@localhost:5432/hungertalk_db"
+    # En production Railway, cette variable DOIT être fournie via les variables d'environnement
+    DATABASE_URL: str = "postgresql://user:password@localhost:5432/hungertalk_db"  # Valeur par défaut (ne fonctionne pas sur Railway)
     
     # JWT
     SECRET_KEY: str = "change-me-in-production-79juEwjfulVuZskpnmtZM4pMrGe5LENNDhckNb60MHM"
