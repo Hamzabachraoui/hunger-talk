@@ -1,12 +1,12 @@
 # Configuration Nixpacks pour Railway
 # Le provider Python sera détecté automatiquement grâce à requirements.txt à la racine
-# On personnalise juste les commandes pour utiliser backend/
+# On personnalise les commandes pour utiliser python -m pip au lieu de pip
 
 [phases.install]
 cmds = [
-  "python -m pip install --upgrade pip",
-  "python -m pip install -r requirements.txt"
+  "python3 -m pip install --upgrade pip",
+  "python3 -m pip install -r requirements.txt"
 ]
 
 [start]
-cmd = "cd backend && python -m uvicorn main:app --host 0.0.0.0 --port $PORT"
+cmd = "cd backend && python3 -m uvicorn main:app --host 0.0.0.0 --port $PORT"
