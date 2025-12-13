@@ -16,10 +16,10 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = "development"
     
     # Base de données
-    DATABASE_URL: str
+    DATABASE_URL: str = "postgresql://user:password@localhost:5432/hungertalk_db"
     
     # JWT
-    SECRET_KEY: str
+    SECRET_KEY: str = "change-me-in-production-79juEwjfulVuZskpnmtZM4pMrGe5LENNDhckNb60MHM"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     
