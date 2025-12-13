@@ -53,10 +53,10 @@ class AppConfig {
   static Future<void> initialize({bool autoDiscover = false}) async {
     // En production, utiliser directement l'URL fixe (pas de découverte)
     if (isProduction) {
-      // URL fixe pour production (à remplacer par ton URL Railway/Render/etc.)
+      // URL fixe pour production (Railway)
       _baseUrl = const String.fromEnvironment(
         'API_BASE_URL',
-        defaultValue: 'https://ton-app.up.railway.app', // ← REMPLACER par ton URL
+        defaultValue: 'https://hunger-talk-production.up.railway.app',
       );
       debugPrint('🚀 [Config] Mode PRODUCTION - URL fixe: $_baseUrl');
     } else {
