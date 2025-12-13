@@ -1,0 +1,37 @@
+# Backend FastAPI - Hunger-Talk
+# Python 3.10+
+
+# Framework web
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+
+# Base de données
+sqlalchemy==2.0.23
+alembic==1.12.1
+psycopg2-binary==2.9.9
+
+# Authentification
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-dotenv==1.0.0
+
+# Validation
+pydantic==2.5.0
+pydantic-settings==2.1.0
+
+# IA et LLM
+langchain==0.0.335
+ollama==0.1.5
+faiss-cpu==1.7.4
+sentence-transformers==2.2.2
+
+# Utilitaires
+httpx==0.25.2
+aiofiles==23.2.1
+email-validator==2.1.0
+
+# Tests
+pytest==7.4.3
+pytest-asyncio==0.21.1
+

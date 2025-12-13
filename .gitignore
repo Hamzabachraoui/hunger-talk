@@ -1,0 +1,53 @@
+# Fichiers système
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Fichiers de configuration sensibles
+.env
+.env.local
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+env/
+.venv
+*.egg-info/
+dist/
+build/
+
+# Flutter/Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+**/build/
+
+# Logs
+*.log
+logs/
+
+# Dossiers temporaires
+tmp/
+temp/
+*.tmp
+
+# Base de données locales
+*.db
+*.sqlite
+*.sqlite3
+

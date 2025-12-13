@@ -1,0 +1,348 @@
+CAHIER DES CHARGES — Projet PFA
+Hunger-Talk : Application mobile intelligente de gestion nutritionnelle et alimentaire
+
+1. Présentation générale du projet
+Hunger-Talk est une application mobile intelligente qui aide l’utilisateur à mieux gérer son alimentation au quotidien.
+L’application combine :
+* une gestion automatique du stock alimentaire
+* un système de recommandations de repas personnalisés
+* un assistant virtuel basé sur l’IA
+* une mise à jour dynamique du stock en fonction des plats cuisinés
+L’objectif principal est de permettre à l’utilisateur de manger de manière équilibrée, d’éviter le gaspillage, et d’utiliser au mieux les aliments qu’il a déjà chez lui.
+
+ 2. Objectifs du projet
+2.1 Objectif principal
+Développer une application mobile intelligente permettant à l’utilisateur de :
+* enregistrer ses aliments (manuellement ou via détection)
+* consulter en temps réel son stock disponible
+* exprimer ses envies ou ses objectifs nutritionnels
+* obtenir des repas réalisables immédiatement selon son stock
+* recevoir les recettes détaillées
+* mettre à jour automatiquement son inventaire
+2.2 Objectifs secondaires
+* Simplifier la gestion des courses
+* Réduire le gaspillage alimentaire
+* Proposer un suivi nutritionnel quotidien
+* Offrir une interface simple, intuitive et agréable
+* Utiliser une IA moderne pour une interaction naturelle
+
+ 3. Public cible
+* Étudiants et travailleurs souhaitant mieux gérer leur nutrition
+* Personnes cherchant à optimiser leur planning alimentaire
+* Familles voulant réduire le gaspillage
+* Sportifs ayant des objectifs nutritionnels précis
+* Toute personne souhaitant cuisiner selon ce qu’elle possède déjà
+
+ 4. Fonctionnalités principales
+4.1 Gestion du stock alimentaire
+* Ajouter un produit manuellement (nom, quantité, catégorie, date d’expiration)
+* Ajouter un produit via photo (détection objet ? optionnelle)
+* Possibilité de modifier ou supprimer un élément
+* Affichage du stock par catégories
+* Indicateurs visuels :
+o produits presque finis
+o produits expirant bientôt
+
+4.2 Assistant IA (Chatbot)
+Un chatbot intelligent basé sur un modèle de langage existant (LLaMA/Mistral) capable de :
+* comprendre les messages naturels de l’utilisateur
+* analyser les envies exprimées (ex : “j’ai envie d’un truc sucré”)
+* tenir compte des objectifs nutritionnels (ex : “beaucoup de protéines aujourd’hui”)
+* proposer une liste de repas réalisables avec le stock disponible
+* afficher les valeurs nutritionnelles estimées
+
+4.3 Système de recommandations
+L’IA analyse :
+* le stock actuel
+* les préférences de l’utilisateur
+* les restrictions alimentaires (halal, allergies, vegan…)
+* l’objectif du jour (léger, protéiné, rapide, sucré…)
+Et génère :
+* 3 à 5 plats possibles
+* sélection directe par l’utilisateur
+* proposition d’alternatives si un ingrédient manque
+
+4.4 Recettes
+Pour chaque plat :
+* Liste détaillée des ingrédients nécessaires
+* Quantités à consommer
+* Étapes de préparation
+* Temps de cuisson
+* Informations nutritionnelles (kcal, glucides, lipides, protéines)
+
+4.5 Mise à jour automatique du stock
+Lorsque l'utilisateur valide qu’il a préparé un plat :
+* Les ingrédients utilisés sont automatiquement retirés du stock
+* Les quantités sont recalculées
+* Les produits arrivés à zéro sont supprimés ou notés comme “à racheter”
+
+4.6 Notifications
+* Avertissement d’expiration proche
+* Propositions de recettes pour utiliser les produits avant qu’ils ne se périment
+* Rappel nutritionnel quotidien
+* Suggestions de courses
+
+ 5. Contraintes techniques
+5.1 Application mobile
+Technologies recommandées :
+* Flutter (multiplateforme, rapide, gratuit)
+ou
+* React Native
+5.2 Backend
+Framework possible :
+* Django (Python)
+* Laravel (PHP)
+* Node.js Express
+Le backend assure :
+* gestion utilisateurs
+* gestion du stock
+* communication avec le modèle IA
+* stockage des recettes
+5.3 Base de données
+* PostgreSQL / Firebase / Supabase
+Tables principales :
+* users
+* stock_items
+* recipes
+* nutrition_data
+* preferences_users
+5.4 Intelligence Artificielle
+* Modèle existant (pas entraîné depuis zéro) :
+o LLaMA 3.1 8B
+o Mistral 7B
+* Intégration via API interne
+* Système RAG pour injecter stock + recettes à l’IA au moment de la conversation
+5.5 Détection d’objet (optionnelle)
+Utilisation possible :
+* TensorFlow Lite
+* YOLOv8-Nano
+* ML Kit (Google)
+
+ 6. Interface utilisateur (UI/UX)
+6.1 Ecrans principaux
+* Page d’accueil (dashboard nutrition)
+* Page de gestion du stock
+* Scanner photo (si utilisé)
+* Chat IA (page principale d’interaction)
+* Page recette
+* Page des paramètres utilisateurs
+6.2 Critères ergonomiques
+* Design simple et moderne
+* Navigation minimaliste
+* Couleurs douces
+* Iconographie explicite
+* Messages d’erreur clairs
+
+ 7. Sécurité & confidentialité
+* Les données utilisateur doivent rester privées
+* Stockage sécurisé (hash des mots de passe)
+* Aucun transfert de données sensibles vers l’IA sans contrôle
+* Possibilité de supprimer son compte et ses données
+
+ 8. Indicateurs de performance
+* Temps de réponse de l’IA < 2 secondes
+* Taux de détection correcte (si active)
+* Pourcentage de stock correctement mis à jour
+* Satisfaction utilisateur (questionnaire interne)
+* Réduction du gaspillage (optionnel)
+
+ 9. Organisation & Répartition des tâches
+Selon ton équipe, mais généralement :
+* Développeur mobile : UI / fonctionnalités
+* Développeur backend : API / base de données
+* Spécialiste IA : intégration LLaMA / RAG
+* Designer : maquettes et ergonomie
+
+ 11. Tests
+* Tests unitaires des fonctionnalités
+* Tests fonctionnels (scénarios utilisateur)
+* Tests de performance (réponses IA)
+* Tests sur différents appareils
+* Tests dUX
+
+ 12. Résultats attendus
+À la fin du projet, l’utilisateur doit pouvoir :
+* gérer son stock facilement
+* discuter naturellement avec une IA
+* se voir proposer des plats réalisables immédiatement
+* cuisiner selon ses objectifs
+* suivre sa nutrition au quotidien
+* réduire le gaspillage
+* gagner du temps dans sa planification de repas
+Parfait — voici une version enrichie du cahier des charges, avec une nouvelle section “Recommandations de technologies et outils”, extrêmement détaillée, fonction par fonction, outil par outil.
+C’est du niveau professionnel pour un PFA, tu pourras l’intégrer directement dans ton rapport.
+
+ 13. Recommandations de technologies et d’outils
+Cette section propose pour chaque fonctionnalité de Hunger-Talk les meilleurs outils, bibliothèques, et technologies à utiliser, en tenant compte de la gratuité, des performances, et des compétences d’un étudiant.
+
+ 13.1 Développement Mobile
+?? Framework recommandé
+* Flutter (? Recommandé – simple, performant, multiplateforme, gratuit)
+* Alternatif : React Native (moins stable que Flutter en 2024/2025)
+?? Pourquoi Flutter ?
+* Un seul code pour Android + iOS
+* Excellente performance
+* UI moderne
+* Large communauté
+* Intégration facile avec IA + backend
+?? Outils nécessaires
+* Android Studio (ou Visual Studio Code)
+* SDK Flutter
+* Émulateur Android
+* Plugin Flutter/Dart
+
+ 13.2 Backend & API
+?? Langage recommandé
+* Python (meilleur pour IA + API)
+?? Framework API
+* Django Rest Framework (robuste, structuré, sécurisé)
+ou
+* FastAPI (plus rapide, moderne, idéal pour IA)
+ Recommandation : FastAPI pour ce projet.
+?? Fonctions backend
+* Authentification
+* API pour gérer le stock
+* API pour envoyer les requêtes à l’IA
+* API pour enregistrer les recettes
+* Mise à jour du stock après cuisson
+?? Outils backend
+* Uvicorn (serveur FastAPI)
+* Pydantic (validation)
+* Alembic (migrations DB)
+
+ 13.3 Base de données & stockage
+?? Type de base de données
+* PostgreSQL (? le meilleur choix)
+ou
+* Supabase (PostgreSQL hébergé, gratuit, super simple)
+ou
+* Firebase (si tu veux éviter SQL)
+?? Tables essentielles
+* users
+* stock_items
+* categories
+* recipes
+* nutrition_table
+* messages_chat
+* settings_user
+* shopping_list
+?? Outils recommandés
+* pgAdmin (gestion PostgreSQL)
+* Prisma ORM (si Node)
+* SQLAlchemy (si Python/FastAPI)
+
+ 13.4 Intelligence Artificielle (Chatbot)
+?? Modèle recommandé
+* LLaMA 3.1 – 8B (open-source, gratuit, très performant)
+ou
+* Mistral 7B (excellent aussi)
+ Ne pas créer un modèle, utiliser un existant.
+?? Méthodes d’intégration
+* RAG (Retrieval Augmented Generation)
+? Tu envoies au modèle :
+o stock actuel
+o préférences
+o recettes disponibles
+o objectifs nutritionnels
+? Le modèle génère les réponses intelligentes.
+?? Outils IA recommandés
+* Ollama (? le meilleur pour charger LLaMA localement)
+* HuggingFace Transformers (pour manipuler les modèles)
+* LangChain (orchestration IA + RAG)
+* FAISS (base vectorielle pour recherches IA)
+?? Serveur IA
+* CPU local suffisant (pour 7-8B)
+* GPU (optionnel)
+
+ 13.5 Recommandation de repas
+?? Algorithmes utilisés
+* RAG via IA
+* Matching des ingrédients
+* Filtrage selon préférences
+* Analyse nutritionnelle automatique
+?? Outils nécessaires
+* OpenFoodFacts API (données nutritionnelles générales)
+* Librairie “nutritionix” (alternative)
+* Calcul nutritionnel automatique via Python
+
+ 13.6 Recettes & nutrition
+?? Sources de recettes
+* Base interne créée par vous
+* Dataset recettes open-source (Kaggle)
+* Système IA pour générer des recettes uniques
+?? Outils
+* Dataset JSON
+* DB PostgreSQL
+* Moteur IA (LLaMA) pour générer une variante
+?? Calcul des calories
+* Formule automatique :
+o calories
+o protéines
+o lipides
+o glucides
+* API OpenFoodFacts pour infos exactes
+
+ 13.7 Gestion du stock
+?? Fonctionnalités techniques
+* CRUD (Create/Read/Update/Delete)
+* Quantité en unités ou grammes
+* Historique
+* Date d’expiration
+?? Outils recommandés
+* FastAPI (endpoints)
+* PostgreSQL
+* Background tasks :
+o notifications d’expiration
+o suggestions de plats
+
+ 13.8 Notifications
+?? Outils recommandés
+* Firebase Cloud Messaging (FCM)
+* Local Notifications (Flutter plugin)
+* Scheduler backend :
+o Celery (Python)
+o FastAPI Background Tasks
+
+13.9 Gestion des images (optionnelle, object detection)
+?? Si tu veux intégrer la détection d’objet :
+* TensorFlow Lite (facile à intégrer dans Flutter)
+* YOLOv8-nano (si tu veux un modèle plus précis)
+* ML Kit Vision (simple, mais moins spécialisé)
+?? Outils pour entraînement
+* Roboflow (annotations + dataset)
+* Google Colab (entraîner gratuitement)
+* Ultralytics (YOLO)
+
+13.10 Sécurité
+?? Outils recommandés
+* JWT Authentication (FastAPI)
+* Hashing mots de passe : Bcrypt
+* HTTPS : Certbot + Nginx
+* Limitation de requêtes (rate limit)
+
+ 13.11 Déploiement
+?? Déploiement Backend
+* Render (gratuit)
+* Railway (gratuit)
+* Ubuntu VPS (option pro)
+?? Déploiement Base de données
+* Supabase
+* Neon PostgreSQL
+* Railway PostgreSQL
+?? Déploiement IA
+* Serveur local via Ollama
+* Serveur cloud GPU (si besoin)
+
+ 13.12 Outils de développement & de travail
+?? Outils généraux
+* VS Code
+* Git + GitHub
+* Trello (gestion projet)
+* Postman (tester l’API)
+* Draw.io (diagrammes UML)
+?? UI/UX
+* Figma
+* FlutterFlow (si tu veux accélérer)
+
+ 13.13 Résumé final des recommandations
+FonctionnalitéTechnologieOutilsMobile AppFlutterVS Code, Android StudioBackendFastAPIUvicorn, PydanticIA ChatbotLLaMA/MistralOllama, LangChainRecommandationsRAGFAISS, TransformersStockPostgreSQLSupabaseNotificationsFCMFlutter pluginsObject Detection (option)YOLOv8Roboflow, TFLiteDéploiementRender/RailwayGitHubSécuritéJWTBcryptNutritionOpenFoodFactsAPI RESTUI/UXFigmaMaterial Design

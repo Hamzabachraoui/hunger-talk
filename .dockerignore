@@ -1,0 +1,28 @@
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+docs/
+Diagramme/
+
+# Backend (géré par backend/.dockerignore)
+backend/venv/
+backend/.env
+backend/__pycache__/
+
+# Mobile
+mobile/
+
+# Scripts et outils
+*.bat
+*.sh
+*.ps1
+*.sql
+
+# Autres
+.DS_Store
+Thumbs.db
+*.log
+

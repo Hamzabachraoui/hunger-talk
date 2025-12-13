@@ -1,0 +1,1092 @@
+PLAN DÉTAILLÉ DU PROJET HUNGER-TALK
+Application mobile intelligente de gestion nutritionnelle et alimentaire
+================================================================================
+
+Ce document présente toutes les étapes détaillées à suivre pour développer 
+le projet Hunger-Talk, de la préparation initiale jusqu'à la finalisation.
+
+================================================================================
+PHASE 0 : PRÉPARATION ET CONFIGURATION DE L'ENVIRONNEMENT
+================================================================================
+
+ÉTAPE 0.1 : Installation des outils de développement [TERMINÉ]
+-----------------------------------------------------
+- Installer Visual Studio Code (ou Android Studio)
+- Installer Flutter SDK (dernière version stable)
+- Vérifier l'installation : flutter doctor
+- Configurer les émulateurs Android/iOS
+- Installer Git et créer un compte GitHub
+- Créer un repository GitHub pour le projet
+- ✅ Script de vérification créé (install_all_tools.ps1)
+- ✅ Guide d'installation détaillé créé (docs/INSTALLATION_TOOLS.md)
+- ✅ Tous les outils installés :
+  * ✅ Python 3.11.9 - Installé
+  * ✅ Flutter - Installé
+  * ✅ Git - Installé
+  * ✅ PostgreSQL - Installé (version 17 et 18)
+  * ✅ Ollama - Installé
+
+ÉTAPE 0.2 : Configuration de l'environnement backend [TERMINÉ]
+-----------------------------------------------------
+- Installer Python 3.10 ou supérieur
+- Créer un environnement virtuel Python
+- Installer FastAPI, Uvicorn, SQLAlchemy, Pydantic
+- Installer PostgreSQL localement (ou préparer Supabase)
+- Installer pgAdmin pour gérer la base de données
+- Configurer les variables d'environnement (.env)
+- ✅ Python 3.11.9 installé et vérifié
+- ✅ Environnement virtuel créé (backend/venv/)
+- ✅ Toutes les dépendances installées (FastAPI, SQLAlchemy, LangChain, etc.)
+- ✅ Fichier requirements.txt créé avec toutes les dépendances
+- ✅ Fichier .env créé et configuré avec mot de passe PostgreSQL
+- ✅ Fichier env.example créé pour la configuration
+- ✅ Scripts d'initialisation créés (init_setup.bat / init_setup.sh)
+- ✅ PostgreSQL installé et fonctionnel
+
+ÉTAPE 0.3 : Configuration de l'environnement IA [EN COURS]
+------------------------------------------------
+- Installer Ollama sur votre machine
+- Télécharger le modèle LLaMA 3.1 8B via Ollama
+- Tester que le modèle fonctionne localement
+- Installer LangChain et FAISS pour le RAG
+- Installer HuggingFace Transformers (si nécessaire)
+- ✅ Ollama installé et fonctionnel
+- ✅ Dépendances IA installées dans l'environnement virtuel (langchain, ollama, faiss-cpu, sentence-transformers)
+- ⚠️ Modèle LLaMA 3.1:8b - À télécharger avec : ollama pull llama3.1:8b
+
+ÉTAPE 0.4 : Outils de gestion de projet [EN COURS - À FAIRE MANUELLEMENT]
+----------------------------------------
+- Créer un compte Trello (ou utiliser GitHub Projects)
+- Créer les listes : À faire, En cours, À tester, Terminé
+- Créer un compte Figma (gratuit) pour les maquettes
+- Installer Postman pour tester les APIs
+- Installer Draw.io pour les diagrammes UML
+- ⚠️ Note : Ces outils doivent être installés/créés manuellement par l'utilisateur
+
+ÉTAPE 0.5 : Structure des dossiers du projet [TERMINÉ]
+----------------------------------------------
+- Créer la structure de dossiers pour Flutter
+- Créer la structure de dossiers pour le backend FastAPI
+- Créer un dossier pour la documentation
+- Créer un dossier pour les tests
+- Initialiser Git dans chaque dossier
+- Créer un fichier .gitignore approprié
+- ✅ Dossiers créés : backend/, mobile/, docs/, database/
+- ✅ Fichiers .gitignore créés pour chaque partie du projet
+- ✅ README.md principal créé
+- ✅ Guide d'installation créé (docs/SETUP_GUIDE.md)
+
+ÉTAPE 0.6 : Configuration Docker [TERMINÉ]
+------------------------------------------
+- Installer Docker Desktop
+- Créer Dockerfile pour le backend FastAPI
+- Créer docker-compose.yml pour orchestrer les services
+- Configurer PostgreSQL dans Docker
+- Configurer l'accès à Ollama depuis Docker
+- Créer docker-compose.prod.yml pour la production
+- ✅ Dockerfile créé (backend/Dockerfile)
+- ✅ docker-compose.yml créé (configuration principale)
+- ✅ docker-compose.prod.yml créé (configuration production)
+- ✅ .dockerignore créé (backend et racine)
+- ✅ database/init.sql créé (initialisation SQL)
+- ✅ Guide Docker complet créé (docs/DOCKER_GUIDE.md)
+- ✅ Guide de démarrage rapide créé (DOCKER_QUICK_START.md)
+- 📝 Note : Ollama reste en local (plus simple pour l'IA)
+
+================================================================================
+RÉSUMÉ PHASE 0 : TOUS LES GUIDES ET SCRIPTS SONT PRÊTS
+================================================================================
+
+✅ Guides et documentation créés :
+  - START_HERE.md (point de départ)
+  - CHECKLIST_CONFIGURATION.md (suivi de progression)
+  - RESUME_CONFIGURATION.md (résumé des actions)
+  - FICHIERS_CREES.md (liste de tous les fichiers)
+  - docs/GUIDE_CONFIGURATION_COMPLETE.md (guide complet détaillé)
+  - docs/INSTALLATION_TOOLS.md (instructions d'installation)
+  - INSTALLATION_RAPIDE.md (version condensée)
+  - CHECK_INSTALLATION.md (état des outils)
+
+✅ Scripts de configuration créés :
+  - install_all_tools.ps1 (vérification des outils)
+  - COMPLETE_SETUP.bat (configuration complète guidée)
+  - setup_postgresql.bat (guide PostgreSQL)
+  - setup_ollama.bat (guide Ollama)
+  - backend/init_setup.bat (initialisation backend)
+  - backend/create_db.sql (script SQL pour la base)
+
+✅ Fichiers de configuration créés :
+  - backend/requirements.txt (toutes les dépendances)
+  - backend/env.example (template de configuration)
+  - backend/.gitignore, mobile/.gitignore, .gitignore
+  - database/README.md (documentation base de données)
+
+✅ Configuration Docker créée :
+  - backend/Dockerfile (image FastAPI)
+  - docker-compose.yml (orchestration des services)
+  - docker-compose.prod.yml (configuration production)
+  - backend/.dockerignore, .dockerignore
+  - database/init.sql (initialisation SQL)
+  - docs/DOCKER_GUIDE.md (guide complet Docker)
+  - DOCKER_QUICK_START.md (démarrage rapide)
+
+⚠️ Actions manuelles restantes (guidées par les scripts ci-dessus) :
+  1. ✅ Installer PostgreSQL (TERMINÉ)
+  2. ✅ Créer la base de données hungertalk_db (TERMINÉ)
+  3. ✅ Installer Ollama (TERMINÉ)
+  4. Télécharger le modèle LLaMA 3.1:8b (optionnel pour l'instant)
+  5. ✅ Créer l'environnement virtuel Python (TERMINÉ)
+  6. ✅ Configurer le fichier .env (TERMINÉ)
+  7. Installer Docker Desktop (pour utiliser Docker)
+
+📋 Pour commencer : Exécuter COMPLETE_SETUP.bat ou suivre START_HERE.md
+📋 Pour Docker : Voir DOCKER_QUICK_START.md ou docs/DOCKER_GUIDE.md
+
+================================================================================
+PHASE 1 : CONCEPTION ET DESIGN [TERMINÉ]
+================================================================================
+
+✅ Résumé de la PHASE 1 :
+- ✅ ÉTAPE 1.2 : Diagrammes UML (déjà créés dans le dossier Diagramme/)
+- ✅ ÉTAPE 1.3 : Schéma de base de données complet
+- ✅ ÉTAPE 1.4 : Documentation API complète
+- ✅ ÉTAPE 1.6 : Conception système RAG
+- ⚠️ ÉTAPE 1.1 : Analyse des besoins (déjà couverte par le cahier des charges)
+- ⚠️ ÉTAPE 1.5 : Maquettage UI/UX (à faire manuellement avec Figma)
+
+ÉTAPE 1.1 : Analyse des besoins détaillée [TERMINÉ]
+------------------------------------------
+- Lister tous les cas d'usage possibles
+- Définir les scénarios utilisateur principaux
+- Identifier les fonctionnalités MVP vs futures
+- Définir les priorités (P0, P1, P2)
+- Documenter les contraintes techniques précises
+
+ÉTAPE 1.2 : Création des diagrammes UML
+----------------------------------------
+- Diagramme de cas d'usage (tous les acteurs et actions)
+- Diagramme de classes (entités principales)
+- Diagramme de séquence (flux d'interaction avec l'IA)
+- Diagramme d'architecture système (mobile-backend-IA-BD)
+- Diagramme de base de données (schéma complet)
+
+ÉTAPE 1.3 : Conception de la base de données [TERMINÉ]
+---------------------------------------------
+- Définir toutes les tables nécessaires :
+  * users (id, email, password_hash, created_at, preferences)
+  * stock_items (id, user_id, name, quantity, unit, category, expiry_date, added_at)
+  * categories (id, name, icon)
+  * recipes (id, name, description, prep_time, cook_time, difficulty)
+  * recipe_ingredients (recipe_id, ingredient_name, quantity, unit)
+  * recipe_steps (recipe_id, step_number, instruction)
+  * nutrition_data (recipe_id, calories, proteins, carbs, fats)
+  * chat_messages (id, user_id, message, response, timestamp)
+  * user_preferences (user_id, dietary_restrictions, allergies, goals)
+  * shopping_list (id, user_id, item_name, quantity, added_at)
+- Définir les relations entre tables (clés étrangères)
+- Définir les index pour optimiser les requêtes
+- Créer le script SQL de création de la base
+- ✅ Schéma SQL complet créé (database/schema.sql)
+- ✅ 11 tables définies avec relations et index
+- ✅ Vues utiles créées (products_expiring_soon, daily_nutrition_stats)
+- ✅ Triggers pour updated_at
+- ✅ Catégories pré-remplies
+
+ÉTAPE 1.4 : Conception de l'API Backend [TERMINÉ]
+----------------------------------------
+- Lister tous les endpoints nécessaires :
+  * POST /api/auth/register
+  * POST /api/auth/login
+  * POST /api/auth/logout
+  * GET /api/user/profile
+  * PUT /api/user/profile
+  * GET /api/stock (liste du stock)
+  * POST /api/stock (ajouter un produit)
+  * PUT /api/stock/:id (modifier un produit)
+  * DELETE /api/stock/:id (supprimer un produit)
+  * POST /api/chat (envoyer un message à l'IA)
+  * GET /api/recipes (liste des recettes)
+  * GET /api/recipes/:id (détails d'une recette)
+  * POST /api/recipes/:id/cook (valider la cuisson, mettre à jour le stock)
+  * GET /api/nutrition/daily (statistiques nutritionnelles du jour)
+  * GET /api/nutrition/weekly (statistiques hebdomadaires)
+  * GET /api/notifications (liste des notifications)
+  * POST /api/notifications/:id/read (marquer comme lue)
+  * GET /api/shopping-list (liste de courses)
+  * POST /api/shopping-list (ajouter à la liste)
+  * DELETE /api/shopping-list/:id (supprimer)
+  * GET /api/user/preferences (préférences)
+  * PUT /api/user/preferences (mettre à jour)
+- Documenter chaque endpoint (méthode, paramètres, réponse)
+- Définir les modèles de données (Pydantic schemas)
+- Définir les codes d'erreur HTTP
+- ✅ Documentation API complète créée (docs/API_DOCUMENTATION.md)
+- ✅ Tous les endpoints documentés avec exemples JSON
+- ✅ Codes d'erreur HTTP définis
+- ✅ Modèles de données décrits
+
+ÉTAPE 1.5 : Maquettage UI/UX
+-----------------------------
+- Créer les maquettes Figma pour chaque écran :
+  * Page de connexion/inscription
+  * Dashboard (page d'accueil avec stats nutrition)
+  * Page de gestion du stock (liste + ajout)
+  * Page de chat avec l'IA
+  * Page de détails d'une recette
+  * Page des paramètres utilisateur
+  * Page de notifications
+  * Page de liste de courses
+- Définir la palette de couleurs (couleurs douces)
+- Choisir la typographie
+- Créer un guide de style (design system)
+- Définir les animations et transitions
+- Tester la navigation entre écrans (wireflow)
+
+ÉTAPE 1.6 : Conception du système RAG pour l'IA [TERMINÉ]
+------------------------------------------------
+- Définir comment structurer le contexte envoyé à l'IA :
+  * Format du stock actuel
+  * Format des préférences utilisateur
+  * Format des recettes disponibles
+  * Format des objectifs nutritionnels
+- Définir le prompt système (instructions pour l'IA)
+- Définir comment l'IA doit formater ses réponses
+- Planifier l'utilisation de FAISS pour la recherche vectorielle
+- Définir comment extraire les recettes recommandées de la réponse IA
+- ✅ Conception RAG complète créée (docs/CONCEPTION_RAG.md)
+- ✅ Format du contexte défini pour tous les éléments
+- ✅ Prompt système complet défini
+- ✅ Format de réponse attendu spécifié
+- ✅ Méthodes d'extraction des recettes documentées
+- ✅ Gestion des erreurs et fallbacks définis
+- ✅ Configuration et paramètres spécifiés
+
+================================================================================
+PHASE 2 : DÉVELOPPEMENT BACKEND [EN COURS - 95% TERMINÉ]
+================================================================================
+
+✅ RÉSUMÉ PHASE 2 :
+- ✅ Configuration complète du projet FastAPI
+- ✅ Tous les modèles de base de données créés
+- ✅ Système d'authentification JWT fonctionnel
+- ✅ Tous les endpoints API implémentés et testés :
+  * ✅ Authentification (register, login, logout)
+  * ✅ Gestion du stock (CRUD complet + statistiques + catégories)
+  * ✅ Chat IA avec RAG (Ollama + contexte utilisateur)
+  * ✅ Gestion des recettes (liste, détails, cuisson)
+  * ✅ Système de recommandations intelligent
+  * ✅ API nutrition (quotidien et hebdomadaire)
+  * ✅ Système de notifications
+  * ✅ Liste de courses (CRUD + génération automatique)
+  * ✅ Préférences utilisateur
+- ✅ Services métier implémentés (RAG, recommandations, nutrition, notifications)
+- ✅ Initialisation automatique des données (catégories, recettes) au démarrage
+- ✅ Documentation Swagger complète
+- ⏳ Tests automatisés à finaliser
+- ✅ Prêt pour Phase 3 (Développement Mobile Flutter)
+
+================================================================================
+PHASE 2 : DÉVELOPPEMENT BACKEND
+================================================================================
+
+ÉTAPE 2.1 : Configuration du projet FastAPI [TERMINÉ]
+-------------------------------------------
+- ✅ Créer le projet FastAPI avec la structure de dossiers
+- ✅ Configurer les fichiers de configuration (config.py)
+- ✅ Configurer les variables d'environnement (.env)
+- ✅ Configurer la connexion à la base de données (SQLAlchemy)
+- ✅ Créer le fichier requirements.txt avec toutes les dépendances
+- ✅ Configurer CORS pour accepter les requêtes du mobile
+- ✅ Configuration complète de la structure FastAPI
+- ✅ Fichiers créés : config.py, database.py, main.py, structure app/
+
+ÉTAPE 2.2 : Modèles de base de données (SQLAlchemy) [TERMINÉ]
+----------------------------------------------------
+- ✅ Créer tous les modèles SQLAlchemy correspondant aux tables
+- ✅ Définir les relations entre modèles
+- ✅ Créer la configuration Alembic
+- ✅ Scripts de création de la base de données créés
+- ✅ Modèles créés : User, Category, StockItem, Recipe, RecipeIngredient, RecipeStep, NutritionData, UserPreferences, ChatMessage, ShoppingListItem, Notification, CookingHistory
+- ✅ Configuration Alembic complète (alembic.ini, env.py)
+- ✅ Script d'initialisation des catégories créé
+- ✅ Scripts de création : scripts/create_database.py (méthode alternative)
+- ✅ Configuration Alembic complète et corrigée (alembic/env.py)
+- ✅ Scripts pour migrations Alembic : scripts/create_migration_alembic.py, init_db_alembic.bat
+- ⏳ À faire : Exécuter les migrations Alembic pour créer les tables :
+  * alembic revision --autogenerate -m "Initial migration - Create all tables"
+  * alembic upgrade head
+  * python scripts/init_categories.py
+
+ÉTAPE 2.3 : Système d'authentification [TERMINÉ]
+---------------------------------------
+- ✅ Implémenter le hashage des mots de passe (Bcrypt)
+- ✅ Créer l'endpoint POST /api/auth/register
+  * Validation des données (email, mot de passe)
+  * Vérification que l'email n'existe pas déjà
+  * Hashage du mot de passe
+  * Création de l'utilisateur en base
+  * Retour d'un token JWT
+- ✅ Créer l'endpoint POST /api/auth/login
+  * Vérification des credentials
+  * Génération du token JWT
+  * Retour du token et des infos utilisateur
+- ✅ Créer un middleware pour vérifier le token JWT (get_current_user dans core/dependencies.py)
+- ✅ Créer l'endpoint POST /api/auth/logout
+- ✅ Fichiers créés : app/routers/auth.py, app/core/security.py, app/core/dependencies.py, app/schemas/user.py
+
+ÉTAPE 2.4 : API de gestion du stock [TERMINÉ]
+------------------------------------
+- ✅ Créer l'endpoint GET /api/stock
+  * Récupérer le stock de l'utilisateur connecté
+  * Filtrer par catégorie (optionnel)
+  * Trier par date d'expiration, nom ou date d'ajout
+  * Retourner les produits expirant bientôt (dans 3 jours)
+  * Endpoint GET /api/stock/{item_id} pour un élément spécifique
+- ✅ Créer l'endpoint POST /api/stock
+  * Validation des données (nom, quantité, catégorie, date expiration)
+  * Vérification que la catégorie existe
+  * Création de l'élément en base
+  * Retour de l'élément créé
+- ✅ Créer l'endpoint PUT /api/stock/{item_id}
+  * Vérification que l'élément appartient à l'utilisateur
+  * Mise à jour partielle des données
+  * Retour de l'élément mis à jour
+- ✅ Créer l'endpoint DELETE /api/stock/{item_id}
+  * Vérification que l'élément appartient à l'utilisateur
+  * Suppression de l'élément
+  * Retour d'une confirmation
+- ✅ Créer l'endpoint GET /api/stock/statistics/summary
+  * Statistiques du stock (total, expirant bientôt, expirés, par catégorie)
+- ✅ Créer l'endpoint GET /api/stock/categories
+  * Récupérer la liste de toutes les catégories disponibles
+- ✅ Fichiers créés : app/routers/stock.py, app/schemas/stock.py, app/schemas/category.py
+- ✅ Router inclus dans main.py
+- ✅ Correction : Résolution du conflit de nom entre modèle SQLAlchemy Category et schéma Pydantic Category
+  * Modèle SQLAlchemy renommé en CategoryModel pour éviter les conflits
+  * Tous les endpoints testés et fonctionnels
+
+ÉTAPE 2.5 : Intégration de l'IA (Ollama + RAG) [TERMINÉ]
+-----------------------------------------------
+- ✅ Configurer la connexion à Ollama (app/services/ollama_service.py)
+- ✅ Créer la fonction pour récupérer le stock formaté
+- ✅ Créer la fonction pour récupérer les préférences utilisateur
+- ✅ Créer la fonction pour récupérer les recettes disponibles
+- ✅ Créer la fonction pour construire le contexte RAG (app/services/rag_service.py)
+- ✅ Créer la fonction pour appeler LLaMA avec le contexte
+- ✅ Créer la fonction pour parser la réponse de l'IA
+- ✅ Créer l'endpoint POST /api/chat
+  * Récupération du message utilisateur
+  * Construction du contexte RAG
+  * Appel à l'IA
+  * Parsing de la réponse
+  * Sauvegarde du message et de la réponse en base
+  * Retour de la réponse à l'utilisateur
+- ✅ Créer l'endpoint GET /api/chat/history
+  * Récupérer l'historique des messages de l'utilisateur
+- ✅ Gérer les erreurs (IA non disponible, timeout, etc.)
+- ✅ Fichiers créés : app/routers/chat.py, app/services/ollama_service.py, app/services/rag_service.py, app/schemas/chat.py
+- ✅ Router inclus dans main.py
+
+ÉTAPE 2.6 : API de gestion des recettes [TERMINÉ]
+----------------------------------------
+- ✅ Créer l'endpoint GET /api/recipes
+  * Récupérer toutes les recettes disponibles
+  * Filtrer selon les préférences utilisateur
+  * Retourner les recettes avec leurs infos nutritionnelles
+- ✅ Créer l'endpoint GET /api/recipes/{id}
+  * Récupérer les détails complets d'une recette
+  * Inclure les ingrédients, les étapes, les infos nutritionnelles
+  * Vérifier si la recette est réalisable avec le stock actuel
+- ✅ Créer l'endpoint POST /api/recipes/{id}/cook
+  * Vérifier que tous les ingrédients sont disponibles
+  * Mettre à jour le stock (soustraire les quantités utilisées)
+  * Supprimer les produits arrivés à zéro
+  * Enregistrer l'activité de cuisson
+  * Retourner une confirmation
+- ✅ Fichiers créés : app/routers/recipes.py, app/schemas/recipe.py
+- ✅ Router inclus dans main.py
+- ✅ Script d'initialisation des recettes : scripts/add_sample_recipes.py
+
+ÉTAPE 2.7 : Système de recommandations [TERMINÉ]
+---------------------------------------
+- ✅ Créer la fonction de matching des ingrédients (app/services/recommendation_service.py)
+  * Comparer le stock avec les ingrédients des recettes
+  * Calculer un score de compatibilité
+  * Gestion de la compatibilité des unités
+- ✅ Créer la fonction de filtrage selon préférences
+  * Vérifier les restrictions alimentaires
+  * Vérifier les allergies
+  * Vérifier les objectifs nutritionnels
+- ✅ Créer la fonction de calcul nutritionnel
+  * Calculer les calories, protéines, glucides, lipides
+  * Scoring nutritionnel basé sur les objectifs utilisateur
+- ✅ Intégrer ces fonctions dans l'endpoint /api/chat
+- ✅ Créer l'endpoint GET /api/recommendations
+  * Récupérer les recommandations basées sur le stock actuel
+- ✅ Créer l'endpoint POST /api/recommendations
+  * Générer des recommandations personnalisées avec filtres
+- ✅ Fichiers créés : app/routers/recommendations.py, app/services/recommendation_service.py, app/schemas/recommendation.py
+- ✅ Router inclus dans main.py
+
+ÉTAPE 2.8 : API de nutrition et statistiques [TERMINÉ]
+---------------------------------------------
+- ✅ Créer l'endpoint GET /api/nutrition/daily
+  * Calculer les stats nutritionnelles du jour
+  * Basé sur les recettes cuisinées aujourd'hui
+  * Retourner calories, protéines, glucides, lipides
+  * Comparer avec les objectifs de l'utilisateur
+- ✅ Créer l'endpoint GET /api/nutrition/weekly
+  * Statistiques de la semaine
+  * Calcul des totaux et moyennes hebdomadaires
+  * Comparaison avec les objectifs
+- ✅ Fichiers créés : app/routers/nutrition.py, app/services/nutrition_service.py, app/schemas/nutrition.py
+- ✅ Router inclus dans main.py
+
+ÉTAPE 2.9 : Système de notifications [TERMINÉ]
+------------------------------------
+- ✅ Créer une tâche en arrière-plan (FastAPI Background Tasks)
+  * Vérifier les produits expirant dans les 2-3 prochains jours
+  * Générer des suggestions de recettes pour ces produits
+- ✅ Créer l'endpoint GET /api/notifications
+  * Récupérer les notifications de l'utilisateur
+  * Filtrer par statut (lues/non lues)
+  * Trier par date de création
+- ✅ Créer l'endpoint POST /api/notifications/{id}/read
+  * Marquer une notification comme lue
+- ✅ Créer l'endpoint POST /api/notifications/read-all
+  * Marquer toutes les notifications comme lues
+- ✅ Fichiers créés : app/routers/notifications.py, app/services/notification_service.py, app/schemas/notification.py
+- ✅ Router inclus dans main.py
+
+ÉTAPE 2.10 : API de liste de courses [TERMINÉ]
+------------------------------------
+- ✅ Créer l'endpoint GET /api/shopping-list
+  * Récupérer la liste de courses de l'utilisateur
+  * Filtrer par statut (acheté/non acheté)
+- ✅ Créer l'endpoint POST /api/shopping-list
+  * Ajouter un élément à la liste
+- ✅ Créer l'endpoint PUT /api/shopping-list/{id}
+  * Mettre à jour un élément (quantité, statut, etc.)
+- ✅ Créer l'endpoint DELETE /api/shopping-list/{id}
+  * Supprimer un élément de la liste
+- ✅ Créer l'endpoint POST /api/shopping-list/generate-from-recipe
+  * Générer une liste de courses à partir d'une recette
+  * Calculer les quantités manquantes par rapport au stock
+- ✅ Créer l'endpoint POST /api/shopping-list/generate-from-missing
+  * Générer une liste basée sur les ingrédients manquants du stock
+- ✅ Fichiers créés : app/routers/shopping_list.py, app/schemas/shopping_list.py
+- ✅ Router inclus dans main.py
+
+ÉTAPE 2.11 : Gestion des préférences utilisateur [TERMINÉ]
+-------------------------------------------------
+- ✅ Créer l'endpoint GET /api/user/preferences
+  * Récupérer les préférences de l'utilisateur
+  * Création automatique si elles n'existent pas
+- ✅ Créer l'endpoint PUT /api/user/preferences
+  * Mettre à jour les préférences
+  * Restrictions alimentaires, allergies, objectifs nutritionnels
+  * Mise à jour partielle supportée
+- ✅ Fichiers créés : app/routers/user.py, app/schemas/user_preferences.py
+- ✅ Router inclus dans main.py
+
+ÉTAPE 2.12 : Tests du backend [EN COURS]
+------------------------------
+- ✅ Tests manuels effectués via Swagger UI
+- ✅ Tous les endpoints principaux testés et fonctionnels
+- ✅ Correction des bugs identifiés :
+  * Conflit de nom Category (modèle vs schéma) - RÉSOLU
+  * Gestion des Decimal dans shopping-list - RÉSOLU
+  * Initialisation automatique des catégories et recettes au démarrage
+- ⏳ Tests unitaires automatisés à créer (pytest)
+- ⏳ Tests d'intégration complets à implémenter
+- ✅ Documentation Swagger complète et accessible
+
+ÉTAPE 2.13 : Documentation de l'API [TERMINÉ]
+------------------------------------
+- ✅ Documentation automatique FastAPI (Swagger) disponible sur /docs
+- ✅ Descriptions ajoutées pour chaque endpoint
+- ✅ Exemples de requêtes/réponses dans Swagger
+- ✅ Documentation ReDoc disponible sur /redoc
+- ✅ Scripts d'initialisation documentés
+- ✅ Guide de gestion de base de données : README_DATABASE.md
+- ⏳ README backend complet à finaliser
+
+================================================================================
+PHASE 3 : DÉVELOPPEMENT MOBILE (FLUTTER)
+================================================================================
+
+ÉTAPE 3.1 : Configuration du projet Flutter [TERMINÉ]
+--------------------------------------------
+- ✅ Créer un nouveau projet Flutter avec structure complète
+- ✅ Configurer pubspec.yaml avec toutes les dépendances nécessaires :
+  * http, dio (pour les appels API)
+  * provider (gestion d'état)
+  * shared_preferences, flutter_secure_storage (stockage local)
+  * flutter_local_notifications (notifications)
+  * image_picker (pour les photos, si détection d'objets)
+  * intl (formatage des dates)
+  * go_router (navigation)
+  * google_fonts (typographie)
+  * equatable, json_annotation (utilitaires)
+- ✅ Créer le Design System complet :
+  * Palette de couleurs douces (AppColors)
+  * Thème Material Design 3 (AppTheme)
+  * Typographie avec Google Fonts (Inter)
+- ✅ Créer l'architecture complète :
+  * core/ (thème, constants, routing)
+  * data/ (models, services)
+  * presentation/ (screens, widgets, providers)
+- ✅ Créer tous les modèles de données :
+  * UserModel, StockItemModel, ChatMessageModel, RecipeModel
+- ✅ Créer tous les services API :
+  * ApiService, AuthService, StockService, ChatService, RecipeService
+- ✅ Créer tous les providers (State Management) :
+  * AuthProvider, StockProvider, ChatProvider, RecipeProvider
+- ✅ Créer les écrans de base :
+  * LoginScreen, RegisterScreen, DashboardScreen, StockScreen, ChatScreen, RecipesScreen, SettingsScreen
+- ✅ Configurer le routing avec GoRouter
+- ✅ Configurer les fichiers Android (AndroidManifest.xml, build.gradle, MainActivity.kt)
+- ✅ Ajouter Flutter à Docker :
+  * Dockerfile pour builder l'APK
+  * Service mobile dans docker-compose.yml
+  * Documentation Docker (DOCKER_README.md)
+- ✅ Créer les scripts de test (test_setup.bat, test_setup.sh)
+- ✅ Vérifier que le code compile sans erreurs (flutter analyze)
+- ⏳ Configurer les fichiers iOS (Info.plist) si nécessaire (pour iOS)
+- ⏳ Tester que l'application se lance correctement sur émulateur/appareil
+
+ÉTAPE 3.2 : Architecture de l'application
+------------------------------------------
+- Créer la structure de dossiers :
+  * lib/models/ (modèles de données)
+  * lib/services/ (services API, stockage)
+  * lib/screens/ (écrans)
+  * lib/widgets/ (composants réutilisables)
+  * lib/utils/ (fonctions utilitaires)
+  * lib/providers/ (gestion d'état)
+- Configurer le système de routing (go_router ou Navigator)
+- Créer un thème global (couleurs, typographie)
+
+ÉTAPE 3.3 : Modèles de données
+-------------------------------
+- Créer le modèle User
+- Créer le modèle StockItem
+- Créer le modèle Recipe
+- Créer le modèle ChatMessage
+- Créer le modèle NutritionData
+- Créer les fonctions fromJson/toJson pour chaque modèle
+
+ÉTAPE 3.4 : Services API
+-------------------------
+- Créer le service ApiService (classe pour les appels HTTP)
+- Configurer l'URL de base de l'API
+- Créer le service AuthService :
+  * login(email, password)
+  * register(email, password, name)
+  * logout()
+  * getCurrentUser()
+- Créer le service StockService :
+  * getStock()
+  * addStockItem(item)
+  * updateStockItem(id, item)
+  * deleteStockItem(id)
+- Créer le service ChatService :
+  * sendMessage(message)
+  * getChatHistory()
+- Créer le service RecipeService :
+  * getRecipes()
+  * getRecipeDetails(id)
+  * cookRecipe(id)
+- Créer le service NutritionService :
+  * getDailyNutrition()
+- Gérer le stockage du token JWT
+- Gérer les erreurs HTTP (401, 404, 500, etc.)
+
+ÉTAPE 3.5 : Gestion d'état (Provider/Riverpod)
+-----------------------------------------------
+- Créer le provider AuthProvider :
+  * État de l'utilisateur connecté
+  * Méthodes login, register, logout
+- Créer le provider StockProvider :
+  * Liste du stock
+  * Méthodes pour ajouter, modifier, supprimer
+  * Actualisation automatique
+- Créer le provider ChatProvider :
+  * Historique des messages
+  * Méthode pour envoyer un message
+  * État de chargement
+- Créer le provider RecipeProvider :
+  * Liste des recettes
+  * Recette sélectionnée
+  * Méthodes pour charger et cuisiner
+
+ÉTAPE 3.6 : Écran de connexion/inscription
+-------------------------------------------
+- Créer l'écran LoginScreen :
+  * Champs email et mot de passe
+  * Bouton de connexion
+  * Lien vers l'inscription
+  * Gestion des erreurs (affichage des messages)
+  * Indicateur de chargement
+- Créer l'écran RegisterScreen :
+  * Champs nom, email, mot de passe, confirmation
+  * Validation des champs
+  * Bouton d'inscription
+  * Lien vers la connexion
+- Gérer la navigation après connexion réussie
+- Sauvegarder le token et rediriger vers le dashboard
+
+ÉTAPE 3.7 : Dashboard (page d'accueil)
+---------------------------------------
+- Créer l'écran DashboardScreen :
+  * Affichage des stats nutritionnelles du jour
+  * Graphique ou cartes avec calories, protéines, etc.
+  * Indicateur de progression vers les objectifs
+  * Liste des recettes récentes
+  * Accès rapide au stock
+  * Bouton pour ouvrir le chat IA
+- Créer les widgets réutilisables :
+  * NutritionCard (affiche une stat nutritionnelle)
+  * ProgressIndicator (barre de progression)
+- Charger les données au démarrage
+- Actualiser périodiquement
+
+ÉTAPE 3.8 : Page de gestion du stock
+-------------------------------------
+- Créer l'écran StockScreen :
+  * Liste des produits (ListView ou GridView)
+  * Filtrage par catégorie
+  * Tri par date d'expiration
+  * Indicateurs visuels (expirant bientôt, presque fini)
+- Créer le widget StockItemCard :
+  * Nom du produit
+  * Quantité
+  * Date d'expiration
+  * Catégorie avec icône
+  * Boutons modifier/supprimer
+- Créer l'écran AddStockItemScreen :
+  * Formulaire pour ajouter un produit
+  * Champs : nom, quantité, unité, catégorie, date expiration
+  * Sélecteur de date
+  * Bouton de validation
+- Créer l'écran EditStockItemScreen (similaire à Add)
+- Implémenter la fonctionnalité de suppression
+- Ajouter un bouton FAB (Floating Action Button) pour ajouter
+
+ÉTAPE 3.9 : Page de chat avec l'IA
+-----------------------------------
+- Créer l'écran ChatScreen :
+  * Zone de messages (scrollable)
+  * Champ de saisie en bas
+  * Bouton d'envoi
+  * Indicateur de frappe (quand l'IA répond)
+- Créer le widget MessageBubble :
+  * Style différent pour messages utilisateur vs IA
+  * Affichage de l'heure
+  * Formatage du texte
+- Créer le widget RecipeSuggestionCard :
+  * Afficher les recettes suggérées par l'IA
+  * Bouton pour voir les détails
+  * Bouton pour cuisiner directement
+- Implémenter l'envoi de messages
+- Afficher les réponses de l'IA en temps réel
+- Gérer le scroll automatique vers le bas
+- Sauvegarder l'historique localement
+
+ÉTAPE 3.10 : Page de détails d'une recette
+-------------------------------------------
+- Créer l'écran RecipeDetailsScreen :
+  * Image de la recette (si disponible)
+  * Nom et description
+  * Informations : temps de préparation, temps de cuisson, difficulté
+  * Liste des ingrédients avec quantités
+  * Liste des étapes de préparation
+  * Informations nutritionnelles (calories, protéines, etc.)
+  * Indicateur de disponibilité (quels ingrédients manquent)
+  * Bouton "Cuisiner" (si tous les ingrédients sont disponibles)
+  * Bouton "Ajouter à la liste de courses" (si ingrédients manquants)
+- Créer les widgets :
+  * IngredientList (liste formatée)
+  * StepList (étapes numérotées)
+  * NutritionInfo (tableau nutritionnel)
+- Implémenter la fonctionnalité "Cuisiner" :
+  * Confirmation avant de cuisiner
+  * Appel API pour mettre à jour le stock
+  * Message de succès
+  * Retour au dashboard
+
+ÉTAPE 3.11 : Page des paramètres
+---------------------------------
+- Créer l'écran SettingsScreen :
+  * Section profil utilisateur
+  * Section préférences alimentaires :
+    * Restrictions (halal, vegan, végétarien)
+    * Allergies (liste à cocher)
+    * Objectifs nutritionnels (calories par jour, etc.)
+  * Section notifications :
+    * Activer/désactiver les notifications d'expiration
+    * Activer/désactiver les suggestions quotidiennes
+  * Section compte :
+    * Changer le mot de passe
+    * Supprimer le compte
+  * Bouton de déconnexion
+- Créer les widgets de formulaire pour chaque section
+- Sauvegarder les préférences
+
+ÉTAPE 3.12 : Système de notifications locales
+----------------------------------------------
+- Configurer flutter_local_notifications
+- Créer le service NotificationService :
+  * Demander les permissions
+  * Programmer les notifications d'expiration
+  * Programmer les rappels nutritionnels
+  * Programmer les suggestions de recettes
+- Créer une tâche en arrière-plan pour vérifier les expirations
+- Tester les notifications sur Android et iOS
+
+ÉTAPE 3.13 : Page de liste de courses (optionnelle)
+-----------------------------------------------------
+- Créer l'écran ShoppingListScreen :
+  * Liste des produits à acheter
+  * Cases à cocher pour marquer comme acheté
+  * Bouton pour ajouter manuellement
+  * Bouton pour synchroniser avec le stock (ajouter au stock)
+- Créer le widget ShoppingItemCard
+
+ÉTAPE 3.14 : Navigation et routing
+-----------------------------------
+- Configurer le système de navigation
+- Créer un BottomNavigationBar ou Drawer :
+  * Dashboard
+  * Stock
+  * Chat IA
+  * Recettes
+  * Paramètres
+- Gérer la navigation entre écrans
+- Gérer le retour en arrière
+- Protéger les routes (rediriger vers login si non connecté)
+
+ÉTAPE 3.15 : Gestion des erreurs et états de chargement
+--------------------------------------------------------
+- Créer un widget ErrorWidget pour afficher les erreurs
+- Créer un widget LoadingWidget
+- Gérer les états de chargement sur chaque écran
+- Afficher des messages d'erreur clairs
+- Implémenter le retry en cas d'erreur réseau
+- Gérer le cas où l'API n'est pas disponible
+
+ÉTAPE 3.16 : Stockage local (cache)
+------------------------------------
+- Utiliser shared_preferences pour :
+  * Sauvegarder le token
+  * Sauvegarder les préférences
+  * Sauvegarder le dernier état de l'application
+- Implémenter un cache pour le stock (éviter de recharger à chaque fois)
+- Implémenter un cache pour les recettes
+
+ÉTAPE 3.17 : Tests de l'application mobile
+-------------------------------------------
+- Tester sur émulateur Android
+- Tester sur émulateur iOS (si disponible)
+- Tester sur un appareil physique
+- Tester tous les écrans
+- Tester tous les flux utilisateur
+- Tester la gestion des erreurs
+- Tester les performances (temps de chargement)
+
+================================================================================
+PHASE 4 : INTÉGRATION ET TESTS
+================================================================================
+
+ÉTAPE 4.1 : Intégration mobile-backend
+---------------------------------------
+- Vérifier que tous les endpoints sont appelés correctement
+- Tester l'authentification complète
+- Tester la gestion du stock (CRUD complet)
+- Tester le chat avec l'IA
+- Tester la cuisson d'une recette et la mise à jour du stock
+- Vérifier que les tokens JWT sont gérés correctement
+- Vérifier la gestion des erreurs réseau
+
+ÉTAPE 4.2 : Tests de l'intégration IA
+--------------------------------------
+- Tester que l'IA répond correctement aux questions
+- Tester que les recettes suggérées sont pertinentes
+- Tester que le contexte RAG est bien construit
+- Tester avec différents stocks (vide, plein, partiel)
+- Tester avec différentes préférences utilisateur
+- Vérifier le temps de réponse (< 2 secondes si possible)
+- Gérer les cas où l'IA ne trouve pas de recette
+
+ÉTAPE 4.3 : Tests fonctionnels complets
+----------------------------------------
+- Scénario 1 : Inscription → Ajout de produits → Demande de recette → Cuisson
+- Scénario 2 : Connexion → Consultation du stock → Chat avec l'IA → Sélection recette
+- Scénario 3 : Ajout de produits expirant bientôt → Vérification des notifications
+- Scénario 4 : Cuisson de plusieurs recettes → Vérification de la mise à jour du stock
+- Scénario 5 : Modification des préférences → Vérification de l'impact sur les suggestions
+- Tester tous les cas limites :
+  * Stock vide
+  * Produits expirés
+  * Recette avec ingrédients manquants
+  * Connexion perdue pendant l'utilisation
+
+ÉTAPE 4.4 : Tests de performance
+---------------------------------
+- Mesurer le temps de chargement de chaque écran
+- Mesurer le temps de réponse de l'API
+- Mesurer le temps de réponse de l'IA
+- Optimiser les requêtes lentes
+- Vérifier l'utilisation de la mémoire
+- Vérifier la consommation de la batterie
+
+ÉTAPE 4.5 : Tests de sécurité
+------------------------------
+- Vérifier que les mots de passe sont bien hashés
+- Vérifier que les tokens JWT expirent correctement
+- Vérifier que les utilisateurs ne peuvent accéder qu'à leurs données
+- Tester les injections SQL (si applicable)
+- Vérifier que les données sensibles ne sont pas exposées
+
+ÉTAPE 4.6 : Tests d'utilisabilité (UX)
+---------------------------------------
+- Faire tester l'application à des utilisateurs externes
+- Recueillir les retours sur :
+  * La clarté de l'interface
+  * La facilité d'utilisation
+  * Les problèmes rencontrés
+  * Les suggestions d'amélioration
+- Corriger les problèmes identifiés
+- Améliorer l'UX selon les retours
+
+================================================================================
+PHASE 5 : AMÉLIORATIONS ET OPTIMISATIONS
+================================================================================
+
+ÉTAPE 5.1 : Optimisation de l'interface
+----------------------------------------
+- Améliorer les animations et transitions
+- Ajouter des micro-interactions
+- Améliorer les indicateurs visuels
+- Optimiser les couleurs pour l'accessibilité
+- Ajouter des icônes explicites partout
+
+ÉTAPE 5.2 : Optimisation des performances
+------------------------------------------
+- Optimiser les requêtes à la base de données
+- Implémenter la pagination pour les listes longues
+- Optimiser les images (compression, lazy loading)
+- Réduire la taille de l'application
+- Optimiser le cache
+
+ÉTAPE 5.3 : Amélioration de l'IA
+----------------------------------
+- Affiner les prompts pour de meilleures réponses
+- Améliorer le système RAG
+- Ajouter plus de contexte à l'IA
+- Tester différents modèles (LLaMA vs Mistral)
+- Optimiser le temps de réponse
+
+ÉTAPE 5.4 : Fonctionnalités supplémentaires (si temps)
+--------------------------------------------------------
+- Détection d'objets par photo (si prévu)
+- Export des données nutritionnelles
+- Partage de recettes
+- Historique des recettes cuisinées
+- Statistiques hebdomadaires/mensuelles
+- Mode hors ligne (synchronisation)
+
+================================================================================
+PHASE 6 : DÉPLOIEMENT
+================================================================================
+
+ÉTAPE 6.1 : Préparation du déploiement backend
+-----------------------------------------------
+- Choisir une plateforme d'hébergement (Render, Railway, ou VPS)
+- Configurer l'environnement de production
+- Configurer la base de données (Supabase, Neon, ou autre)
+- Configurer les variables d'environnement de production
+- Tester que l'API fonctionne en production
+- Configurer HTTPS (certificat SSL)
+- Configurer un nom de domaine (optionnel)
+
+ÉTAPE 6.2 : Déploiement du backend
+-----------------------------------
+- Déployer le code sur la plateforme choisie
+- Configurer la base de données
+- Exécuter les migrations
+- Vérifier que tous les endpoints fonctionnent
+- Configurer les logs
+- Configurer le monitoring (optionnel)
+
+ÉTAPE 6.3 : Configuration de l'IA en production
+------------------------------------------------
+- Déterminer où héberger l'IA (local, cloud GPU, etc.)
+- Si local : configurer pour être accessible depuis le backend
+- Si cloud : configurer l'API de l'IA
+- Tester que l'IA répond correctement en production
+- Optimiser les performances
+
+ÉTAPE 6.4 : Préparation de l'application mobile
+------------------------------------------------
+- Configurer les clés de signature Android
+- Configurer les certificats iOS (si nécessaire)
+- Mettre à jour l'URL de l'API dans l'application
+- Tester l'application avec l'API de production
+- Optimiser la taille de l'APK/IPA
+
+ÉTAPE 6.5 : Build de l'application
+----------------------------------
+- Créer un build de release Android (APK ou AAB)
+- Créer un build de release iOS (si applicable)
+- Tester les builds de release
+- Vérifier que toutes les fonctionnalités marchent
+
+ÉTAPE 6.6 : Publication (optionnelle)
+--------------------------------------
+- Créer un compte développeur Google Play
+- Créer un compte développeur Apple (si iOS)
+- Préparer les screenshots et descriptions
+- Soumettre l'application aux stores
+- Attendre l'approbation
+
+================================================================================
+PHASE 7 : DOCUMENTATION ET FINALISATION
+================================================================================
+
+ÉTAPE 7.1 : Documentation technique
+------------------------------------
+- Documenter l'architecture du système
+- Documenter l'API (endpoints, modèles)
+- Documenter la base de données (schéma, relations)
+- Documenter le système RAG et l'intégration IA
+- Créer des diagrammes à jour
+- Documenter les choix techniques
+
+ÉTAPE 7.2 : Documentation utilisateur
+---------------------------------------
+- Créer un guide d'utilisation
+- Créer des tutoriels pour les fonctionnalités principales
+- Ajouter de l'aide dans l'application (tooltips, FAQ)
+- Créer une vidéo de démonstration (optionnel)
+
+ÉTAPE 7.3 : Documentation du projet
+------------------------------------
+- Créer un README complet pour le projet
+- Documenter l'installation et la configuration
+- Documenter comment lancer le projet
+- Ajouter les captures d'écran
+- Lister les technologies utilisées
+- Créer un fichier CHANGELOG
+
+ÉTAPE 7.4 : Préparation de la présentation
+--------------------------------------------
+- Créer une présentation PowerPoint/PDF
+- Préparer une démonstration en direct
+- Préparer les réponses aux questions potentielles
+- Créer un document récapitulatif du projet
+- Préparer les statistiques et métriques
+
+ÉTAPE 7.5 : Tests finaux
+-------------------------
+- Faire un dernier tour complet de l'application
+- Vérifier que tout fonctionne correctement
+- Corriger les derniers bugs
+- Vérifier la documentation
+- Préparer l'environnement de démonstration
+
+================================================================================
+CONSEILS ET BONNES PRATIQUES
+================================================================================
+
+GESTION DU TEMPS
+- Estimer le temps pour chaque phase
+- Créer un planning avec des jalons
+- Prioriser les fonctionnalités MVP
+- Ne pas tout faire en même temps
+- Faire des commits Git réguliers
+
+GESTION DU CODE
+- Écrire du code propre et commenté
+- Suivre les conventions de nommage
+- Faire des commits Git réguliers avec messages clairs
+- Créer des branches pour les fonctionnalités
+- Faire des pull requests et code reviews (si en équipe)
+
+TESTS
+- Tester au fur et à mesure, pas à la fin
+- Écrire les tests en même temps que le code
+- Tester sur différents appareils
+- Tester avec différents scénarios
+
+DOCUMENTATION
+- Documenter au fur et à mesure
+- Ne pas attendre la fin pour documenter
+- Garder la documentation à jour
+
+DÉBOGAGE
+- Utiliser les outils de débogage (debugger, logs)
+- Tester chaque fonctionnalité isolément
+- Vérifier les logs du backend
+- Vérifier les logs de l'application mobile
+
+================================================================================
+CHECKLIST FINALE
+================================================================================
+
+Avant de considérer le projet terminé, vérifier :
+
+BACKEND
+[ ] Tous les endpoints fonctionnent
+[ ] L'authentification est sécurisée
+[ ] La base de données est bien structurée
+[ ] L'IA répond correctement
+[ ] Les tests passent
+[ ] La documentation API est à jour
+[ ] Le déploiement fonctionne
+
+MOBILE
+[ ] Tous les écrans sont implémentés
+[ ] La navigation fonctionne
+[ ] Les appels API fonctionnent
+[ ] La gestion d'état fonctionne
+[ ] Les notifications fonctionnent
+[ ] L'application est testée sur plusieurs appareils
+[ ] Les performances sont bonnes
+
+INTÉGRATION
+[ ] Le mobile communique correctement avec le backend
+[ ] L'IA est bien intégrée
+[ ] La mise à jour du stock fonctionne
+[ ] Les recettes sont bien affichées
+[ ] Les statistiques nutritionnelles sont correctes
+
+TESTS
+[ ] Tests unitaires écrits et passent
+[ ] Tests d'intégration passent
+[ ] Tests fonctionnels complets
+[ ] Tests de performance satisfaisants
+[ ] Tests de sécurité effectués
+
+DOCUMENTATION
+[ ] Documentation technique complète
+[ ] Documentation utilisateur créée
+[ ] README à jour
+[ ] Code commenté
+
+DÉPLOIEMENT
+[ ] Backend déployé et accessible
+[ ] Base de données configurée
+[ ] IA accessible
+[ ] Application mobile buildée
+[ ] Tout fonctionne en production
+
+================================================================================
+FIN DU PLAN DÉTAILLÉ
+================================================================================
+
+Ce plan couvre toutes les étapes nécessaires pour développer le projet 
+Hunger-Talk de A à Z. Suivez les étapes dans l'ordre, mais n'hésitez pas 
+à adapter selon vos besoins et contraintes.
+
+Bon courage pour votre projet !

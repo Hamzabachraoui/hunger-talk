@@ -1,0 +1,847 @@
+==========================================
+DIAGRAMMES UML - PROJET HUNGER-TALK
+Codes PlantUML pour tous les diagrammes
+==========================================
+
+==========================================
+1. DIAGRAMMES DE CAS D'UTILISATION
+==========================================
+
+--- Diagramme 1.1 : Authentification et Gestion de Compte ---
+
+@startuml CasUtilisation_Auth
+!theme plain
+skinparam actorStyle awesome
+left to right direction
+
+actor Utilisateur as User
+
+rectangle "Authentification" {
+    usecase UC1 as "S'authentifier"
+    usecase UC2 as "S'inscrire"
+    usecase UC21 as "Supprimer son compte"
+}
+
+User --> UC1
+User --> UC2
+User --> UC21
+
+@enduml
+
+--- Diagramme 1.2 : Gestion du Stock ---
+
+@startuml CasUtilisation_Stock
+!theme plain
+skinparam actorStyle awesome
+left to right direction
+
+actor Utilisateur as User
+
+rectangle "Gestion du Stock" {
+    usecase UC3 as "Ajouter un produit\nmanuellement"
+    usecase UC4 as "Ajouter un produit\nvia photo"
+    usecase UC5 as "Modifier un produit"
+    usecase UC6 as "Supprimer un produit"
+    usecase UC7 as "Consulter le stock"
+    usecase UC8 as "Consulter le stock\npar catégorie"
+}
+
+User --> UC3
+User --> UC4
+User --> UC5
+User --> UC6
+User --> UC7
+User --> UC8
+
+UC3 ..> UC7 : <<extend>>
+UC4 ..> UC7 : <<extend>>
+
+@enduml
+
+--- Diagramme 1.3 : Assistant IA et Recommandations ---
+
+@startuml CasUtilisation_IA
+!theme plain
+skinparam actorStyle awesome
+left to right direction
+
+actor Utilisateur as User
+
+rectangle "Assistant IA" {
+    usecase UC9 as "Discuter avec l'IA"
+    usecase UC10 as "Demander des\nrecommandations de repas"
+    usecase UC11 as "Exprimer ses envies\nalimentaires"
+    usecase UC12 as "Définir des objectifs\nnutritionnels"
+}
+
+User --> UC9
+User --> UC10
+User --> UC11
+User --> UC12
+
+UC10 ..> UC9 : <<extend>>
+UC11 ..> UC10 : <<extend>>
+UC12 ..> UC10 : <<extend>>
+
+@enduml
+
+--- Diagramme 1.4 : Recettes et Nutrition ---
+
+@startuml CasUtilisation_Recettes
+!theme plain
+skinparam actorStyle awesome
+left to right direction
+
+actor Utilisateur as User
+
+rectangle "Recettes et Nutrition" {
+    usecase UC13 as "Consulter une recette"
+    usecase UC14 as "Valider la préparation\nd'un plat"
+    usecase UC15 as "Consulter les informations\nnutritionnelles"
+    usecase UC20 as "Consulter le dashboard\nnutritionnel"
+}
+
+User --> UC13
+User --> UC14
+User --> UC15
+User --> UC20
+
+UC14 ..> UC13 : <<include>>
+UC15 ..> UC13 : <<extend>>
+
+@enduml
+
+--- Diagramme 1.5 : Paramètres et Notifications ---
+
+@startuml CasUtilisation_Parametres
+!theme plain
+skinparam actorStyle awesome
+left to right direction
+
+actor Utilisateur as User
+
+rectangle "Paramètres" {
+    usecase UC16 as "Gérer les préférences\nalimentaires"
+    usecase UC17 as "Définir des restrictions\nalimentaires"
+    usecase UC18 as "Consulter les notifications"
+    usecase UC19 as "Gérer la liste de courses"
+}
+
+User --> UC16
+User --> UC17
+User --> UC18
+User --> UC19
+
+UC17 ..> UC16 : <<extend>>
+
+@enduml
+
+--- Diagramme 1.6 : Vue d'ensemble (Relations principales) ---
+
+@startuml CasUtilisation_Global
+!theme plain
+skinparam actorStyle awesome
+
+actor Utilisateur as User
+
+package "Authentification" {
+    usecase UC1 as "S'authentifier"
+}
+
+package "Gestion Stock" {
+    usecase UC7 as "Consulter le stock"
+}
+
+package "Assistant IA" {
+    usecase UC9 as "Discuter avec l'IA"
+    usecase UC10 as "Demander recommandations"
+}
+
+package "Recettes" {
+    usecase UC13 as "Consulter recette"
+    usecase UC14 as "Valider préparation"
+}
+
+User --> UC1
+User --> UC7
+User --> UC9
+User --> UC10
+User --> UC13
+User --> UC14
+
+UC1 ..> UC7 : <<include>>
+UC1 ..> UC9 : <<include>>
+UC1 ..> UC10 : <<include>>
+UC1 ..> UC13 : <<include>>
+
+UC10 ..> UC9 : <<extend>>
+UC10 ..> UC13 : <<extend>>
+UC14 ..> UC7 : <<extend>>
+
+@enduml
+
+==========================================
+2. DIAGRAMME DE CLASSES
+==========================================
+
+@startuml Classes
+!theme plain
+skinparam classAttributeIconSize 0
+
+package "Modèle de données" {
+    class User {
+        -id: int
+        -email: string
+        -password_hash: string
+        -first_name: string
+        -last_name: string
+        -created_at: datetime
+        -updated_at: datetime
+        +authenticate(password: string): bool
+        +update_profile(data: dict): void
+        +delete_account(): void
+    }
+
+    class StockItem {
+        -id: int
+        -user_id: int
+        -name: string
+        -quantity: float
+        -unit: string
+        -category_id: int
+        -expiration_date: date
+        -created_at: datetime
+        -updated_at: datetime
+        +add_quantity(amount: float): void
+        +remove_quantity(amount: float): void
+        +is_expiring_soon(): bool
+        +is_low_stock(): bool
+    }
+
+    class Category {
+        -id: int
+        -name: string
+        -description: string
+        +get_all(): List[Category]
+    }
+
+    class Recipe {
+        -id: int
+        -name: string
+        -description: string
+        -preparation_time: int
+        -cooking_time: int
+        -servings: int
+        -difficulty: string
+        -instructions: text
+        -created_at: datetime
+        +calculate_nutrition(): NutritionData
+        +get_ingredients(): List[RecipeIngredient]
+        +can_prepare_with_stock(stock: List[StockItem]): bool
+    }
+
+    class RecipeIngredient {
+        -id: int
+        -recipe_id: int
+        -ingredient_name: string
+        -quantity: float
+        -unit: string
+    }
+
+    class NutritionData {
+        -id: int
+        -recipe_id: int
+        -calories: float
+        -proteins: float
+        -carbohydrates: float
+        -lipids: float
+        -fiber: float
+        +calculate_total(): float
+    }
+
+    class UserPreferences {
+        -id: int
+        -user_id: int
+        -dietary_restrictions: json
+        -allergies: json
+        -preferred_cuisine: string
+        -calorie_goal: int
+        +update_preferences(data: dict): void
+    }
+
+    class ChatMessage {
+        -id: int
+        -user_id: int
+        -message: text
+        -response: text
+        -is_user_message: bool
+        -created_at: datetime
+        +save(): void
+    }
+
+    class Recommendation {
+        -id: int
+        -user_id: int
+        -recipe_id: int
+        -confidence_score: float
+        -reason: string
+        -created_at: datetime
+        +get_recommendations(user_id: int): List[Recommendation]
+    }
+
+    class ShoppingListItem {
+        -id: int
+        -user_id: int
+        -name: string
+        -quantity: float
+        -unit: string
+        -is_purchased: bool
+        -created_at: datetime
+        +mark_as_purchased(): void
+    }
+
+    class Notification {
+        -id: int
+        -user_id: int
+        -type: string
+        -title: string
+        -message: text
+        -is_read: bool
+        -created_at: datetime
+        +mark_as_read(): void
+        +send(): void
+    }
+}
+
+package "Services" {
+    class StockService {
+        +add_item(user_id: int, item_data: dict): StockItem
+        +update_item(item_id: int, data: dict): StockItem
+        +delete_item(item_id: int): void
+        +get_user_stock(user_id: int): List[StockItem]
+        +get_expiring_soon(user_id: int): List[StockItem]
+        +update_stock_after_recipe(user_id: int, recipe_id: int): void
+    }
+
+    class AIService {
+        -model: LLMModel
+        -rag_system: RAGSystem
+        +process_message(user_id: int, message: string): string
+        +generate_recommendations(user_id: int, context: dict): List[Recommendation]
+        +analyze_user_intent(message: string): dict
+    }
+
+    class RecipeService {
+        +get_recipe(recipe_id: int): Recipe
+        +search_recipes(criteria: dict): List[Recipe]
+        +get_compatible_recipes(stock: List[StockItem]): List[Recipe]
+        +calculate_recipe_nutrition(recipe_id: int): NutritionData
+    }
+
+    class NotificationService {
+        +check_expiring_items(user_id: int): void
+        +send_expiration_alert(user_id: int, item: StockItem): void
+        +send_recipe_suggestion(user_id: int, recipe: Recipe): void
+        +send_daily_reminder(user_id: int): void
+    }
+
+    class AuthenticationService {
+        +register(user_data: dict): User
+        +login(email: string, password: string): string
+        +logout(token: string): void
+        +validate_token(token: string): bool
+    }
+}
+
+' Relations
+User "1" --> "*" StockItem
+User "1" --> "1" UserPreferences
+User "1" --> "*" ChatMessage
+User "1" --> "*" Recommendation
+User "1" --> "*" ShoppingListItem
+User "1" --> "*" Notification
+
+Category "1" --> "*" StockItem
+
+Recipe "1" --> "*" RecipeIngredient
+Recipe "1" --> "1" NutritionData
+Recipe "1" --> "*" Recommendation
+
+StockService ..> StockItem
+StockService ..> User
+AIService ..> User
+AIService ..> StockItem
+AIService ..> Recipe
+RecipeService ..> Recipe
+RecipeService ..> StockItem
+NotificationService ..> Notification
+NotificationService ..> StockItem
+NotificationService ..> Recipe
+AuthenticationService ..> User
+
+@enduml
+
+==========================================
+3. DIAGRAMMES DE SÉQUENCE
+==========================================
+
+@startuml SequenceDemanderRecette
+!theme plain
+
+actor Utilisateur
+participant "Application\nMobile" as App
+participant "API Backend" as API
+participant "Service IA" as AI
+participant "Service Recettes" as RecipeService
+participant "Service Stock" as StockService
+participant "Base de\nDonnées" as DB
+
+Utilisateur -> App: Envoie message "J'ai envie de quelque chose de sucré"
+App -> API: POST /api/chat/message
+activate API
+
+API -> AI: process_message(user_id, message)
+activate AI
+
+AI -> StockService: get_user_stock(user_id)
+activate StockService
+StockService -> DB: SELECT stock_items WHERE user_id
+DB --> StockService: Liste des produits
+StockService --> AI: Stock actuel
+deactivate StockService
+
+AI -> RecipeService: get_compatible_recipes(stock)
+activate RecipeService
+RecipeService -> DB: SELECT recipes WHERE ingredients match
+DB --> RecipeService: Liste des recettes compatibles
+RecipeService --> AI: Recettes possibles
+deactivate RecipeService
+
+AI -> AI: Analyser envie "sucré"
+AI -> AI: Filtrer recettes selon préférences
+AI -> AI: Générer réponse avec RAG
+
+AI --> API: Réponse avec recommandations
+deactivate AI
+
+API -> DB: INSERT chat_message
+DB --> API: Message sauvegardé
+
+API --> App: Réponse JSON avec recettes
+deactivate API
+
+App -> Utilisateur: Affiche recommandations
+
+@enduml
+
+@startuml SequenceAjouterProduit
+!theme plain
+
+actor Utilisateur
+participant "Application\nMobile" as App
+participant "API Backend" as API
+participant "Service Stock" as StockService
+participant "Service\nCatégories" as CategoryService
+participant "Base de\nDonnées" as DB
+
+Utilisateur -> App: Saisit informations produit
+App -> App: Valide les données
+
+App -> API: POST /api/stock/items
+activate API
+
+API -> API: Valide token JWT
+API -> API: Valide données (Pydantic)
+
+API -> CategoryService: get_or_create_category(name)
+activate CategoryService
+CategoryService -> DB: SELECT category WHERE name
+alt Catégorie existe
+    DB --> CategoryService: Category
+else Catégorie n'existe pas
+    CategoryService -> DB: INSERT category
+    DB --> CategoryService: Nouvelle Category
+end
+CategoryService --> API: Category
+deactivate CategoryService
+
+API -> StockService: add_item(user_id, item_data)
+activate StockService
+StockService -> DB: INSERT stock_item
+DB --> StockService: StockItem créé
+StockService --> API: StockItem
+deactivate StockService
+
+API -> DB: Log action
+API --> App: Réponse JSON avec item créé
+deactivate API
+
+App -> App: Mise à jour de l'interface
+App -> Utilisateur: Confirmation ajout réussi
+
+@enduml
+
+@startuml SequenceValiderPreparation
+!theme plain
+
+actor Utilisateur
+participant "Application\nMobile" as App
+participant "API Backend" as API
+participant "Service Recettes" as RecipeService
+participant "Service Stock" as StockService
+participant "Service\nNotifications" as NotifService
+participant "Base de\nDonnées" as DB
+
+Utilisateur -> App: Valide "J'ai préparé ce plat"
+App -> API: POST /api/recipes/{id}/prepare
+activate API
+
+API -> RecipeService: get_recipe(recipe_id)
+activate RecipeService
+RecipeService -> DB: SELECT recipe + ingredients
+DB --> RecipeService: Recipe avec ingrédients
+RecipeService --> API: Recipe
+deactivate RecipeService
+
+API -> StockService: update_stock_after_recipe(user_id, recipe_id)
+activate StockService
+
+loop Pour chaque ingrédient de la recette
+    StockService -> DB: SELECT stock_item WHERE name = ingredient
+    DB --> StockService: StockItem
+    
+    StockService -> StockItem: remove_quantity(amount)
+    StockItem -> StockItem: quantity -= amount
+    
+    alt Quantité <= 0
+        StockService -> DB: UPDATE stock_item SET quantity = 0
+        StockService -> NotifService: send_low_stock_alert(user_id, item)
+        activate NotifService
+        NotifService -> DB: INSERT notification
+        NotifService --> StockService: Notification créée
+        deactivate NotifService
+    else Quantité > 0
+        StockService -> DB: UPDATE stock_item SET quantity = new_quantity
+    end
+end
+
+StockService -> DB: Log stock update
+StockService --> API: Stock mis à jour
+deactivate StockService
+
+API -> DB: INSERT recipe_preparation_log
+API --> App: Confirmation mise à jour
+deactivate API
+
+App -> Utilisateur: Affiche confirmation
+
+@enduml
+
+@startuml SequenceScannerProduit
+!theme plain
+
+actor Utilisateur
+participant "Application\nMobile" as App
+participant "Service\nDétection" as DetectionService
+participant "API Backend" as API
+participant "Service Stock" as StockService
+participant "Base de\nDonnées" as DB
+
+Utilisateur -> App: Prend une photo du produit
+App -> App: Préparation de l'image
+
+App -> DetectionService: detect_object(image)
+activate DetectionService
+DetectionService -> DetectionService: Analyse avec YOLOv8/TensorFlow
+DetectionService --> App: Produit détecté (nom, catégorie)
+deactivate DetectionService
+
+App -> App: Affiche résultat détection
+Utilisateur -> App: Confirme ou corrige les informations
+
+App -> API: POST /api/stock/items (avec données détectées)
+activate API
+
+API -> StockService: add_item(user_id, item_data)
+activate StockService
+StockService -> DB: INSERT stock_item
+DB --> StockService: StockItem créé
+StockService --> API: StockItem
+deactivate StockService
+
+API --> App: Confirmation
+deactivate API
+
+App -> Utilisateur: Produit ajouté au stock
+
+@enduml
+
+==========================================
+4. DIAGRAMMES D'ACTIVITÉ
+==========================================
+
+@startuml ActiviteRecommandationRecettes
+!theme plain
+
+start
+
+:Utilisateur envoie un message;
+:Analyser l'intention utilisateur;
+
+if (Type de message?) then (Demande de recommandation)
+    :Récupérer le stock actuel;
+    :Récupérer les préférences utilisateur;
+    :Récupérer les restrictions alimentaires;
+    
+    :Chercher recettes compatibles avec le stock;
+    
+    if (Recettes trouvées?) then (Oui)
+        :Filtrer selon préférences;
+        :Filtrer selon restrictions;
+        :Calculer scores de compatibilité;
+        
+        if (Objectif nutritionnel exprimé?) then (Oui)
+            :Calculer valeurs nutritionnelles;
+            :Trier par objectif (protéines, calories, etc.);
+        else (Non)
+            :Trier par score de compatibilité;
+        endif
+        
+        :Sélectionner top 3-5 recettes;
+        :Générer réponse avec RAG;
+        :Afficher recommandations;
+    else (Non)
+        :Identifier ingrédients manquants;
+        :Proposer alternatives ou substitutions;
+        :Générer réponse explicative;
+        :Afficher message "Pas de recette possible";
+    endif
+    
+elseif (Expression d'envie) then
+    :Extraire type d'envie (sucré, salé, etc.);
+    :Appliquer même processus de recommandation;
+    
+elseif (Question générale) then
+    :Générer réponse avec contexte stock;
+    :Afficher réponse;
+endif
+
+stop
+
+@enduml
+
+@startuml ActiviteMiseAJourStock
+!theme plain
+
+start
+
+:Utilisateur valide préparation d'un plat;
+:Récupérer la recette;
+:Récupérer la liste des ingrédients;
+
+partition "Pour chaque ingrédient" {
+    :Récupérer ingrédient de la recette;
+    :Chercher produit correspondant dans le stock;
+    
+    if (Produit trouvé?) then (Oui)
+        :Récupérer quantité nécessaire;
+        :Soustraire quantité du stock;
+        
+        if (Quantité restante <= 0?) then (Oui)
+            :Mettre quantité à 0;
+            :Créer notification "Produit épuisé";
+            :Ajouter à liste de courses;
+        else (Non)
+            :Mettre à jour quantité;
+        endif
+        
+        if (Produit expirant bientôt?) then (Oui)
+            :Créer notification "Produit expirant";
+        endif
+        
+    else (Non)
+        :Logger ingrédient manquant;
+        :Créer notification "Ingrédient non trouvé";
+    endif
+}
+
+:Enregistrer historique de mise à jour;
+:Mettre à jour timestamp;
+:Afficher confirmation à l'utilisateur;
+
+stop
+
+@enduml
+
+@startuml ActiviteAuthentification
+!theme plain
+
+start
+
+if (Action?) then (Inscription)
+    :Saisir email, mot de passe, nom;
+    :Valider format email;
+    :Valider force du mot de passe;
+    
+    if (Données valides?) then (Non)
+        :Afficher erreur de validation;
+        stop
+    endif
+    
+    :Vérifier si email existe déjà;
+    
+    if (Email existe?) then (Oui)
+        :Afficher erreur "Email déjà utilisé";
+        stop
+    endif
+    
+    :Hasher le mot de passe (Bcrypt);
+    :Créer compte utilisateur;
+    :Créer préférences par défaut;
+    :Générer token JWT;
+    :Retourner token;
+    :Rediriger vers dashboard;
+    
+elseif (Connexion) then
+    :Saisir email et mot de passe;
+    :Chercher utilisateur par email;
+    
+    if (Utilisateur trouvé?) then (Non)
+        :Afficher erreur "Identifiants incorrects";
+        stop
+    endif
+    
+    :Vérifier mot de passe (Bcrypt);
+    
+    if (Mot de passe correct?) then (Non)
+        :Afficher erreur "Identifiants incorrects";
+        stop
+    endif
+    
+    :Générer token JWT;
+    :Retourner token;
+    :Rediriger vers dashboard;
+    
+elseif (Déconnexion) then
+    :Invalider token JWT;
+    :Nettoyer données locales;
+    :Rediriger vers page de connexion;
+endif
+
+stop
+
+@enduml
+
+@startuml ActiviteGestionNotifications
+!theme plain
+
+start
+
+partition "Vérification quotidienne" {
+    :Lancer tâche planifiée;
+    :Récupérer tous les utilisateurs;
+    
+    partition "Pour chaque utilisateur" {
+        :Récupérer stock de l'utilisateur;
+        
+        partition "Vérification expiration" {
+            :Parcourir tous les produits;
+            
+            if (Date expiration <= 2 jours?) then (Oui)
+                :Créer notification "Produit expirant";
+                :Récupérer recettes utilisant ce produit;
+                :Créer notification "Recettes suggérées";
+            endif
+        }
+        
+        partition "Vérification stock faible" {
+            :Parcourir tous les produits;
+            
+            if (Quantité < seuil minimum?) then (Oui)
+                :Créer notification "Stock faible";
+                :Ajouter à liste de courses;
+            endif
+        }
+        
+        partition "Rappel nutritionnel" {
+            if (Heure = 12h00?) then (Oui)
+                :Créer notification "Rappel repas";
+                :Suggérer recettes selon objectifs;
+            endif
+        }
+    }
+}
+
+partition "Envoi notifications" {
+    :Récupérer notifications non envoyées;
+    
+    repeat
+        :Envoyer via FCM;
+        :Marquer comme envoyée;
+    repeat while (Il reste des notifications à envoyer?)
+}
+
+stop
+
+@enduml
+
+@startuml ActiviteAjoutProduitManuel
+!theme plain
+
+start
+
+:Utilisateur ouvre formulaire d'ajout;
+:Saisir nom du produit;
+
+if (Nom valide?) then (Non)
+    :Afficher erreur;
+    stop
+endif
+
+:Saisir quantité;
+:Saisir unité (g, kg, unité, etc.);
+
+if (Quantité valide?) then (Non)
+    :Afficher erreur;
+    stop
+endif
+
+:Sélectionner catégorie;
+
+if (Catégorie existe?) then (Non)
+    :Créer nouvelle catégorie;
+endif
+
+:Saisir date d'expiration (optionnel);
+
+if (Date valide?) then (Non)
+    :Afficher erreur;
+    stop
+endif
+
+:Valider toutes les données;
+:Envoyer requête API;
+
+if (Réponse API = succès?) then (Oui)
+    :Afficher confirmation;
+    :Mettre à jour liste du stock;
+    :Fermer formulaire;
+else (Non)
+    :Afficher erreur;
+    :Permettre nouvelle tentative;
+endif
+
+stop
+
+@enduml
+
+==========================================
+FIN DES DIAGRAMMES
+==========================================
+
+Notes d'utilisation :
+- Copiez chaque bloc @startuml ... @enduml dans un fichier .puml séparé
+- Ou utilisez un outil en ligne comme plantuml.com/plantuml
+- Ou installez l'extension PlantUML dans VS Code
+- Les diagrammes peuvent être exportés en PNG, SVG, ou PDF
+
