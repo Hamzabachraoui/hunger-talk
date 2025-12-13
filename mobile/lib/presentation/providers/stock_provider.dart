@@ -19,10 +19,17 @@ class StockProvider with ChangeNotifier {
     notifyListeners();
 
     try {
+      debugPrint('📦 [STOCK PROVIDER] Chargement du stock...');
       _items = await _stockService.getStock();
+      debugPrint('✅ [STOCK PROVIDER] Stock chargé: ${_items.length} item(s)');
+      if (_items.isNotEmpty) {
+        debugPrint('   Premier item: ${_items.first.name}');
+      }
       _isLoading = false;
       notifyListeners();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      debugPrint('❌ [STOCK PROVIDER] Erreur lors du chargement: $e');
+      debugPrint('   Stack: $stackTrace');
       _error = e.toString();
       _isLoading = false;
       notifyListeners();

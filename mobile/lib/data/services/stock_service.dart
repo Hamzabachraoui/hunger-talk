@@ -20,20 +20,28 @@ class StockService {
         ? ''
         : '?${queryParams.entries.map((e) => '${e.key}=${e.value}').join('&')}';
 
+    debugPrint('📦 [STOCK SERVICE] Récupération du stock...');
     final response = await _apiService.get('${AppConstants.stock}$queryString');
+    debugPrint('📦 [STOCK SERVICE] Réponse reçue: ${response.runtimeType}');
+    
     if (response == null) {
+      debugPrint('⚠️ [STOCK SERVICE] Réponse null, retour liste vide');
       return [];
     }
     if (response is! List) {
+      debugPrint('❌ [STOCK SERVICE] Format invalide: ${response.runtimeType}, attendu List');
       throw Exception('Format de réponse invalide: attendu List, reçu ${response.runtimeType}');
     }
     final List<dynamic> data = response;
-    return data.map((json) {
+    debugPrint('✅ [STOCK SERVICE] ${data.length} item(s) reçu(s)');
+    final items = data.map((json) {
       if (json is! Map<String, dynamic>) {
         throw Exception('Format d\'élément invalide: attendu Map, reçu ${json.runtimeType}');
       }
       return StockItemModel.fromJson(json);
     }).toList();
+    debugPrint('✅ [STOCK SERVICE] ${items.length} item(s) parsé(s)');
+    return items;
   }
 
   Future<StockItemModel> addItem(StockItemModel item) async {
