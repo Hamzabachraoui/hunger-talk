@@ -24,9 +24,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
     _loadData();
-    // Charger le stock via le provider
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<StockProvider>().loadStock();
+    // Charger le stock via le provider - attendre un peu pour que le token soit sauvegardé
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // Attendre un peu pour s'assurer que le token est sauvegardé après la connexion
+      await Future.delayed(const Duration(milliseconds: 100));
+      if (mounted) {
+        context.read<StockProvider>().loadStock();
+      }
     });
   }
 
