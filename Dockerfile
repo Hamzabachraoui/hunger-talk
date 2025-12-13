@@ -22,6 +22,6 @@ EXPOSE ${PORT:-8000}
 # Démarrer l'application
 # Railway définit PORT automatiquement
 # Créer un script de démarrage pour gérer le PORT correctement
-RUN echo '#!/bin/sh\nPORT=${PORT:-8000}\necho "Starting on port $PORT"\nuvicorn main:app --host 0.0.0.0 --port $PORT' > /app/start.sh && chmod +x /app/start.sh
+RUN echo '#!/bin/sh\necho "Starting Uvicorn on port: $PORT"\nuvicorn main:app --host 0.0.0.0 --port $PORT' > /app/start.sh && chmod +x /app/start.sh
 
 CMD ["/app/start.sh"]
