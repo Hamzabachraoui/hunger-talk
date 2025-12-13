@@ -19,9 +19,9 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Exposer le port (Railway définit PORT automatiquement)
 EXPOSE ${PORT:-8000}
 
-# Démarrer l'application
-# Railway définit PORT automatiquement
-# Créer un script de démarrage pour gérer le PORT correctement
-RUN echo '#!/bin/sh\necho "Starting Uvicorn on port: $PORT"\nuvicorn main:app --host 0.0.0.0 --port $PORT' > /app/start.sh && chmod +x /app/start.sh
+# Copier le script de démarrage
+COPY backend/start.sh /app/start.sh
+RUN chmod +x /app/start.sh
 
+# Démarrer l'application
 CMD ["/app/start.sh"]
