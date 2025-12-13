@@ -89,15 +89,28 @@ class ApiService {
       // Pour GET, normaliser l'URL (sans trailing slash sauf si nécessaire)
       final normalizedUrl = _normalizeUrl(endpoint);
       final url = Uri.parse(normalizedUrl);
+      
+      // Récupérer le token AVANT de construire les headers pour éviter les problèmes de timing
+      String? token;
+      if (requiresAuth) {
+        token = await _getToken();
+        if (token == null) {
+          debugPrint('❌❌❌ [API] GET $url - TOKEN MANQUANT !');
+        } else {
+          debugPrint('✅✅✅ [API] GET $url - Token trouvé (${token.substring(0, 20)}...)');
+        }
+      }
+      
       final headers = await _getHeaders(requiresAuth: requiresAuth);
 
       debugPrint('🌐 [API] GET $url');
+      debugPrint('   Requires Auth: $requiresAuth');
       debugPrint('   Headers: ${headers.keys.join(", ")}');
       if (headers.containsKey('Authorization')) {
         final authHeader = headers['Authorization']!;
         debugPrint('   🔑 Authorization: ${authHeader.substring(0, authHeader.length > 30 ? 30 : authHeader.length)}...');
       } else {
-        debugPrint('   ⚠️ Authorization header manquant !');
+        debugPrint('   ⚠️⚠️⚠️ Authorization header MANQUANT !');
       }
 
       final response = await http

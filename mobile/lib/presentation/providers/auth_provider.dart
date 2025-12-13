@@ -70,7 +70,18 @@ class AuthProvider with ChangeNotifier {
         createdAt: DateTime.now(),
       );
 
+      // Sauvegarder le token AVANT de notifier les listeners
+      debugPrint('💾 [AUTH PROVIDER] Sauvegarde du token dans le storage...');
       await _secureStorage.write(key: 'auth_token', value: _token!);
+      debugPrint('✅✅✅ [AUTH PROVIDER] Token sauvegardé avec succès !');
+      
+      // Vérifier que le token est bien sauvegardé
+      final savedToken = await _secureStorage.read(key: 'auth_token');
+      if (savedToken == null) {
+        debugPrint('❌❌❌ [AUTH PROVIDER] ERREUR: Token non sauvegardé !');
+      } else {
+        debugPrint('✅✅✅ [AUTH PROVIDER] Token vérifié dans le storage (${savedToken.substring(0, 20)}...)');
+      }
 
       _isLoading = false;
       notifyListeners();
