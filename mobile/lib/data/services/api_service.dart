@@ -57,7 +57,13 @@ class ApiService {
   }
 
   Future<String?> _getToken() async {
-    return await _storage.read(key: 'auth_token');
+    final token = await _storage.read(key: 'auth_token');
+    if (token == null) {
+      debugPrint('⚠️ [API] Token non trouvé dans le storage');
+    } else {
+      debugPrint('✅ [API] Token lu depuis le storage (${token.substring(0, 20)}...)');
+    }
+    return token;
   }
 
   Future<Map<String, String>> _getHeaders({bool requiresAuth = true}) async {
