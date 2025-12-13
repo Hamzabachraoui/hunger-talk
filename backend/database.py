@@ -5,10 +5,18 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from config import settings
+import os
+
+# Récupérer DATABASE_URL depuis les variables d'environnement ou settings
+database_url = os.getenv("DATABASE_URL", settings.DATABASE_URL)
+
+# Si DATABASE_URL est vide, utiliser une valeur par défaut (ne fonctionnera pas mais évitera le crash)
+if not database_url or database_url.strip() == "":
+    database_url = "postgresql://user:password@localhost:5432/hungertalk_db"
 
 # Créer le moteur SQLAlchemy
 engine = create_engine(
-    settings.DATABASE_URL,
+    database_url,
     pool_pre_ping=True,  # Vérifier la connexion avant utilisation
     echo=settings.DEBUG   # Afficher les requêtes SQL en mode debug
 )
