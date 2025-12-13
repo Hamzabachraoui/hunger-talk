@@ -1,5 +1,5 @@
 # Backend FastAPI - Hunger-Talk
-# Python 3.10+
+# Python 3.11+
 
 # Framework web
 fastapi==0.104.1
@@ -21,17 +21,17 @@ pydantic==2.5.0
 pydantic-settings==2.1.0
 
 # IA et LLM
-langchain==0.0.335
-ollama==0.1.5
-faiss-cpu==1.7.4
-sentence-transformers==2.2.2
+# ollama utilise seulement httpx (déjà inclus ci-dessus)
+# Les dépendances suivantes ne sont pas utilisées et causent des problèmes de build
+# langchain==0.0.335
+# faiss-cpu==1.7.4
+# sentence-transformers==2.2.2
 
 # Utilitaires
 httpx==0.25.2
 aiofiles==23.2.1
 email-validator==2.1.0
 
-# Tests
-pytest==7.4.3
-pytest-asyncio==0.21.1
-
+# Tests (optionnel pour production)
+# pytest==7.4.3
+# pytest-asyncio==0.21.1
