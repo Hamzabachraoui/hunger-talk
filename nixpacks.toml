@@ -1,15 +1,11 @@
 # Configuration Nixpacks pour Railway
-# Indique que le backend Python est dans le dossier backend/
-
-providers = ["python"]
-
-[phases.setup]
-nixPkgs = ["python311", "pip"]
+# Le provider Python sera détecté automatiquement grâce à requirements.txt à la racine
+# On personnalise juste les commandes pour utiliser backend/
 
 [phases.install]
 cmds = [
-  "cd backend && pip install --upgrade pip",
-  "cd backend && pip install -r requirements.txt"
+  "pip install --upgrade pip",
+  "pip install -r requirements.txt"
 ]
 
 [start]
