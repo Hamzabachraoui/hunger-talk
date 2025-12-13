@@ -69,6 +69,9 @@ class ApiService {
       final token = await _getToken();
       if (token != null) {
         headers['Authorization'] = 'Bearer $token';
+        debugPrint('🔑 [API] Token présent dans headers (${token.substring(0, 20)}...)');
+      } else {
+        debugPrint('⚠️ [API] Token manquant ! L\'utilisateur n\'est pas authentifié.');
       }
     }
 
