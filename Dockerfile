@@ -21,4 +21,5 @@ EXPOSE ${PORT:-8000}
 
 # Démarrer l'application
 # Railway définit PORT automatiquement, on utilise sh pour interpréter la variable
-CMD sh -c "uvicorn main:app --host 0.0.0.0 --port $PORT"
+# Si PORT n'est pas défini, utiliser 8000 par défaut
+CMD sh -c "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"
