@@ -47,9 +47,18 @@ app.include_router(user.router, prefix="/api/user", tags=["user"])
 @app.on_event("startup")
 async def startup_event():
     """Actions à effectuer au démarrage de l'application"""
+    import logging
+    logger = logging.getLogger(__name__)
+    
     # Initialiser la base de données (créer les tables si elles n'existent pas)
-    init_db()
-    print("✅ Base de données initialisée")
+    try:
+        init_db()
+        logger.info("✅ Base de données initialisée")
+    except Exception as e:
+        # Ne pas bloquer le démarrage si la connexion échoue
+        logger.error(f"❌ Erreur lors de l'initialisation de la base de données: {e}")
+        logger.warning("⚠️ L'application démarre mais la base de données n'est pas accessible")
+        logger.warning("⚠️ Vérifie que DATABASE_URL est correctement configuré dans Railway")
     
     # Initialiser les données de base (catégories, recettes) si nécessaire
     # Cette initialisation est idempotente (peut être exécutée plusieurs fois)
@@ -58,8 +67,6 @@ async def startup_event():
         init_database()
     except Exception as e:
         # Ne pas bloquer le démarrage si l'initialisation échoue
-        import logging
-        logger = logging.getLogger(__name__)
         logger.warning(f"Initialisation des données de base échouée (non bloquant): {e}")
 
 

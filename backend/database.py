@@ -37,5 +37,12 @@ def init_db():
     Initialiser la base de données.
     Crée toutes les tables définies dans les modèles.
     """
-    Base.metadata.create_all(bind=engine)
+    try:
+        # Tester la connexion avant de créer les tables
+        with engine.connect() as conn:
+            conn.execute("SELECT 1")
+        Base.metadata.create_all(bind=engine)
+    except Exception as e:
+        # Relancer l'erreur pour qu'elle soit gérée par le startup event
+        raise Exception(f"Impossible de se connecter à la base de données: {e}")
 
