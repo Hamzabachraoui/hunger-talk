@@ -17,8 +17,7 @@ from database import engine, init_db
 app = FastAPI(
     title=settings.APP_NAME,
     description="API pour l'application mobile de gestion nutritionnelle et alimentaire",
-    version=settings.APP_VERSION,
-    redirect_slashes=False  # Désactiver les redirections automatiques pour éviter les problèmes avec les headers
+    version=settings.APP_VERSION
 )
 
 # Configuration CORS
@@ -39,15 +38,19 @@ async def log_requests(request, call_next):
     # Logger les informations de la requête
     auth_header = request.headers.get("authorization") or request.headers.get("Authorization")
     logger.info(f"📥 [REQUEST] {request.method} {request.url.path}")
+    logger.info(f"   🔗 Full URL: {request.url}")
     if auth_header:
         logger.info(f"   🔑 Authorization: {auth_header[:50]}...")
     else:
         logger.warning(f"   ⚠️ Pas de header Authorization")
     
-    response = await call_next(request)
-    
-    logger.info(f"📤 [RESPONSE] {request.method} {request.url.path} - {response.status_code}")
-    return response
+    try:
+        response = await call_next(request)
+        logger.info(f"📤 [RESPONSE] {request.method} {request.url.path} - {response.status_code}")
+        return response
+    except Exception as e:
+        logger.error(f"❌ [ERROR] {request.method} {request.url.path} - {e}")
+        raise
 
 # Importer les routers
 from app.routers import auth, stock, chat, recipes, recommendations, nutrition, notifications, shopping_list, user

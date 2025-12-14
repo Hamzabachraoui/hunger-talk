@@ -39,6 +39,73 @@ async def get_categories(
     return categories
 
 
+@router.get("/statistics/summary")
+async def get_stock_statistics(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Obtenir des statistiques sur le stock de l'utilisateur.
+    
+    Retourne :
+    - Nombre total d'éléments
+    - Nombre d'éléments par catégorie
+    - Nombre d'éléments expirant bientôt (dans 3 jours)
+    - Nombre d'éléments expirés
+    """
+    # Total d'éléments
+    total_items = db.query(StockItem).filter(StockItem.user_id == current_user.id).count()
+    
+    # Éléments expirant bientôt (dans 3 jours)
+    today = date.today()
+    three_days_later = today + timedelta(days=3)
+    expiring_soon = db.query(StockItem).filter(
+        StockItem.user_id == current_user.id,
+        StockItem.expiry_date.isnot(None),
+        StockItem.expiry_date >= today,
+        StockItem.expiry_date <= three_days_later
+    ).count()
+    
+    # Éléments expirés
+    expired = db.query(StockItem).filter(
+        StockItem.user_id == current_user.id,
+        StockItem.expiry_date.isnot(None),
+        StockItem.expiry_date < today
+    ).count()
+    
+    # Éléments par catégorie
+    from sqlalchemy import func
+    items_by_category = db.query(
+        CategoryModel.id,
+        CategoryModel.name,
+        CategoryModel.icon,
+        func.count(StockItem.id).label('count')
+    ).join(
+        StockItem, CategoryModel.id == StockItem.category_id
+    ).filter(
+        StockItem.user_id == current_user.id
+    ).group_by(
+        CategoryModel.id, CategoryModel.name, CategoryModel.icon
+    ).all()
+    
+    category_stats = [
+        {
+            "category_id": cat_id,
+            "category_name": name,
+            "category_icon": icon,
+            "count": count
+        }
+        for cat_id, name, icon, count in items_by_category
+    ]
+    
+    return {
+        "total_items": total_items,
+        "expiring_soon": expiring_soon,
+        "expired": expired,
+        "by_category": category_stats
+    }
+
+
 @router.get("/", response_model=List[StockItemWithCategory])
 async def get_stock(
     category_id: Optional[int] = Query(None, description="Filtrer par catégorie"),
@@ -298,71 +365,4 @@ async def delete_stock_item(
     db.commit()
     
     return None
-
-
-@router.get("/statistics/summary")
-async def get_stock_statistics(
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
-):
-    """
-    Obtenir des statistiques sur le stock de l'utilisateur.
-    
-    Retourne :
-    - Nombre total d'éléments
-    - Nombre d'éléments par catégorie
-    - Nombre d'éléments expirant bientôt (dans 3 jours)
-    - Nombre d'éléments expirés
-    """
-    # Total d'éléments
-    total_items = db.query(StockItem).filter(StockItem.user_id == current_user.id).count()
-    
-    # Éléments expirant bientôt (dans 3 jours)
-    today = date.today()
-    three_days_later = today + timedelta(days=3)
-    expiring_soon = db.query(StockItem).filter(
-        StockItem.user_id == current_user.id,
-        StockItem.expiry_date.isnot(None),
-        StockItem.expiry_date >= today,
-        StockItem.expiry_date <= three_days_later
-    ).count()
-    
-    # Éléments expirés
-    expired = db.query(StockItem).filter(
-        StockItem.user_id == current_user.id,
-        StockItem.expiry_date.isnot(None),
-        StockItem.expiry_date < today
-    ).count()
-    
-    # Éléments par catégorie
-    from sqlalchemy import func
-    items_by_category = db.query(
-        CategoryModel.id,
-        CategoryModel.name,
-        CategoryModel.icon,
-        func.count(StockItem.id).label('count')
-    ).join(
-        StockItem, CategoryModel.id == StockItem.category_id
-    ).filter(
-        StockItem.user_id == current_user.id
-    ).group_by(
-        CategoryModel.id, CategoryModel.name, CategoryModel.icon
-    ).all()
-    
-    category_stats = [
-        {
-            "category_id": cat_id,
-            "category_name": name,
-            "category_icon": icon,
-            "count": count
-        }
-        for cat_id, name, icon, count in items_by_category
-    ]
-    
-    return {
-        "total_items": total_items,
-        "expiring_soon": expiring_soon,
-        "expired": expired,
-        "by_category": category_stats
-    }
 
