@@ -35,10 +35,23 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
 
 
 def decode_access_token(token: str) -> Optional[dict]:
-    """Décoder un token JWT"""
+    """
+    Décoder un token JWT
+    
+    Retourne:
+    - dict: Le payload du token si valide
+    - None: Si le token est invalide, expiré ou malformé
+    """
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         return payload
-    except JWTError:
+    except jwt.ExpiredSignatureError:
+        # Token expiré
+        return None
+    except jwt.JWTError:
+        # Token invalide, malformé, ou signature incorrecte
+        return None
+    except Exception:
+        # Autre erreur
         return None
 
