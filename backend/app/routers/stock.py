@@ -109,11 +109,11 @@ async def get_stock_statistics(
 @router.get("", response_model=List[StockItemWithCategory])
 @router.get("/", response_model=List[StockItemWithCategory])
 async def get_stock(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
     category_id: Optional[int] = Query(None, description="Filtrer par catégorie"),
     expired_soon: Optional[bool] = Query(None, description="Afficher seulement les produits expirant bientôt (dans 3 jours)"),
-    sort_by: Optional[str] = Query("expiry_date", description="Trier par: expiry_date, name, added_at"),
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
+    sort_by: Optional[str] = Query("expiry_date", description="Trier par: expiry_date, name, added_at")
 ):
     """
     Récupérer le stock de l'utilisateur connecté.
