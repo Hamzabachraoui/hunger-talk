@@ -14,10 +14,14 @@ from config import settings
 from database import engine, init_db
 
 # Créer l'application FastAPI
+# redirect_slashes=True par défaut - FastAPI redirige automatiquement /api/stock vers /api/stock/
+# Mais cela peut causer la perte des headers lors de la redirection
+# On garde le comportement par défaut mais on ajoute des routes explicites pour les deux formats
 app = FastAPI(
     title=settings.APP_NAME,
     description="API pour l'application mobile de gestion nutritionnelle et alimentaire",
-    version=settings.APP_VERSION
+    version=settings.APP_VERSION,
+    redirect_slashes=True  # Comportement par défaut - on gère les deux formats dans les routes
 )
 
 # Configuration CORS
@@ -31,25 +35,25 @@ app.add_middleware(
 
 # Middleware de logging pour déboguer les problèmes d'authentification
 @app.middleware("http")
-async def log_requests(request, call_next):
+async def log_requests(http_request, call_next):
     import logging
     logger = logging.getLogger(__name__)
     
     # Logger les informations de la requête
-    auth_header = request.headers.get("authorization") or request.headers.get("Authorization")
-    logger.info(f"📥 [REQUEST] {request.method} {request.url.path}")
-    logger.info(f"   🔗 Full URL: {request.url}")
+    auth_header = http_request.headers.get("authorization") or http_request.headers.get("Authorization")
+    logger.info(f"📥 [REQUEST] {http_request.method} {http_request.url.path}")
+    logger.info(f"   🔗 Full URL: {http_request.url}")
     if auth_header:
         logger.info(f"   🔑 Authorization: {auth_header[:50]}...")
     else:
         logger.warning(f"   ⚠️ Pas de header Authorization")
     
     try:
-        response = await call_next(request)
-        logger.info(f"📤 [RESPONSE] {request.method} {request.url.path} - {response.status_code}")
+        response = await call_next(http_request)
+        logger.info(f"📤 [RESPONSE] {http_request.method} {http_request.url.path} - {response.status_code}")
         return response
     except Exception as e:
-        logger.error(f"❌ [ERROR] {request.method} {request.url.path} - {e}")
+        logger.error(f"❌ [ERROR] {http_request.method} {http_request.url.path} - {e}")
         raise
 
 # Importer les routers

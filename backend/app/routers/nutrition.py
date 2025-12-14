@@ -21,9 +21,9 @@ router = APIRouter()
 
 @router.get("/daily", response_model=DailyNutritionResponse)
 async def get_daily_nutrition(
-    target_date: Optional[str] = Query(None, description="Date cible au format YYYY-MM-DD (par défaut: aujourd'hui)"),
     current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    target_date: Optional[str] = Query(None, description="Date cible au format YYYY-MM-DD (par défaut: aujourd'hui)")
 ):
     """
     Récupérer les statistiques nutritionnelles pour une journée.
@@ -63,9 +63,9 @@ async def get_daily_nutrition(
 
 @router.get("/weekly", response_model=WeeklyNutritionResponse)
 async def get_weekly_nutrition(
-    start_date: Optional[str] = Query(None, description="Date de début au format YYYY-MM-DD (par défaut: il y a 7 jours)"),
     current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    start_date: Optional[str] = Query(None, description="Date de début au format YYYY-MM-DD (par défaut: il y a 7 jours)")
 ):
     """
     Récupérer les statistiques nutritionnelles pour une semaine.

@@ -106,6 +106,7 @@ async def get_stock_statistics(
     }
 
 
+@router.get("", response_model=List[StockItemWithCategory])
 @router.get("/", response_model=List[StockItemWithCategory])
 async def get_stock(
     category_id: Optional[int] = Query(None, description="Filtrer par catégorie"),
@@ -232,6 +233,7 @@ async def get_stock_item(
     return StockItemWithCategory(**item_dict)
 
 
+@router.post("", response_model=StockItemSchema, status_code=status.HTTP_201_CREATED)
 @router.post("/", response_model=StockItemSchema, status_code=status.HTTP_201_CREATED)
 async def create_stock_item(
     stock_item_data: StockItemCreate,
