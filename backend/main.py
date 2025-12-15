@@ -21,7 +21,8 @@ app = FastAPI(
     title=settings.APP_NAME,
     description="API pour l'application mobile de gestion nutritionnelle et alimentaire",
     version=settings.APP_VERSION,
-    redirect_slashes=True  # Comportement par défaut - on gère les deux formats dans les routes
+    # Évite les redirections 307 qui suppriment parfois les headers Authorization
+    redirect_slashes=False
 )
 
 # Configuration CORS

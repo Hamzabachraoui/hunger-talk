@@ -225,7 +225,7 @@ async def get_stock_item(
     }
     
     if stock_item.category_id:
-        category = db.query(Category).filter(Category.id == stock_item.category_id).first()
+        category = db.query(CategoryModel).filter(CategoryModel.id == stock_item.category_id).first()
         if category:
             item_dict["category_name"] = category.name
             item_dict["category_icon"] = category.icon

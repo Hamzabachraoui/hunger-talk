@@ -62,6 +62,9 @@ class AppConfig {
     } else {
       // En développement : utiliser la découverte automatique si activée
       _baseUrl = await ConfigService.getServerUrl();
+      if (_baseUrl.isEmpty) {
+        _baseUrl = ConfigService.defaultServerUrl;
+      }
       
       if (autoDiscover) {
         final isWorking = await ConfigService.testConnection(_baseUrl);
@@ -92,6 +95,12 @@ class AppConfig {
     debugPrint('   Base URL: $_baseUrl');
     // ignore: avoid_print
     debugPrint('   API URL: $apiBaseUrl');
+  }
+
+  /// Permet d'injecter une URL en tests sans toucher au stockage sécurisé
+  @visibleForTesting
+  static void setBaseUrlForTesting(String url) {
+    _baseUrl = url;
   }
 }
 

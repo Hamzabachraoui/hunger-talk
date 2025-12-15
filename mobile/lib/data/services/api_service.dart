@@ -6,7 +6,14 @@ import '../../core/constants/app_constants.dart';
 import '../../core/config/app_config.dart';
 
 class ApiService {
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  final FlutterSecureStorage _storage;
+  final http.Client _client;
+
+  ApiService({
+    FlutterSecureStorage? storage,
+    http.Client? client,
+  })  : _storage = storage ?? const FlutterSecureStorage(),
+        _client = client ?? http.Client();
 
   // Liste des endpoints POST qui nécessitent un trailing slash (routes racine FastAPI)
   static const List<String> _postRootEndpoints = [
@@ -113,16 +120,16 @@ class ApiService {
         debugPrint('   ⚠️⚠️⚠️ Authorization header MANQUANT !');
       }
 
-      final response = await http
-          .get(url, headers: headers)
-          .timeout(AppConstants.apiTimeout);
+      final response = await _client.get(url, headers: headers).timeout(
+            AppConstants.apiTimeout,
+          );
 
       debugPrint('📥 [API] Response: ${response.statusCode}');
       if (kDebugMode && response.statusCode >= 400) {
         debugPrint('   Body: ${response.body}');
       }
 
-      return _handleResponse(response);
+      return await _handleResponse(response);
     } catch (e, stackTrace) {
       debugPrint('❌ [API] GET Error: $e');
       debugPrint('   Stack: $stackTrace');
@@ -178,7 +185,7 @@ class ApiService {
       final timeoutDuration = timeout ?? AppConstants.apiTimeout;
       debugPrint('   ⏱️ Timeout: ${timeoutDuration.inSeconds}s');
       
-      final response = await http
+      final response = await _client
           .post(
             url,
             headers: headers,
@@ -208,7 +215,7 @@ class ApiService {
         debugPrint('   ⚠️ Erreur détectée, body complet: ${response.body}');
       }
 
-      final result = _handleResponse(response);
+      final result = await _handleResponse(response);
       debugPrint('📦 [API] POST Parsed result type: ${result.runtimeType}');
       debugPrint('📦 [API] POST Parsed result: $result');
       return result;
@@ -226,7 +233,7 @@ class ApiService {
       final url = Uri.parse(normalizedUrl);
       final headers = await _getHeaders(requiresAuth: requiresAuth);
 
-      final response = await http
+      final response = await _client
           .put(
             url,
             headers: headers,
@@ -234,7 +241,7 @@ class ApiService {
           )
           .timeout(AppConstants.apiTimeout);
 
-      return _handleResponse(response);
+      return await _handleResponse(response);
     } catch (e) {
       throw Exception('Erreur réseau: $e');
     }
@@ -247,17 +254,17 @@ class ApiService {
       final url = Uri.parse(normalizedUrl);
       final headers = await _getHeaders(requiresAuth: requiresAuth);
 
-      final response = await http
+      final response = await _client
           .delete(url, headers: headers)
           .timeout(AppConstants.apiTimeout);
 
-      return _handleResponse(response);
+      return await _handleResponse(response);
     } catch (e) {
       throw Exception('Erreur réseau: $e');
     }
   }
 
-  dynamic _handleResponse(http.Response response) {
+  Future<dynamic> _handleResponse(http.Response response) async {
     if (response.statusCode >= 200 && response.statusCode < 300) {
       if (response.body.isEmpty) {
         debugPrint('⚠️ [API] Réponse vide (status ${response.statusCode})');
@@ -276,9 +283,14 @@ class ApiService {
         debugPrint('   Body: ${response.body}');
         throw Exception('Erreur de parsing JSON: $e');
       }
-    } else if (response.statusCode == 401) {
-      debugPrint('🔒 [API] Unauthorized (401)');
+    } else if (response.statusCode == 401 || response.statusCode == 403) {
+      debugPrint('🔒 [API] Unauthorized/Forbidden (${response.statusCode})');
       debugPrint('   Body: ${response.body}');
+      
+      // Supprimer le token invalide du storage
+      await _storage.delete(key: 'auth_token');
+      debugPrint('🗑️ [API] Token supprimé du storage (erreur ${response.statusCode})');
+      
       try {
         final error = jsonDecode(response.body);
         final detail = error['detail'] ?? 'Non authentifié. Veuillez vous reconnecter.';

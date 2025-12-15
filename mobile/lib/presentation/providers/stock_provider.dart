@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../data/models/stock_item_model.dart';
 import '../../data/services/stock_service.dart';
 
 class StockProvider with ChangeNotifier {
   final StockService _stockService = StockService();
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
   List<StockItemModel> _items = [];
   bool _isLoading = false;
@@ -14,6 +16,16 @@ class StockProvider with ChangeNotifier {
   String? get error => _error;
 
   Future<void> loadStock() async {
+    // Vérifier que le token existe avant de faire la requête
+    final token = await _storage.read(key: 'auth_token');
+    if (token == null) {
+      debugPrint('⚠️ [STOCK PROVIDER] Token manquant, impossible de charger le stock');
+      _error = 'Non authentifié. Veuillez vous reconnecter.';
+      _isLoading = false;
+      notifyListeners();
+      return;
+    }
+
     _isLoading = true;
     _error = null;
     notifyListeners();

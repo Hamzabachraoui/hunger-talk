@@ -1,7 +1,7 @@
 """
 Schemas Pydantic pour le chat avec l'IA
 """
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional, List
 from datetime import datetime
 from uuid import UUID
@@ -9,7 +9,7 @@ from uuid import UUID
 
 class ChatMessageCreate(BaseModel):
     """Schéma pour créer un message de chat"""
-    message: str
+    message: str = Field(..., min_length=1, max_length=2000)
 
 
 class ChatMessageResponse(BaseModel):

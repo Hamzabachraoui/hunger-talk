@@ -1,7 +1,7 @@
 """
 Dépendances FastAPI communes
 """
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 from typing import Optional
@@ -14,9 +14,9 @@ from app.models.user import User
 
 
 class CustomHTTPBearer(HTTPBearer):
-    """HTTPBearer personnalisé qui retourne une erreur 403 avec 'Not authenticated'"""
+    """HTTPBearer personnalisé qui retourne une erreur 401 standard"""
     
-    async def __call__(self, request) -> Optional[HTTPAuthorizationCredentials]:
+    async def __call__(self, request: Request) -> Optional[HTTPAuthorizationCredentials]:
         import logging
         logger = logging.getLogger(__name__)
         
@@ -25,7 +25,7 @@ class CustomHTTPBearer(HTTPBearer):
             if result is None:
                 logger.warning("⚠️ [HTTPBearer] Aucun token fourni dans la requête")
                 raise HTTPException(
-                    status_code=status.HTTP_403_FORBIDDEN,
+                    status_code=status.HTTP_401_UNAUTHORIZED,
                     detail="Not authenticated",
                     headers={"WWW-Authenticate": "Bearer"},
                 )
@@ -35,7 +35,7 @@ class CustomHTTPBearer(HTTPBearer):
             logger.warning(f"⚠️ [HTTPBearer] Exception HTTP: {e.status_code} - {e.detail}")
             if e.status_code in (status.HTTP_401_UNAUTHORIZED, status.HTTP_403_FORBIDDEN):
                 raise HTTPException(
-                    status_code=status.HTTP_403_FORBIDDEN,
+                    status_code=status.HTTP_401_UNAUTHORIZED,
                     detail="Not authenticated",
                     headers={"WWW-Authenticate": "Bearer"},
                 )
@@ -43,7 +43,7 @@ class CustomHTTPBearer(HTTPBearer):
         except Exception as e:
             logger.error(f"❌ [HTTPBearer] Erreur inattendue: {e}")
             raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
+                status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Not authenticated",
                 headers={"WWW-Authenticate": "Bearer"},
             )
@@ -66,7 +66,7 @@ async def get_current_user(
     
     # Exception pour token invalide ou manquant
     authentication_exception = HTTPException(
-        status_code=status.HTTP_403_FORBIDDEN,
+        status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Not authenticated",
         headers={"WWW-Authenticate": "Bearer"},
     )

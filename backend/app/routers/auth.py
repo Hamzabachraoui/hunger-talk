@@ -13,7 +13,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 from database import get_db
 from app.models.user import User
 from app.schemas.user import UserCreate, UserLogin, User as UserSchema, Token
-from app.core.security import get_password_hash, verify_password, create_access_token
+from app.core.security import get_password_hash, verify_password, create_access_token, decode_access_token
 from config import settings
 
 router = APIRouter()
@@ -55,6 +55,40 @@ async def register(user_data: UserCreate, db: Session = Depends(get_db)):
     
     return {
         "access_token": access_token,
+        "token_type": "bearer"
+    }
+
+
+@router.post("/refresh", response_model=Token)
+async def refresh_token(credentials = Depends(security)):
+    """
+    Rafraîchir un token encore valide pour prolonger la session.
+    """
+    token = credentials.credentials if credentials else None
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not authenticated",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    payload = decode_access_token(token)
+    if payload is None or "sub" not in payload:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token invalid or expired",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    user_id = payload["sub"]
+    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    new_token = create_access_token(
+        data={"sub": str(user_id)},
+        expires_delta=access_token_expires
+    )
+    
+    return {
+        "access_token": new_token,
         "token_type": "bearer"
     }
 

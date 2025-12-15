@@ -6,7 +6,12 @@ import 'package:http/http.dart' as http;
 /// Permet de stocker et récupérer l'adresse IP du serveur
 class ConfigService {
   static const String _serverUrlKey = 'server_base_url';
-  static const String _defaultServerUrl = 'http://192.168.11.108:8000';
+
+  // URL par défaut : privilégie la prod, tout en restant surchargable au build
+  static const String _defaultServerUrl = String.fromEnvironment(
+    'API_BASE_URL',
+    defaultValue: 'https://hunger-talk-production.up.railway.app',
+  );
   
   /// Récupère l'URL par défaut (accessible depuis d'autres services)
   static String get defaultServerUrl => _defaultServerUrl;

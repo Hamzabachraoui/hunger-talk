@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import '../../providers/stock_provider.dart';
+import '../../providers/auth_provider.dart';
 import '../../widgets/nutrition_card.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../data/services/nutrition_service.dart';
@@ -23,13 +24,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    // Attendre que le token soit sauvegardé avant de faire les requêtes
+    // Attendre que l'authentification soit initialisée avant de charger les données
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      // Attendre que le token soit sauvegardé dans le storage
-      await Future.delayed(const Duration(milliseconds: 500));
-      if (mounted) {
+      if (!mounted) return;
+      
+      final authProvider = context.read<AuthProvider>();
+      
+      // Attendre que l'authentification soit initialisée
+      try {
+        await authProvider.initializationComplete;
+        debugPrint('✅ [DASHBOARD] Authentification initialisée');
+      } catch (e) {
+        debugPrint('❌ [DASHBOARD] Erreur lors de l\'initialisation de l\'auth: $e');
+      }
+      
+      // Vérifier que l'utilisateur est authentifié
+      if (mounted && authProvider.isAuthenticated) {
         _loadData();
         context.read<StockProvider>().loadStock();
+      } else if (mounted) {
+        debugPrint('⚠️ [DASHBOARD] Utilisateur non authentifié, redirection...');
+        // Le routing redirigera automatiquement vers /login
       }
     });
   }

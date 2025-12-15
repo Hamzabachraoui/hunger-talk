@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/stock_provider.dart';
+import '../../providers/auth_provider.dart';
 import '../../widgets/stock_item_card.dart';
 import '../../../data/models/stock_item_model.dart';
 import '../../../core/theme/app_colors.dart';
@@ -22,8 +23,26 @@ class _StockScreenState extends State<StockScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<StockProvider>().loadStock();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
+      
+      final authProvider = context.read<AuthProvider>();
+      
+      // Attendre que l'authentification soit initialisée
+      try {
+        await authProvider.initializationComplete;
+        debugPrint('✅ [STOCK SCREEN] Authentification initialisée');
+      } catch (e) {
+        debugPrint('❌ [STOCK SCREEN] Erreur lors de l\'initialisation de l\'auth: $e');
+      }
+      
+      // Vérifier que l'utilisateur est authentifié avant de charger
+      if (mounted && authProvider.isAuthenticated) {
+        context.read<StockProvider>().loadStock();
+      } else if (mounted) {
+        debugPrint('⚠️ [STOCK SCREEN] Utilisateur non authentifié, redirection...');
+        // Le routing redirigera automatiquement vers /login
+      }
     });
   }
 

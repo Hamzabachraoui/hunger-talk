@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -12,12 +13,18 @@ class AuthProvider with ChangeNotifier {
   String? _token;
   bool _isLoading = false;
   String? _error;
+  bool _isInitialized = false;
+  final Completer<void> _initializationCompleter = Completer<void>();
 
   UserModel? get user => _user;
   String? get token => _token;
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get isAuthenticated => _token != null && _user != null;
+  bool get isInitialized => _isInitialized;
+
+  // Future qui se complète quand l'authentification est chargée
+  Future<void> get initializationComplete => _initializationCompleter.future;
 
   AuthProvider() {
     _loadStoredAuth();
@@ -25,13 +32,26 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> _loadStoredAuth() async {
     try {
+      debugPrint('🔐 [AUTH PROVIDER] Chargement du token depuis le storage...');
       _token = await _secureStorage.read(key: 'auth_token');
       if (_token != null) {
+        debugPrint('✅ [AUTH PROVIDER] Token trouvé dans le storage (${_token!.substring(0, 20)}...)');
         // TODO: Charger les données utilisateur depuis l'API
+      } else {
+        debugPrint('⚠️ [AUTH PROVIDER] Aucun token trouvé dans le storage');
+      }
+      _isInitialized = true;
+      if (!_initializationCompleter.isCompleted) {
+        _initializationCompleter.complete();
       }
       notifyListeners();
     } catch (e) {
-      debugPrint('Erreur lors du chargement de l\'auth: $e');
+      debugPrint('❌ [AUTH PROVIDER] Erreur lors du chargement de l\'auth: $e');
+      _isInitialized = true;
+      if (!_initializationCompleter.isCompleted) {
+        _initializationCompleter.completeError(e);
+      }
+      notifyListeners();
     }
   }
 
@@ -148,8 +168,18 @@ class AuthProvider with ChangeNotifier {
       _token = null;
       _user = null;
       await _secureStorage.delete(key: 'auth_token');
+      debugPrint('🔐 [AUTH PROVIDER] Utilisateur déconnecté');
       notifyListeners();
     }
+  }
+
+  // Méthode pour forcer la déconnexion (utilisée en cas d'erreur 403)
+  Future<void> forceLogout() async {
+    debugPrint('🔐 [AUTH PROVIDER] Déconnexion forcée (token invalide)');
+    _token = null;
+    _user = null;
+    await _secureStorage.delete(key: 'auth_token');
+    notifyListeners();
   }
 
   void clearError() {

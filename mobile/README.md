@@ -51,7 +51,8 @@ L'application utilise Material Design 3 avec une palette de couleurs douces adap
 
 ## 🔗 API Backend
 
-L'application se connecte au backend FastAPI sur `http://localhost:8000` (développement) ou l'URL de production.
+- Par défaut, l'app pointe sur la prod `https://hunger-talk-production.up.railway.app` (surchargeable via `--dart-define=API_BASE_URL=...`).
+- En local, utilisez l'écran "Configuration du serveur" dans l'app pour saisir votre IP (`http://<ip>:8000`) ou passez `API_BASE_URL` au build.
 
 ## 📱 Fonctionnalités
 
@@ -63,4 +64,9 @@ L'application se connecte au backend FastAPI sur `http://localhost:8000` (dével
 - ✅ Notifications
 - ✅ Liste de courses
 - ✅ Préférences utilisateur
+
+## ✅ Tests et qualité
+
+- Lint : `flutter analyze`
+- Tests unitaires clés (normalisation des routes API, parsing stock) : `flutter test`
 
