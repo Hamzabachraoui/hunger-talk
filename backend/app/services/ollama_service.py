@@ -61,17 +61,32 @@ class OllamaService:
             }
             
             # Appel à Ollama
-            # Ajouter le header ngrok-skip-browser-warning pour éviter le 403 sur ngrok gratuit
-            headers = {}
+            # Ajouter les headers pour éviter le 403 sur ngrok gratuit
+            headers = {
+                "User-Agent": "Railway-Backend/1.0",
+                "Accept": "application/json"
+            }
             if "ngrok" in self.base_url or "ngrok-free.dev" in self.base_url:
                 headers["ngrok-skip-browser-warning"] = "true"
             
-            async with httpx.AsyncClient(timeout=self.timeout) as client:
+            async with httpx.AsyncClient(timeout=self.timeout, follow_redirects=True) as client:
                 response = await client.post(
                     f"{self.base_url}/api/chat",
                     json=payload,
                     headers=headers
                 )
+                
+                # Si on reçoit un 403, c'est probablement la page d'avertissement ngrok
+                if response.status_code == 403:
+                    logger.warning(f"⚠️ ngrok retourne 403, peut-être la page d'avertissement. Réessayons avec d'autres headers...")
+                    # Réessayer avec un header différent
+                    headers["ngrok-skip-browser-warning"] = "any"
+                    response = await client.post(
+                        f"{self.base_url}/api/chat",
+                        json=payload,
+                        headers=headers
+                    )
+                
                 response.raise_for_status()
                 result = response.json()
                 
@@ -109,18 +124,33 @@ class OllamaService:
             True si Ollama est disponible, False sinon
         """
         try:
-            # Ajouter le header ngrok-skip-browser-warning pour éviter le 403 sur ngrok gratuit
-            headers = {}
+            # Ajouter les headers pour éviter le 403 sur ngrok gratuit
+            headers = {
+                "User-Agent": "Railway-Backend/1.0",
+                "Accept": "application/json"
+            }
             if "ngrok" in self.base_url or "ngrok-free.dev" in self.base_url:
                 headers["ngrok-skip-browser-warning"] = "true"
             
-            async with httpx.AsyncClient(timeout=10.0) as client:
+            async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
                 response = await client.get(f"{self.base_url}/api/tags", headers=headers)
+                
+                # Si on reçoit un 403, c'est probablement la page d'avertissement ngrok
+                if response.status_code == 403:
+                    logger.warning(f"⚠️ ngrok retourne 403, réessayons avec d'autres headers...")
+                    headers["ngrok-skip-browser-warning"] = "any"
+                    response = await client.get(f"{self.base_url}/api/tags", headers=headers)
+                
                 if response.status_code == 200:
                     logger.info(f"✅ Ollama est accessible à {self.base_url}")
                     return True
                 else:
                     logger.warning(f"⚠️ Ollama a répondu avec le code {response.status_code}")
+                    # Logger le contenu de la réponse pour debug
+                    try:
+                        logger.warning(f"   Réponse: {response.text[:200]}")
+                    except:
+                        pass
                     return False
         except httpx.ConnectError as e:
             logger.error(f"❌ Impossible de se connecter à Ollama à {self.base_url}: {e}")
