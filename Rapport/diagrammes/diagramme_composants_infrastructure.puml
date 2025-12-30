@@ -1,0 +1,97 @@
+@startuml Diagramme de Composants - Infrastructure SRM-MS
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam component {
+    BackgroundColor #F8F9FA
+    BorderColor #6C757D
+    FontColor #212529
+    FontSize 12
+}
+skinparam package {
+    BackgroundColor #E9ECEF
+    BorderColor #6C757D
+    FontColor #495057
+    FontSize 14
+}
+skinparam interface {
+    BackgroundColor #FFF3CD
+    BorderColor #FFC107
+    FontColor #856404
+    FontSize 11
+}
+
+title **Diagramme de Composants - Infrastructure SRM-MS**
+
+package "Frontend" {
+    component "Interface Web Responsive" as WebUI
+    component "Application Mobile" as MobileApp
+    component "Interface Carte" as MapUI
+}
+
+package "Backend API" {
+    component "Django REST API" as DjangoAPI
+    component "WebSocket Server" as WebSocket
+}
+
+package "Services Externes" {
+    component "API Météo" as WeatherAPI {
+        interface "OpenWeatherMap" as WeatherInterface
+    }
+    
+    component "Service Cartographie" as MapService {
+        interface "OpenStreetMap" as MapInterface
+    }
+}
+
+package "Infrastructure" {
+    component "Serveur Web" as WebServer {
+        component "Nginx" as Nginx
+        component "Gunicorn" as Gunicorn
+    }
+    
+    component "Containerisation" as Docker {
+        component "Docker Compose" as DockerCompose
+        component "Images Docker" as DockerImages
+    }
+    
+    component "Monitoring" as Monitoring {
+        component "Logs" as Logs
+        component "Métriques" as Metrics
+        component "Alertes" as Alerts
+    }
+}
+
+' Relations Infrastructure
+WebUI --> WebServer : HTTP/HTTPS
+MobileApp --> WebServer : REST API
+MapUI --> MapService : API Calls
+
+WebServer --> DjangoAPI : Proxy
+WebServer --> WebSocket : Proxy
+
+DjangoAPI --> WeatherAPI : External API
+DjangoAPI --> MapService : External API
+
+Docker --> WebServer : Containerizes
+Docker --> DjangoAPI : Containerizes
+Docker --> WebSocket : Containerizes
+
+Monitoring --> WebServer : Monitors
+Monitoring --> DjangoAPI : Monitors
+Monitoring --> WebSocket : Monitors
+
+' Interfaces Infrastructure
+WeatherAPI ..> WeatherInterface : exposes
+MapService ..> MapInterface : exposes
+
+WebServer ..> Nginx : uses
+WebServer ..> Gunicorn : uses
+
+Docker ..> DockerCompose : uses
+Docker ..> DockerImages : uses
+
+Monitoring ..> Logs : provides
+Monitoring ..> Metrics : provides
+Monitoring ..> Alerts : provides
+
+@enduml 

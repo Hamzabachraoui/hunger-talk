@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../providers/stock_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../widgets/stock_item_card.dart';
+import '../../widgets/loading_widget.dart';
 import '../../../data/models/stock_item_model.dart';
 import '../../../core/theme/app_colors.dart';
-import 'add_edit_stock_item_screen.dart';
 
 class StockScreen extends StatefulWidget {
   const StockScreen({super.key});
@@ -120,7 +121,7 @@ class _StockScreenState extends State<StockScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+        appBar: AppBar(
         title: const Text('Mon Stock'),
         actions: [
           IconButton(
@@ -148,7 +149,7 @@ class _StockScreenState extends State<StockScreen> {
       body: Consumer<StockProvider>(
         builder: (context, stockProvider, _) {
           if (stockProvider.isLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const LoadingWidget(message: 'Chargement du stock...');
           }
 
           if (stockProvider.error != null) {
@@ -214,11 +215,9 @@ class _StockScreenState extends State<StockScreen> {
                 return StockItemCard(
                   item: item,
                   onEdit: () async {
-                    final result = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AddEditStockItemScreen(item: item),
-                      ),
+                    final result = await context.push<bool>(
+                      '/stock/edit',
+                      extra: item,
                     );
                     if (result == true && mounted) {
                       stockProvider.loadStock();
@@ -234,14 +233,9 @@ class _StockScreenState extends State<StockScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           if (!mounted) return;
-          final navigator = Navigator.of(context);
           final stockProvider = context.read<StockProvider>();
           
-          final result = await navigator.push(
-            MaterialPageRoute(
-              builder: (context) => const AddEditStockItemScreen(),
-            ),
-          );
+          final result = await context.push<bool>('/stock/add');
           if (result == true && mounted) {
             stockProvider.loadStock();
           }

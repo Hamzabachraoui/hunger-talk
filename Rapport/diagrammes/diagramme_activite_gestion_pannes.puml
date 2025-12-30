@@ -1,0 +1,89 @@
+@startuml Diagramme d'Activité - Gestion des Pannes SRM-MS
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam activity {
+    BackgroundColor #F8F9FA
+    BorderColor #6C757D
+    FontColor #212529
+    FontSize 12
+}
+skinparam activityDiamond {
+    BackgroundColor #E9ECEF
+    BorderColor #6C757D
+    FontColor #495057
+}
+skinparam note {
+    BackgroundColor #FFF3CD
+    BorderColor #FFC107
+    FontColor #856404
+}
+
+title **Diagramme d'Activité - Gestion des Pannes SRM-MS**
+
+start
+
+:Détection de la panne;
+
+if (Type de détection?) then (Automatique)
+    :Système SCADA détecte;
+    :Enregistrement automatique;
+else (Manuelle)
+    :Déclaration par équipe;
+    :Déclaration par client;
+    :Saisie des informations;
+endif
+
+:Classification automatique;
+:Assignation du niveau d'urgence;
+
+if (Niveau d'urgence?) then (Critique)
+    :Alerte immédiate;
+    :Escalade automatique;
+    :Notification responsable;
+elseif (Élevée) then
+    :Notification équipe;
+else (Moyenne/Faible)
+    :File d'attente normale;
+endif
+
+:Assignation à une équipe;
+
+fork
+    :Équipe se déplace;
+    :Arrivée sur site;
+    :Évaluation de la situation;
+    
+    if (Intervention possible?) then (Oui)
+        :Début intervention;
+        :Exécution des réparations;
+        :Test du système;
+        
+        if (Réparation réussie?) then (Oui)
+            :Validation technique;
+            :Clôture de la panne;
+            :Mise à jour statut;
+        else (Non)
+            :Demande de renfort;
+            :Escalade technique;
+            :Nouvelle intervention;
+        endif
+    else (Non)
+        :Demande de matériel;
+        :Planification différée;
+        :Mise en attente;
+    endif
+fork again
+    :Suivi en temps réel;
+    :Mise à jour statut;
+    :Communication client;
+fork again
+    :Collecte données météo;
+    :Analyse impact météo;
+    :Ajustement prédictions;
+end fork
+
+:Validation finale;
+:Enregistrement intervention;
+:Génération rapport;
+
+stop 

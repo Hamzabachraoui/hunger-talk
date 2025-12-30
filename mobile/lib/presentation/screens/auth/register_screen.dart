@@ -57,8 +57,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (didPop) return;
+        
+        // Retourner au login si possible
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          context.go('/login');
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
         title: const Text('Inscription'),
       ),
       body: SafeArea(
@@ -215,6 +227,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
           ),
         ),
+      ),
       ),
     );
   }

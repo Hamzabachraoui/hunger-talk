@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../providers/recipe_provider.dart';
 import '../../providers/stock_provider.dart';
@@ -64,8 +65,21 @@ class RecipeDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Consumer<RecipeProvider>(
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (didPop) return;
+        
+        // Naviguer en arrière dans l'historique si possible
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          // Sinon, retourner aux recettes
+          context.go('/recipes');
+        }
+      },
+      child: Scaffold(
+        body: Consumer<RecipeProvider>(
         builder: (context, recipeProvider, _) {
           final recipe = recipeProvider.selectedRecipe;
 
@@ -325,6 +339,7 @@ class RecipeDetailsScreen extends StatelessWidget {
             ],
           );
         },
+      ),
       ),
     );
   }

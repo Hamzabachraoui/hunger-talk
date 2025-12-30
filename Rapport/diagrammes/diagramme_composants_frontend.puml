@@ -1,0 +1,81 @@
+@startuml Diagramme de Composants - Frontend SRM-MS
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam component {
+    BackgroundColor #F8F9FA
+    BorderColor #6C757D
+    FontColor #212529
+    FontSize 12
+}
+skinparam package {
+    BackgroundColor #E9ECEF
+    BorderColor #6C757D
+    FontColor #495057
+    FontSize 14
+}
+skinparam interface {
+    BackgroundColor #FFF3CD
+    BorderColor #FFC107
+    FontColor #856404
+    FontSize 11
+}
+
+title **Diagramme de Composants - Frontend SRM-MS**
+
+package "Frontend" {
+    component "Interface Web Responsive" as WebUI {
+        component "Dashboard Admin" as AdminDash
+        component "Dashboard Responsable" as RespDash
+        component "Interface Technicien" as TechUI
+        component "Portail Client" as ClientPortal
+    }
+    
+    component "Application Mobile" as MobileApp {
+        component "App Technicien" as TechApp
+        component "App Client" as ClientApp
+    }
+    
+    component "Interface Carte" as MapUI {
+        component "Carte Interactive" as InteractiveMap
+        component "Géolocalisation" as Geoloc
+    }
+}
+
+package "Backend API" {
+    component "Django REST API" as DjangoAPI {
+        component "Authentification" as Auth
+        component "Gestion Pannes" as BreakdownAPI
+        component "Gestion Équipes" as TeamAPI
+        component "Prédictions ML" as MLAPI
+        component "Communication" as ChatAPI
+        component "Rapports" as ReportAPI
+    }
+    
+    component "WebSocket Server" as WebSocket {
+        component "Chat Temps Réel" as RealTimeChat
+        component "Notifications Push" as PushNotif
+        component "Suivi GPS" as GPSTracking
+    }
+}
+
+' Relations Frontend
+WebUI --> DjangoAPI : HTTP/HTTPS
+MobileApp --> DjangoAPI : REST API
+MapUI --> DjangoAPI : API Calls
+
+WebSocket --> MobileApp : Real-time
+WebSocket --> WebUI : Real-time
+
+' Interfaces internes
+DjangoAPI ..> Auth : uses
+DjangoAPI ..> BreakdownAPI : uses
+DjangoAPI ..> TeamAPI : uses
+DjangoAPI ..> MLAPI : uses
+DjangoAPI ..> ChatAPI : uses
+DjangoAPI ..> ReportAPI : uses
+
+WebSocket ..> RealTimeChat : provides
+WebSocket ..> PushNotif : provides
+WebSocket ..> GPSTracking : provides
+
+@enduml 

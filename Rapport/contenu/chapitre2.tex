@@ -1,0 +1,221 @@
+\chapter{Conception}
+
+\section{Introduction}
+
+La phase de conception constitue une étape fondamentale dans le développement de Hunger-Talk, car elle permet de structurer les fonctionnalités, de définir les interactions entre les composants et de préparer l'implémentation technique. Cette phase s'appuie sur une analyse approfondie des besoins utilisateurs et sur les enseignements tirés de l'étude bibliographique présentée au chapitre précédent. La conception de Hunger-Talk doit répondre à plusieurs défis spécifiques : intégrer la gestion de stock avec la recommandation de recettes, proposer un assistant conversationnel capable de comprendre le contexte de l'utilisateur, et maintenir une expérience utilisateur fluide malgré la complexité sous-jacente du système.
+
+L'approche de conception adoptée pour Hunger-Talk s'articule autour de plusieurs dimensions complémentaires. D'abord, la modélisation des besoins fonctionnels permet d'identifier les acteurs, leurs objectifs et les interactions avec le système. Ensuite, la conception de l'architecture technique définit l'organisation des composants, les flux de données et les interfaces entre les différentes parties du système. Enfin, la modélisation des données structure l'information à manipuler et les relations entre les entités métier. Cette démarche progressive, de la vision fonctionnelle vers l'implémentation technique, garantit que les choix de conception restent alignés avec les objectifs du projet tout en anticipant les contraintes d'évolution et de maintenance.
+
+\section{Analyse des besoins et modélisation fonctionnelle}
+
+\subsection{Identification des acteurs et des objectifs}
+
+Hunger-Talk s'adresse principalement aux utilisateurs finaux qui souhaitent mieux gérer leur alimentation quotidienne, réduire le gaspillage et bénéficier de recommandations personnalisées. Ces utilisateurs interagissent avec l'application mobile pour gérer leur stock de produits alimentaires, consulter leurs objectifs nutritionnels, demander des suggestions de recettes et dialoguer avec l'assistant conversationnel. Le système doit également prendre en compte les préférences alimentaires, les restrictions (allergies, régimes spécifiques) et les objectifs nutritionnels que chaque utilisateur peut définir.
+
+L'analyse des besoins révèle que les utilisateurs attendent de Hunger-Talk une expérience intégrée où la gestion du stock, le suivi nutritionnel et la recommandation de recettes se complètent naturellement. Par exemple, lorsqu'un utilisateur ajoute un produit à son stock, le système doit pouvoir suggérer des recettes qui utilisent ce produit, en tenant compte de ce qui est déjà disponible et des dates de péremption. De même, l'assistant conversationnel doit pouvoir répondre à des questions variées : "Qu'est-ce que je peux cuisiner avec ce que j'ai ?", "Ce produit expire bientôt, que puis-je en faire ?", ou encore "Comment puis-je atteindre mes objectifs en protéines aujourd'hui ?". Ces interactions nécessitent une compréhension fine du contexte utilisateur et une capacité à combiner plusieurs sources d'information.
+
+\subsection{Diagrammes de cas d'utilisation}
+
+Les diagrammes de cas d'utilisation permettent de visualiser les interactions entre les utilisateurs et le système Hunger-Talk. Le diagramme de vue d'ensemble présente les relations principales entre les différents cas d'utilisation, montrant comment les fonctionnalités s'articulent autour de la gestion du stock, de la recommandation de recettes, de l'assistant conversationnel et du suivi nutritionnel.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Diagramme/CU Vue d'ensemble (Relations principales).png}
+    \caption{Diagramme de cas d'utilisation - Vue d'ensemble des relations principales}
+    \label{fig:cu_vue_ensemble}
+\end{figure}
+
+Le cas d'utilisation "Authentification et Gestion de Compte" couvre les fonctionnalités essentielles pour l'accès au système et la personnalisation du profil utilisateur. L'authentification permet à l'utilisateur de se connecter de manière sécurisée, tandis que la gestion de compte inclut la définition des préférences alimentaires, des objectifs nutritionnels et des restrictions (allergies, régimes). Ces informations sont cruciales car elles influencent toutes les recommandations et interactions ultérieures avec le système.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Diagramme/CU Authentification et Gestion de Compte.png}
+    \caption{Diagramme de cas d'utilisation - Authentification et Gestion de Compte}
+    \label{fig:cu_authentification}
+\end{figure}
+
+La gestion du stock constitue le cœur fonctionnel de Hunger-Talk, car elle permet de suivre les produits disponibles, leurs quantités et leurs dates de péremption. Le cas d'utilisation correspondant couvre l'ajout, la modification et la suppression de produits, ainsi que la consultation du stock et la réception d'alertes pour les produits proches de leur date d'expiration. Cette fonctionnalité est étroitement liée à la recommandation de recettes, car le système doit pouvoir identifier quels produits sont disponibles et dans quelles quantités pour proposer des recettes réalisables.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Diagramme/CU Gestion du Stock.png}
+    \caption{Diagramme de cas d'utilisation - Gestion du Stock}
+    \label{fig:cu_stock}
+\end{figure}
+
+Le cas d'utilisation "Recettes et Nutrition" regroupe les fonctionnalités liées à la recherche, à la consultation et à la préparation de recettes, ainsi qu'au suivi des apports nutritionnels. L'utilisateur peut rechercher des recettes selon différents critères (ingrédients disponibles, temps de préparation, objectifs nutritionnels), consulter les détails d'une recette (ingrédients, étapes, valeurs nutritionnelles), et marquer une recette comme "préparée" pour mettre à jour automatiquement le stock et les apports nutritionnels. Le système doit également fournir un suivi quotidien et hebdomadaire des apports nutritionnels, en les comparant aux objectifs définis par l'utilisateur.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Diagramme/CU Recettes et Nutrition.png}
+    \caption{Diagramme de cas d'utilisation - Recettes et Nutrition}
+    \label{fig:cu_recettes}
+\end{figure}
+
+L'assistant conversationnel représente l'innovation principale de Hunger-Talk, car il permet une interaction naturelle en langage naturel pour obtenir des recommandations, poser des questions sur la nutrition ou la gestion du stock, et recevoir des conseils personnalisés. Le cas d'utilisation correspondant couvre l'envoi de messages à l'assistant, la réception de réponses contextuelles, la demande de recommandations de recettes via le dialogue, et l'obtention d'explications sur les choix du système. L'assistant doit pouvoir comprendre des requêtes variées et adapter ses réponses en fonction du contexte de l'utilisateur (stock actuel, objectifs nutritionnels, historique des recettes préparées).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Diagramme/CU Assistant IA et Recommandations.png}
+    \caption{Diagramme de cas d'utilisation - Assistant IA et Recommandations}
+    \label{fig:cu_assistant}
+\end{figure}
+
+Enfin, le cas d'utilisation "Paramètres et Notifications" permet à l'utilisateur de configurer ses préférences de notification (alertes d'expiration, suggestions quotidiennes), de gérer les paramètres de l'application et de consulter l'historique de ses activités. Ces fonctionnalités contribuent à personnaliser l'expérience utilisateur et à maintenir l'engagement sur le long terme.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Diagramme/CU Paramètres et Notifications.png}
+    \caption{Diagramme de cas d'utilisation - Paramètres et Notifications}
+    \label{fig:cu_parametres}
+\end{figure}
+
+\section{Modélisation des processus métier}
+
+\subsection{Diagrammes d'activité}
+
+Les diagrammes d'activité décrivent les processus métier et les flux de travail au sein de Hunger-Talk. Ils permettent de comprendre comment les différentes actions s'enchaînent et quelles décisions conditionnent le déroulement des processus.
+
+Le processus d'authentification illustre les étapes de connexion et d'inscription, incluant la validation des identifiants, la gestion des erreurs d'authentification et la création d'un nouveau compte avec initialisation des préférences par défaut. Ce processus est essentiel car il constitue le point d'entrée dans l'application et doit garantir la sécurité des données utilisateur.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Diagramme/ActiviteAuthentification.png}
+    \caption{Diagramme d'activité - Authentification}
+    \label{fig:activite_auth}
+\end{figure}
+
+Le processus d'ajout de produit manuel décrit les étapes nécessaires pour qu'un utilisateur ajoute un produit à son stock. L'utilisateur saisit les informations du produit (nom, quantité, unité, date d'expiration, catégorie), le système valide ces informations et les enregistre dans la base de données. Une fois le produit ajouté, le système peut déclencher des actions automatiques, telles que la vérification de la date d'expiration pour programmer une alerte si nécessaire, ou la mise à jour des recommandations de recettes disponibles.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Diagramme/ActiviteAjoutProduitManuel.png}
+    \caption{Diagramme d'activité - Ajout de produit manuel}
+    \label{fig:activite_ajout_produit}
+\end{figure}
+
+Le processus de mise à jour du stock se déclenche lorsqu'un utilisateur prépare une recette ou consomme un produit. Le système identifie les ingrédients utilisés, calcule les quantités consommées en fonction des portions préparées, et met à jour le stock en conséquence. Si un produit atteint une quantité minimale ou est épuisé, le système peut suggérer de l'ajouter à une liste de courses ou proposer des recettes alternatives qui n'utilisent pas ce produit.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Diagramme/ActiviteMiseAJourStock.png}
+    \caption{Diagramme d'activité - Mise à jour du stock}
+    \label{fig:activite_maj_stock}
+\end{figure}
+
+Le processus de recommandation de recettes illustre comment le système génère des suggestions personnalisées. À partir du stock disponible, des préférences utilisateur, des objectifs nutritionnels et du contexte (heure de la journée, nombre de personnes), le système interroge la base de données de recettes, filtre et classe les résultats selon leur pertinence, et présente les recommandations à l'utilisateur. Ce processus peut être déclenché explicitement par l'utilisateur ou automatiquement lorsque le stock change ou que des produits approchent de leur date d'expiration.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Diagramme/ActiviteRecommandationRecettes.png}
+    \caption{Diagramme d'activité - Recommandation de recettes}
+    \label{fig:activite_recommandation}
+\end{figure}
+
+Le processus de gestion des notifications couvre la génération, l'envoi et la gestion des alertes et suggestions. Le système surveille les dates d'expiration, les objectifs nutritionnels et les habitudes d'utilisation pour générer des notifications pertinentes. L'utilisateur peut configurer ses préférences de notification et consulter l'historique des notifications reçues.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Diagramme/ActiviteGestionNotifications.png}
+    \caption{Diagramme d'activité - Gestion des notifications}
+    \label{fig:activite_notifications}
+\end{figure}
+
+\subsection{Diagrammes de séquence}
+
+Les diagrammes de séquence détaillent les interactions entre les différents composants du système lors de l'exécution de processus spécifiques. Ils montrent l'ordre chronologique des messages échangés entre l'interface utilisateur, le backend, la base de données et les services externes.
+
+Le diagramme de séquence pour l'ajout de produit illustre les interactions entre l'application mobile, l'API backend, la base de données et le service de recommandation. Lorsqu'un utilisateur ajoute un produit, l'application envoie une requête à l'API, qui valide les données, les enregistre dans la base de données, puis déclenche une mise à jour des recommandations de recettes disponibles. Cette mise à jour peut impliquer une requête au service de recommandation, qui analyse le nouveau stock et retourne une liste de recettes pertinentes.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Diagramme/SequenceAjouterProduit.png}
+    \caption{Diagramme de séquence - Ajout de produit}
+    \label{fig:sequence_ajout_produit}
+\end{figure}
+
+Le diagramme de séquence pour la demande de recette via l'assistant conversationnel montre comment l'utilisateur interagit avec l'assistant, comment le message est traité par le backend, comment le système RAG récupère les informations pertinentes, et comment la réponse est générée et renvoyée à l'utilisateur. Ce processus met en évidence l'intégration entre le modèle de langage (LLaMA 3.1), le système de récupération d'information (RAG) et la base de données de recettes.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Diagramme/SequenceDemanderRecette.png}
+    \caption{Diagramme de séquence - Demande de recette via l'assistant}
+    \label{fig:sequence_demande_recette}
+\end{figure}
+
+Le diagramme de séquence pour le scan de produit (fonctionnalité optionnelle permettant d'ajouter un produit en scannant son code-barres) illustre les interactions avec un service externe de reconnaissance de codes-barres, la récupération d'informations sur le produit, et l'ajout automatique au stock avec les données récupérées.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Diagramme/SequenceScannerProduit.png}
+    \caption{Diagramme de séquence - Scan de produit}
+    \label{fig:sequence_scan}
+\end{figure}
+
+Le diagramme de séquence pour la validation de préparation d'une recette montre comment, lorsqu'un utilisateur indique qu'il a préparé une recette, le système met à jour le stock (en déduisant les ingrédients utilisés), met à jour les apports nutritionnels, et peut déclencher de nouvelles recommandations basées sur le stock mis à jour.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Diagramme/SequenceValiderPreparation.png}
+    \caption{Diagramme de séquence - Validation de préparation de recette}
+    \label{fig:sequence_validation}
+\end{figure}
+
+\section{Modélisation des données}
+
+\subsection{Diagramme de classes}
+
+Le diagramme de classes représente la structure statique du système Hunger-Talk en définissant les entités principales, leurs attributs et les relations entre elles. Cette modélisation guide l'implémentation de la base de données et la structure des objets manipulés par l'application.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Diagramme/Diagramme class.png}
+    \caption{Diagramme de classes - Modèle de données Hunger-Talk}
+    \label{fig:diagramme_classes}
+\end{figure}
+
+L'entité centrale "Utilisateur" représente les comptes utilisateurs et leurs informations de profil. Chaque utilisateur possède des préférences alimentaires, des objectifs nutritionnels, des restrictions (allergies, régimes) et un historique d'activités. L'entité "StockItem" représente les produits alimentaires dans le stock de l'utilisateur, avec leurs quantités, unités, dates d'expiration et catégories. La relation entre Utilisateur et StockItem est de type "un-à-plusieurs", car un utilisateur peut posséder plusieurs produits dans son stock.
+
+L'entité "Recette" représente les recettes disponibles dans le système, avec leurs informations (nom, description, temps de préparation, difficulté, valeurs nutritionnelles). La relation entre Recette et StockItem passe par l'entité "Ingrédient", qui associe une recette à un produit avec une quantité et une unité spécifiques. Cette modélisation permet de déterminer quelles recettes sont réalisables avec le stock actuel d'un utilisateur, en comparant les ingrédients requis aux produits disponibles.
+
+L'entité "Nutrition" permet de suivre les apports nutritionnels quotidiens et hebdomadaires de l'utilisateur. Elle est liée à l'Utilisateur et peut être mise à jour automatiquement lorsqu'une recette est préparée, en additionnant les valeurs nutritionnelles de la recette aux apports existants. L'entité "Conversation" et "Message" modélisent les interactions avec l'assistant conversationnel, en conservant l'historique des échanges pour permettre un contexte conversationnel cohérent.
+
+L'entité "Notification" représente les alertes et suggestions envoyées à l'utilisateur, avec leur type (expiration, suggestion de recette, rappel nutritionnel), leur statut (envoyée, lue) et leur contenu. Cette modélisation permet de gérer les préférences de notification et l'historique des communications avec l'utilisateur.
+
+\section{Architecture technique}
+
+\subsection{Architecture générale}
+
+L'architecture de Hunger-Talk suit une approche client-serveur avec une séparation claire entre l'application mobile (client) et le backend (serveur). L'application mobile, développée en Flutter, communique avec le backend via une API REST, permettant une séparation des responsabilités et une évolution indépendante des deux parties. Le backend, développé avec FastAPI, expose des endpoints pour toutes les fonctionnalités : gestion du stock, consultation des recettes, interaction avec l'assistant conversationnel, suivi nutritionnel.
+
+La base de données PostgreSQL stocke toutes les données persistantes : profils utilisateurs, stock, recettes, historique des conversations, apports nutritionnels. Cette base de données relationnelle permet de maintenir l'intégrité des données et de réaliser des requêtes complexes pour la recommandation de recettes et l'analyse nutritionnelle. Le système RAG utilise également PostgreSQL pour stocker les embeddings des recettes et des informations nutritionnelles, permettant une recherche vectorielle efficace pour l'assistant conversationnel.
+
+L'assistant conversationnel repose sur une architecture RAG (Retrieval-Augmented Generation) combinant un modèle de langage LLaMA 3.1 avec un système de récupération d'information. Lorsqu'un utilisateur pose une question, le système convertit la question en embedding vectoriel, recherche dans la base de données les recettes et informations pertinentes, puis construit un contexte enrichi pour le modèle de langage. Le modèle génère ensuite une réponse en s'appuyant sur ce contexte, garantissant que les informations fournies sont factuelles et pertinentes.
+
+\subsection{Flux de données et intégrations}
+
+Le flux de données principal dans Hunger-Talk suit un pattern classique de requête-réponse : l'application mobile envoie une requête HTTP à l'API backend, le backend traite la requête (validation, logique métier, accès à la base de données), et retourne une réponse JSON à l'application mobile. Pour l'assistant conversationnel, le flux est plus complexe : le message utilisateur est envoyé au backend, qui l'envoie au service RAG, qui récupère les informations pertinentes, construit le contexte, appelle le modèle LLaMA 3.1, et retourne la réponse générée.
+
+Les intégrations externes sont limitées dans la version actuelle de Hunger-Talk, mais l'architecture permet d'envisager des extensions futures. Par exemple, l'intégration avec des services de reconnaissance de codes-barres permettrait d'ajouter des produits au stock en scannant leur code, l'intégration avec des services de livraison permettrait de commander directement les ingrédients manquants, et l'intégration avec des applications de suivi d'activité physique permettrait d'ajuster les objectifs nutritionnels en fonction de l'activité.
+
+\section{Considérations de conception}
+
+\subsection{Expérience utilisateur et ergonomie}
+
+La conception de Hunger-Talk accorde une attention particulière à l'expérience utilisateur, car l'application doit s'intégrer naturellement dans le quotidien des utilisateurs sans créer de charge cognitive excessive. L'interface mobile est conçue pour être intuitive, avec une navigation claire entre les différentes sections (stock, recettes, assistant, nutrition, paramètres). Les actions fréquentes, comme l'ajout d'un produit ou la consultation des recettes disponibles, sont accessibles en quelques clics.
+
+L'assistant conversationnel est conçu pour être accessible depuis n'importe quelle section de l'application, permettant à l'utilisateur de poser des questions contextuelles à tout moment. Par exemple, depuis la page de stock, l'utilisateur peut demander "Que puis-je faire avec ces tomates ?" et recevoir des suggestions de recettes. Cette intégration contextuelle améliore l'expérience utilisateur en réduisant les frictions entre les différentes fonctionnalités.
+
+\subsection{Scalabilité et performance}
+
+L'architecture de Hunger-Talk est conçue pour être scalable, même si la version initiale cible un nombre limité d'utilisateurs. La séparation entre le frontend et le backend permet de faire évoluer chaque partie indépendamment, et l'utilisation d'une base de données relationnelle avec des index appropriés garantit des performances acceptables même avec un volume de données croissant. Le système RAG utilise des embeddings vectoriels et une recherche par similarité, ce qui est efficace pour des bases de données de recettes de taille modérée, mais pourrait nécessiter des optimisations (index vectoriels spécialisés comme FAISS) si le volume augmente significativement.
+
+\subsection{Sécurité et confidentialité}
+
+La sécurité des données utilisateur est une préoccupation majeure dans la conception de Hunger-Talk. L'authentification utilise des tokens JWT (JSON Web Tokens) pour sécuriser les communications entre l'application mobile et le backend. Les mots de passe sont hashés avant stockage, et les données sensibles sont transmises via HTTPS. La base de données est configurée pour isoler les données de chaque utilisateur, garantissant qu'un utilisateur ne peut accéder qu'à ses propres données.
+
+\section{Conclusion}
+
+La phase de conception de Hunger-Talk a permis de structurer les fonctionnalités, de modéliser les processus métier et de définir l'architecture technique du système. Les diagrammes de cas d'utilisation, d'activité, de séquence et de classes fournissent une vision complète du système, depuis les interactions utilisateur jusqu'à la structure des données. Cette modélisation guide l'implémentation technique et facilite la communication entre les différentes parties prenantes du projet.
+
+L'architecture adoptée, basée sur une séparation client-serveur avec une API REST, une base de données relationnelle et un système RAG pour l'assistant conversationnel, répond aux besoins fonctionnels identifiés tout en restant suffisamment flexible pour évoluer. Les considérations d'expérience utilisateur, de scalabilité et de sécurité ont été intégrées dès la phase de conception, garantissant que le système final sera à la fois fonctionnel, performant et sécurisé.

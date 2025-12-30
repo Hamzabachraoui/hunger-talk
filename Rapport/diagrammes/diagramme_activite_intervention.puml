@@ -1,0 +1,90 @@
+@startuml Diagramme d'Activité - Intervention Technique SRM-MS
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam activity {
+    BackgroundColor #F8F9FA
+    BorderColor #6C757D
+    FontColor #212529
+    FontSize 12
+}
+skinparam activityDiamond {
+    BackgroundColor #E9ECEF
+    BorderColor #6C757D
+    FontColor #495057
+}
+skinparam note {
+    BackgroundColor #FFF3CD
+    BorderColor #FFC107
+    FontColor #856404
+}
+
+title **Diagramme d'Activité - Intervention Technique SRM-MS**
+
+start
+
+:Notification d'intervention;
+:Consultation détails panne;
+:Préparation équipement;
+
+if (Équipement disponible?) then (Oui)
+    :Chargement véhicule;
+else (Non)
+    :Demande équipement;
+    :Attente disponibilité;
+    :Chargement véhicule;
+endif
+
+:Calcul itinéraire optimal;
+:Départ vers le site;
+
+while (En route?) is (Oui)
+    :Suivi GPS;
+    :Mise à jour ETA;
+    :Communication statut;
+endwhile (Non)
+
+:Arrivée sur site;
+:Évaluation sécurité;
+
+if (Site sécurisé?) then (Oui)
+    :Accès au site;
+else (Non)
+    :Coordination sécurité;
+    :Attente autorisation;
+    :Accès au site;
+endif
+
+:Diagnostic technique;
+:Identification problème;
+
+if (Réparation immédiate?) then (Oui)
+    :Exécution réparation;
+    :Test fonctionnel;
+    
+    if (Test réussi?) then (Oui)
+        :Validation technique;
+        :Remise en service;
+    else (Non)
+        :Analyse échec;
+        :Nouvelle tentative;
+    endif
+else (Non)
+    :Planification intervention;
+    :Demande autorisation;
+    :Programmation différée;
+endif
+
+:Documentation intervention;
+:Photos avant/après;
+:Saisie rapport technique;
+
+if (Matériel utilisé?) then (Oui)
+    :Inventaire matériel;
+    :Mise à jour stock;
+endif
+
+:Validation responsable;
+:Clôture intervention;
+:Retour base;
+
+stop 

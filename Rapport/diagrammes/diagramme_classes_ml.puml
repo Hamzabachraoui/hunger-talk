@@ -1,0 +1,161 @@
+@startuml Diagramme de Classes - Système ML SRM-MS
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam class {
+    BackgroundColor #F8F9FA
+    BorderColor #6C757D
+    FontColor #212529
+    FontSize 12
+}
+skinparam package {
+    BackgroundColor #E9ECEF
+    BorderColor #6C757D
+    FontColor #495057
+    FontSize 14
+}
+
+title **Diagramme de Classes - Système ML SRM-MS**
+
+package "Système de Prédiction ML" {
+    class PredictionModel {
+        +id: UUID
+        +name: String
+        +description: Text
+        +model_type: String {xgboost, prophet, random_forest, neural_network}
+        +status: String {training, trained, active, deprecated, failed}
+        +hyperparameters: JSON
+        +accuracy: Float
+        +precision: Float
+        +recall: Float
+        +f1_score: Float
+        +model_file: FileField
+        +training_data_size: Integer
+        +training_duration: Duration
+        +features_used: JSON
+        +created_at: DateTime
+        +updated_at: DateTime
+        +trained_at: DateTime
+        +created_by: CustomUser
+        --
+        +is_active: Boolean
+        +performance_summary: Dict
+        +get_hyperparameters(): Dict
+        +set_hyperparameters(params)
+    }
+
+    class Prediction {
+        +id: UUID
+        +model: PredictionModel
+        +prediction_type: String {breakdown_probability, breakdown_count, maintenance_need, trend_analysis}
+        +latitude: Float
+        +longitude: Float
+        +location_name: String
+        +prediction_date: DateTime
+        +prediction_horizon: String
+        +predicted_value: Float
+        +confidence_score: Float
+        +confidence_level: String {low, medium, high, very_high}
+        +input_features: JSON
+        +is_validated: Boolean
+        +actual_value: Float
+        +requested_by: CustomUser
+        +created_at: DateTime
+        --
+        +accuracy_if_validated: Float
+        +is_accurate: Boolean
+    }
+
+    class WeeklyPrediction {
+        +id: UUID
+        +week_start_date: Date
+        +week_end_date: Date
+        +week_number: Integer
+        +year: Integer
+        +location_name: String
+        +latitude: Float
+        +longitude: Float
+        +monday_probability: Float
+        +tuesday_probability: Float
+        +wednesday_probability: Float
+        +thursday_probability: Float
+        +friday_probability: Float
+        +saturday_probability: Float
+        +sunday_probability: Float
+        +weather_forecast: JSON
+        +overall_risk_level: String
+        +total_expected_breakdowns: Float
+        +confidence_score: Float
+        +recommendations: JSON
+        +high_risk_days: JSON
+        +model_used: PredictionModel
+        +created_by: CustomUser
+        +created_at: DateTime
+        +updated_at: DateTime
+        --
+        +week_range: String
+        +daily_probabilities: Dict
+    }
+
+    class ZonePrediction {
+        +id: UUID
+        +zone_name: String
+        +week_start_date: Date
+        +week_end_date: Date
+        +week_number: Integer
+        +year: Integer
+        +monday_risk: Float
+        +tuesday_risk: Float
+        +wednesday_risk: Float
+        +thursday_risk: Float
+        +friday_risk: Float
+        +saturday_risk: Float
+        +sunday_risk: Float
+        +avg_temperature: Float
+        +avg_humidity: Float
+        +avg_wind_speed: Float
+        +total_precipitation: Float
+        +overall_risk_level: String
+        +avg_weekly_risk: Float
+        +max_risk_day: String
+        +max_risk_value: Float
+        +expected_breakdowns: Float
+        +confidence_score: Float
+        +historical_breakdowns: Integer
+        +weather_impact: Float
+        +seasonal_factor: Float
+        +created_at: DateTime
+        +updated_at: DateTime
+    }
+
+    class DailyZonePrediction {
+        +id: UUID
+        +zone_name: String
+        +prediction_date: Date
+        +risk_probability: Float
+        +expected_breakdowns: Float
+        +confidence_score: Float
+        +temperature: Float
+        +humidity: Float
+        +wind_speed: Float
+        +precipitation: Float
+        +risk_level: String
+        +historical_breakdowns: Integer
+        +weather_impact: Float
+        +seasonal_factor: Float
+        +created_at: DateTime
+        +updated_at: DateTime
+        +is_active: Boolean
+    }
+}
+
+' Relations
+PredictionModel ||--o{ Prediction : "génère"
+PredictionModel ||--o{ WeeklyPrediction : "utilise"
+PredictionModel ||--o{ ZonePrediction : "utilise"
+PredictionModel ||--o{ DailyZonePrediction : "utilise"
+Prediction }o--|| CustomUser : "demande"
+WeeklyPrediction }o--|| CustomUser : "crée"
+ZonePrediction }o--|| CustomUser : "crée"
+DailyZonePrediction }o--|| CustomUser : "crée"
+
+@enduml 

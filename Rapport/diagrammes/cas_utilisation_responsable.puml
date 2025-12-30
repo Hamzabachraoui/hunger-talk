@@ -1,0 +1,130 @@
+@startuml Cas d'utilisation - Responsable
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam actorStyle awesome
+skinparam usecase {
+    BackgroundColor #F0F8FF
+    BorderColor #4A90E2
+    FontColor #1A1A1A
+    FontSize 12
+}
+skinparam actor {
+    BackgroundColor #E8F4FD
+    BorderColor #4A90E2
+    FontColor #1A1A1A
+    FontSize 14
+}
+
+title **Diagramme de Cas d'Utilisation - Responsable**\n*Système SRM-MS*
+
+actor "Responsable" as RESP #4A90E2
+
+package "Gestion des Équipes" {
+    usecase "Gérer les équipes" as UC1
+    usecase "Assigner des techniciens" as UC2
+    usecase "Planifier les tournées" as UC3
+    usecase "Gérer les disponibilités" as UC4
+    usecase "Superviser les performances" as UC5
+}
+
+package "Gestion des Pannes" {
+    usecase "Surveiller les pannes" as UC6
+    usecase "Assigner les interventions" as UC7
+    usecase "Gérer les priorités" as UC8
+    usecase "Suivre les résolutions" as UC9
+    usecase "Gérer les escalades" as UC10
+}
+
+package "Planification et Coordination" {
+    usecase "Planifier les interventions" as UC11
+    usecase "Optimiser les itinéraires" as UC12
+    usecase "Gérer les ressources" as UC13
+    usecase "Coordonner les équipes" as UC14
+    usecase "Gérer les urgences" as UC15
+}
+
+package "Analytics et Rapports" {
+    usecase "Consulter le dashboard" as UC16
+    usecase "Analyser les performances" as UC17
+    usecase "Générer des rapports" as UC18
+    usecase "Suivre les KPI" as UC19
+    usecase "Analyser les tendances" as UC20
+}
+
+package "Gestion des Prédictions" {
+    usecase "Consulter les prédictions" as UC21
+    usecase "Valider les alertes" as UC22
+    usecase "Planifier la maintenance" as UC23
+    usecase "Optimiser les ressources" as UC24
+    usecase "Gérer les risques" as UC25
+}
+
+package "Communication" {
+    usecase "Communiquer avec les équipes" as UC26
+    usecase "Gérer les notifications" as UC27
+    usecase "Coordonner avec les clients" as UC28
+    usecase "Gérer les réclamations" as UC29
+    usecase "Diffuser les informations" as UC30
+}
+
+' Relations Responsable
+RESP --> UC1
+RESP --> UC2
+RESP --> UC3
+RESP --> UC4
+RESP --> UC5
+RESP --> UC6
+RESP --> UC7
+RESP --> UC8
+RESP --> UC9
+RESP --> UC10
+RESP --> UC11
+RESP --> UC12
+RESP --> UC13
+RESP --> UC14
+RESP --> UC15
+RESP --> UC16
+RESP --> UC17
+RESP --> UC18
+RESP --> UC19
+RESP --> UC20
+RESP --> UC21
+RESP --> UC22
+RESP --> UC23
+RESP --> UC24
+RESP --> UC25
+RESP --> UC26
+RESP --> UC27
+RESP --> UC28
+RESP --> UC29
+RESP --> UC30
+
+' Relations d'inclusion
+UC1 ..> UC2 : <<include>>
+UC2 ..> UC3 : <<include>>
+UC3 ..> UC4 : <<include>>
+UC6 ..> UC7 : <<include>>
+UC7 ..> UC8 : <<include>>
+UC8 ..> UC9 : <<include>>
+UC11 ..> UC12 : <<include>>
+UC12 ..> UC13 : <<include>>
+UC13 ..> UC14 : <<include>>
+UC16 ..> UC17 : <<include>>
+UC17 ..> UC18 : <<include>>
+UC18 ..> UC19 : <<include>>
+UC21 ..> UC22 : <<include>>
+UC22 ..> UC23 : <<include>>
+UC23 ..> UC24 : <<include>>
+
+' Relations d'extension
+UC5 ..> UC10 : <<extend>>
+UC9 ..> UC10 : <<extend>>
+UC14 ..> UC15 : <<extend>>
+UC19 ..> UC20 : <<extend>>
+UC24 ..> UC25 : <<extend>>
+UC26 ..> UC27 : <<extend>>
+UC27 ..> UC28 : <<extend>>
+UC28 ..> UC29 : <<extend>>
+UC29 ..> UC30 : <<extend>>
+
+@enduml 

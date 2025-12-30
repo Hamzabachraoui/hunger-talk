@@ -1,0 +1,102 @@
+@startuml Diagramme d'Activité - Communication Client SRM-MS
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam activity {
+    BackgroundColor #F8F9FA
+    BorderColor #6C757D
+    FontColor #212529
+    FontSize 12
+}
+skinparam activityDiamond {
+    BackgroundColor #E9ECEF
+    BorderColor #6C757D
+    FontColor #495057
+}
+skinparam note {
+    BackgroundColor #FFF3CD
+    BorderColor #FFC107
+    FontColor #856404
+}
+
+title **Diagramme d'Activité - Communication Client SRM-MS**
+
+start
+
+:Client déclare une panne;
+
+if (Moyen de déclaration?) then (Portail web)
+    :Saisie formulaire en ligne;
+    :Validation automatique;
+    :Génération numéro ticket;
+elseif (Téléphone) then
+    :Appel centre d'appel;
+    :Saisie par opérateur;
+    :Génération numéro ticket;
+else (Application mobile)
+    :Saisie via app;
+    :Géolocalisation automatique;
+    :Génération numéro ticket;
+endif
+
+:Enregistrement déclaration;
+:Classification automatique;
+:Assignation priorité;
+
+if (Priorité?) then (Critique)
+    :Notification immédiate;
+    :Alerte équipe;
+    :Confirmation client urgente;
+elseif (Élevée) then
+    :Notification rapide;
+    :Confirmation client;
+else (Normale)
+    :Confirmation standard;
+    :Mise en file d'attente;
+endif
+
+:Envoi confirmation client;
+:Numéro de suivi;
+:Estimation délai;
+
+fork
+    :Suivi statut panne;
+    :Mise à jour automatique;
+    :Notification progression;
+fork again
+    :Communication équipe;
+    :Coordination intervention;
+    :Mise à jour planning;
+fork again
+    :Gestion chat temps réel;
+    :Réponses automatiques;
+    :Support humain si nécessaire;
+end fork
+
+:Intervention en cours;
+:Notification début intervention;
+:Suivi progression;
+
+if (Intervention terminée?) then (Oui)
+    :Validation technique;
+    :Confirmation résolution;
+    :Notification client;
+    
+    if (Client satisfait?) then (Oui)
+        :Clôture ticket;
+        :Enregistrement satisfaction;
+    else (Non)
+        :Escalade problème;
+        :Nouvelle intervention;
+        :Suivi qualité;
+    endif
+else (Non)
+    :Mise à jour statut;
+    :Communication délai;
+    :Continuation suivi;
+endif
+
+:Génération rapport;
+:Analyse satisfaction;
+:Amélioration processus;
+
+stop 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../providers/stock_provider.dart';
@@ -109,7 +110,7 @@ class _AddEditStockItemScreenState extends State<AddEditStockItemScreen> {
     if (!mounted) return;
     
     if (success) {
-      Navigator.pop(context, true);
+      context.pop(true);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(widget.item != null ? 'Produit modifié' : 'Produit ajouté'),
@@ -137,7 +138,7 @@ class _AddEditStockItemScreenState extends State<AddEditStockItemScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+        appBar: AppBar(
         title: Text(widget.item != null ? 'Modifier le produit' : 'Ajouter un produit'),
         actions: [
           TextButton(

@@ -6,9 +6,11 @@ import '../../presentation/screens/auth/login_screen.dart';
 import '../../presentation/screens/auth/register_screen.dart';
 import '../../presentation/screens/dashboard/dashboard_screen.dart';
 import '../../presentation/screens/stock/stock_screen.dart';
+import '../../presentation/screens/stock/add_edit_stock_item_screen.dart';
 import '../../presentation/screens/chat/chat_screen.dart';
 import '../../presentation/screens/recipes/recipes_screen.dart';
 import '../../presentation/screens/settings/settings_screen.dart';
+import '../../data/models/stock_item_model.dart';
 
 class AppRouter {
   static const FlutterSecureStorage _storage = FlutterSecureStorage();
@@ -54,6 +56,21 @@ class AppRouter {
         path: '/stock',
         name: 'stock',
         builder: (context, state) => const StockScreen(),
+        routes: [
+          GoRoute(
+            path: 'add',
+            name: 'stock-add',
+            builder: (context, state) => const AddEditStockItemScreen(),
+          ),
+          GoRoute(
+            path: 'edit',
+            name: 'stock-edit',
+            builder: (context, state) {
+              final item = state.extra as StockItemModel?;
+              return AddEditStockItemScreen(item: item);
+            },
+          ),
+        ],
       ),
       GoRoute(
         path: '/chat',

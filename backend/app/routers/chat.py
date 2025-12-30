@@ -43,9 +43,17 @@ async def chat_with_ai(
         # Vérifier que Ollama est disponible
         is_available = await ollama_service.check_availability()
         if not is_available:
+            ollama_url = ollama_service.base_url
+            error_detail = (
+                f"L'IA n'est pas disponible à {ollama_url}. "
+                "Vérifiez que :\n"
+                "1. Ollama est démarré sur votre machine\n"
+                "2. Le tunnel (ngrok) est actif\n"
+                "3. La variable OLLAMA_BASE_URL dans Railway est correcte"
+            )
             raise HTTPException(
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail="L'IA n'est pas disponible. Vérifiez qu'Ollama est démarré et que le modèle est installé."
+                detail=error_detail
             )
         
         # Construire le contexte RAG

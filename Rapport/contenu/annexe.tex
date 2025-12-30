@@ -1,0 +1,130 @@
+\chapter*{Annexes}
+\label{chapter:Annexes}
+\addcontentsline{toc}{chapter}{Annexes}
+\setcounter{section}{0}
+
+\section*{Système de Prédiction ML}
+
+\subsection*{Prediction Model - Système ML}
+
+\begin{itemize}
+    \item \textbf{Calcul de la probabilité de panne}
+    
+    Calcule la probabilité de panne basée sur les données météorologiques et historiques.
+    
+    \begin{verbatim}
+    def calculer_probabilite_panne(self, donnees_meteo, donnees_historiques):
+        # Features engineering
+        features = {
+            'temperature': donnees_meteo['temperature'],
+            'humidite': donnees_meteo['humidite'],
+            'precipitations': donnees_meteo['precipitations'],
+            'vent_vitesse': donnees_meteo['vent_vitesse'],
+            'pannes_7j': donnees_historiques['pannes_7j'],
+            'pannes_30j': donnees_historiques['pannes_30j'],
+            'maintenance_recente': donnees_historiques['maintenance_recente']
+        }
+        
+        # Prédiction avec XGBoost
+        probabilite = self.modele_xgboost.predict_proba([list(features.values())])[0][1]
+        return round(probabilite * 100, 2)
+    \end{verbatim}
+
+    \item \textbf{Prédiction de tendance temporelle}
+    
+    Prédit les tendances de pannes sur les prochaines semaines.
+    
+    \begin{verbatim}
+    def predire_tendance_hebdomadaire(self, zone_id, nombre_semaines=4):
+        # Récupération des données historiques
+        donnees_historiques = self.get_donnees_historiques(zone_id)
+        
+        # Prédiction avec Prophet
+        future = self.modele_prophet.make_future_dataframe(
+            periods=nombre_semaines * 7
+        )
+        forecast = self.modele_prophet.predict(future)
+        
+        return {
+            'predictions': forecast.tail(nombre_semaines * 7),
+            'precision': self.calculer_precision_modele()
+        }
+    \end{verbatim}
+\end{itemize}
+
+\subsection*{Services ML (ML Services)}
+
+\subsubsection*{PredictionService - Service de Prédiction}
+
+\begin{itemize}
+    \item \textbf{Service de prédiction de pannes}
+    
+    Service principal pour la prédiction de pannes avec XGBoost et Prophet.
+    
+    \begin{verbatim}
+    class PredictionService:
+        def __init__(self):
+            self.xgboost_model = None
+            self.prophet_model = None
+            self.weather_api = WeatherAPIService()
+        
+        def entrainer_modele_xgboost(self, donnees_entrainement):
+            # Préparation des features
+            X = donnees_entrainement[['temperature', 'humidite', 'precipitations', 
+                                    'vent_vitesse', 'pannes_7j', 'pannes_30j']]
+            y = donnees_entrainement['panne_survenue']
+            
+            # Entraînement XGBoost
+            self.xgboost_model = XGBClassifier(
+                n_estimators=100,
+                max_depth=6,
+                learning_rate=0.1,
+                random_state=42
+            )
+            self.xgboost_model.fit(X, y)
+            
+            return self.xgboost_model.score(X, y)
+    \end{verbatim}
+
+    \item \textbf{Collecte et traitement des données météo}
+    
+    Collecte automatique des données météorologiques pour les prédictions.
+    
+    \begin{verbatim}
+    def collecter_donnees_meteo(self, zone_id):
+        # Récupération des coordonnées de la zone
+        zone = Zone.objects.get(id=zone_id)
+        
+        # Appel API météo
+        donnees_meteo = self.weather_api.get_weather_data(
+            lat=zone.latitude,
+            lon=zone.longitude
+        )
+        
+        # Sauvegarde en base
+        WeatherData.objects.create(
+            zone=zone,
+            temperature=donnees_meteo['temperature'],
+            humidite=donnees_meteo['humidite'],
+            precipitations=donnees_meteo['precipitations'],
+            vent_vitesse=donnees_meteo['wind_speed'],
+            timestamp=timezone.now()
+        )
+        
+        return donnees_meteo
+    \end{verbatim}
+\end{itemize}
+
+\section*{Fonctions Critiques du Système de Prédiction}
+
+Ces fonctions représentent le \textbf{cœur métier} du système de prédiction ML :
+
+\begin{itemize}
+    \item \textbf{Système de prédiction ML} : XGBoost et Prophet pour l'anticipation des pannes
+    \item \textbf{Calcul de probabilité} : Prédiction basée sur les données météorologiques et historiques
+    \item \textbf{Prédiction temporelle} : Tendance hebdomadaire des pannes avec Prophet
+    \item \textbf{Collecte données météo} : API intégrée pour les prédictions ML
+    \item \textbf{Entraînement automatique} : Mise à jour des modèles avec nouvelles données
+\end{itemize}
+
+Ces fonctions démontrent l'architecture robuste du système de prédiction intelligente des pannes, intégrant l'IA et l'analyse prédictive pour optimiser la maintenance préventive.

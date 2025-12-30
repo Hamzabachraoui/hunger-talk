@@ -157,8 +157,17 @@ class _ServerConfigScreenState extends State<ServerConfigScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (didPop) return;
+        // Retourner en arrière avec Navigator (car ouvert via Navigator.push)
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context);
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
         title: const Text('Configuration du serveur'),
       ),
       body: Form(
@@ -379,6 +388,7 @@ class _ServerConfigScreenState extends State<ServerConfigScreen> {
             ),
           ],
         ),
+      ),
       ),
     );
   }

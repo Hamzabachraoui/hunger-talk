@@ -1,0 +1,390 @@
+\chapter{Vue conceptuelle}
+\section{Introduction}
+La phase de conception est cruciale pour le développement du système de gestion intelligente des pannes SRM-MS. Ce système vise à optimiser la gestion des pannes électriques et hydrauliques en intégrant des technologies d'intelligence artificielle et de communication en temps réel. La conception doit prendre en compte les aspects spécifiques de la gestion des services publics, notamment la prédiction de pannes, l'optimisation des interventions, et la communication avec les clients.
+
+\section{Modèle UML}
+Les modèles UML (Unified Modeling Language) sont utilisés pour représenter graphiquement les structures et les comportements du système. Les diagrammes suivants sont essentiels pour notre système de gestion intelligente des pannes :
+
+\subsection{Diagramme de cas d'utilisation}
+Ce diagramme illustre les différentes interactions entre les utilisateurs (administrateur, responsable, technicien, client) et le système. Les principaux cas d'utilisation sont organisés par acteur pour une meilleure lisibilité :
+
+\newpage
+\begin{landscape}
+\subsubsection{Cas d'utilisation - Administrateur}
+L'administrateur gère la configuration système, les modèles ML et les comptes utilisateurs :
+
+    \begin{figure}[h]
+    \vspace{1cm}
+    \centering
+        \includegraphics[width=1\linewidth]{figuresChapitres/cas_utilisation_administrateur.png}
+        \caption{Diagramme de cas d'utilisation - Administrateur}
+        \label{fig:4_1}
+    \end{figure}
+\end{landscape}
+
+\newpage
+\begin{landscape}
+\subsubsection{Cas d'utilisation - Responsable}
+Le responsable supervise les équipes, gère les prédictions et coordonne les interventions :
+
+    \begin{figure}[h]
+    \vspace{1cm}
+    \centering
+        \includegraphics[width=1\linewidth]{figuresChapitres/cas_utilisation_responsable.png}
+        \caption{Diagramme de cas d'utilisation - Responsable}
+        \label{fig:4_2}
+    \end{figure}
+\end{landscape}
+
+\newpage
+\begin{landscape}
+\subsubsection{Cas d'utilisation - Technicien}
+Le technicien effectue les interventions terrain et communique avec les clients :
+
+    \begin{figure}[h]
+    \vspace{1cm}
+    \centering
+        \includegraphics[width=1\linewidth]{figuresChapitres/cas_utilisation_technicien.png}
+        \caption{Diagramme de cas d'utilisation - Technicien}
+        \label{fig:4_3}
+    \end{figure}
+\end{landscape}
+
+\newpage
+\begin{landscape}
+\subsubsection{Cas d'utilisation - Client}
+Le client déclare les pannes et suit les interventions via le portail client :
+
+    \begin{figure}[h]
+    \vspace{1cm}
+    \centering
+        \includegraphics[width=1\linewidth]{figuresChapitres/cas_utilisation_client.png}
+        \caption{Diagramme de cas d'utilisation - Client}
+        \label{fig:4_4}
+    \end{figure}
+\end{landscape}
+
+\subsection{Diagramme de classes}
+Le diagramme de classes montre la structure statique du système, organisée en plusieurs packages fonctionnels pour une meilleure lisibilité. Le système SRM-MS est divisé en domaines métier distincts :
+
+\subsubsection{Gestion des Utilisateurs}
+Ce package gère les utilisateurs, équipes et notifications du système :
+
+\begin{landscape}
+    \begin{figure}[h]
+    \vspace{1cm}
+    \centering
+        \includegraphics[height=0.8\textheight]{figuresChapitres/diagramme_classes_utilisateurs.png}
+        \caption{Diagramme de classes - Gestion des Utilisateurs}
+        \label{fig:4_5}
+    \end{figure}
+\end{landscape}
+
+\subsubsection{Gestion des Pannes}
+Ce package centralise la gestion des pannes, interventions et données météorologiques :
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figuresChapitres/diagramme_classes_pannes.png}
+    \caption{Diagramme de classes - Gestion des Pannes}
+    \label{fig:4_6}
+\end{figure}
+
+\subsubsection{Système de Prédiction ML}
+Ce package gère les modèles de prédiction et les analyses prédictives :
+
+\begin{landscape}
+    \begin{figure}[h]
+    \vspace{1cm}
+    \centering
+        \includegraphics[height=0.8\textheight]{figuresChapitres/diagramme_classes_ml.png}
+        \caption{Diagramme de classes - Système ML}
+        \label{fig:4_7}
+    \end{figure}
+\end{landscape}
+
+\subsubsection{Portail Client et Communication}
+Ce package gère l'interface client et la communication en temps réel :
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figuresChapitres/diagramme_classes_client.png}
+    \caption{Diagramme de classes - Portail Client et Communication}
+    \label{fig:4_8}
+\end{figure}
+
+
+
+\subsection{Diagramme d'activité}
+Ce diagramme représente les workflows ou les processus métiers pour des fonctionnalités spécifiques du système SRM-MS :
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figuresChapitres/diagramme_activite_gestion_pannes_1.png}
+    \caption{Diagramme d'activité - Gestion des Pannes (Partie 1)}
+    \label{fig:4_10}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figuresChapitres/diagramme_activite_gestion_pannes_2.png}
+    \caption{Diagramme d'activité - Gestion des Pannes (Partie 2)}
+    \label{fig:4_10b}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[height=0.8\textheight]{figuresChapitres/diagramme_activite_intervention_1.png}
+    \caption{Diagramme d'activité - Intervention Technique (Partie 1)}
+    \label{fig:4_11}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figuresChapitres/diagramme_activite_intervention_2.png}
+    \caption{Diagramme d'activité - Intervention Technique (Partie 2)}
+    \label{fig:4_11b}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figuresChapitres/diagramme_activite_prediction_1.png}
+    \caption{Diagramme d'activité - Prédiction ML (Partie 1)}
+    \label{fig:4_12}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[height=0.8\textheight]{figuresChapitres/diagramme_activite_prediction_2.png}
+    \caption{Diagramme d'activité - Prédiction ML (Partie 2)}
+    \label{fig:4_12b}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figuresChapitres/diagramme_activite_communication_1.png}
+    \caption{Diagramme d'activité - Communication Client (Partie 1)}
+    \label{fig:4_13}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figuresChapitres/diagramme_activite_communication_2.png}
+    \caption{Diagramme d'activité - Communication Client (Partie 2)}
+    \label{fig:4_13b}
+\end{figure}
+
+\subsection{Diagrammes de Composants}
+Les diagrammes de composants présentent l'architecture technique du système, divisée en 4 vues spécialisées pour une meilleure lisibilité :
+
+\subsubsection{Vue Frontend et Backend}
+\begin{landscape}
+    \begin{figure}[h]
+    \vspace{1cm}
+    \centering
+        \includegraphics[width=1\linewidth]{figuresChapitres/diagramme_composants_frontend.png}
+        \caption{Diagramme de Composants - Frontend et Backend SRM-MS}
+        \label{fig:4_14}
+    \end{figure}
+\end{landscape}
+
+\newpage
+\begin{landscape}
+\subsubsection{Vue Services ML}
+    \begin{figure}[h]
+    \vspace{1cm}
+    \centering
+        \includegraphics[width=1\linewidth]{figuresChapitres/diagramme_composants_ml.png}
+        \caption{Diagramme de Composants - Services ML SRM-MS}
+        \label{fig:4_15}
+    \end{figure}
+\end{landscape}
+
+\newpage
+\begin{landscape}
+\subsubsection{Vue Base de Données}
+    \begin{figure}[h]
+    \vspace{1cm}
+    \centering
+        \includegraphics[width=1\linewidth]{figuresChapitres/diagramme_composants_donnees.png}
+        \caption{Diagramme de Composants - Base de Données SRM-MS}
+        \label{fig:4_16}
+    \end{figure}
+\end{landscape}
+
+\newpage
+\begin{landscape}
+\subsubsection{Vue Infrastructure}
+    \begin{figure}[h]
+    \vspace{1cm}
+    \centering
+        \includegraphics[width=1\linewidth]{figuresChapitres/diagramme_composants_infrastructure.png}
+        \caption{Diagramme de Composants - Infrastructure SRM-MS}
+        \label{fig:4_17}
+    \end{figure}
+\end{landscape}
+
+\section{Architecture du Système}
+
+\subsection{Architecture Globale}
+L'architecture du système SRM-MS est basée sur une architecture en couches et microservices, permettant une séparation claire des responsabilités et une maintenance facilitée. Le système intègre des technologies modernes pour assurer la scalabilité et la fiabilité.
+
+
+
+L'architecture est organisée en plusieurs couches fonctionnelles :
+
+\begin{itemize}
+    \item \textbf{Couche Présentation} : 
+    \begin{itemize}
+        \item Interface web responsive (React)
+        \item Application mobile (React Native)
+        \item Cartes interactives (OpenStreetMap)
+        \item Tableaux de bord personnalisés
+    \end{itemize}
+    
+    \item \textbf{Couche Application} : 
+    \begin{itemize}
+        \item API REST Django pour la communication
+        \item WebSocket pour le temps réel
+        \item Services ML (XGBoost, Prophet)
+        \item Gestion des notifications
+    \end{itemize}
+    
+    \item \textbf{Couche Données} : 
+    \begin{itemize}
+        \item Base de données PostgreSQL avec PostGIS
+        \item Cache Redis pour les sessions
+        \item Stockage des modèles ML
+        \item Sauvegarde et récupération
+    \end{itemize}
+    
+    \item \textbf{Services Externes} : 
+    \begin{itemize}
+        \item API météo (OpenWeatherMap)
+        \item Services de cartographie
+        \item Gateway SMS/Email
+        \item Monitoring et logs
+    \end{itemize}
+\end{itemize}
+
+\section{Architecture du Système de Prédiction ML}
+
+\subsection{Architecture Générale du Système ML}
+Le système de prédiction ML de SRM-MS repose sur une architecture hybride combinant deux approches complémentaires : la classification probabiliste et l'analyse de séries temporelles. Cette architecture permet d'anticiper les pannes avec une précision élevée en intégrant des données multi-sources.
+
+\subsection{Composants du Système ML}
+
+\subsubsection{Modèle XGBoost - Classification Probabiliste}
+Le modèle XGBoost est utilisé pour la prédiction de probabilité de pannes basée sur des features multiples :
+
+\begin{itemize}
+    \item \textbf{Features d'entrée} :
+    \begin{itemize}
+        \item Données météorologiques (température, humidité, précipitations, vent)
+        \item Données historiques (pannes des 7 et 30 derniers jours)
+        \item Données de maintenance (dernière intervention, âge des équipements)
+        \item Données géographiques (type de zone, densité de population)
+    \end{itemize}
+    
+    \item \textbf{Sortie} : Probabilité de panne (0-100\%) pour chaque zone
+    \item \textbf{Entraînement} : Données historiques des 2 dernières années
+    \item \textbf{Mise à jour} : Réentraînement hebdomadaire avec nouvelles données
+\end{itemize}
+
+\subsubsection{Modèle Prophet - Analyse Temporelle}
+Le modèle Prophet de Meta/Facebook analyse les tendances et saisonnalités :
+
+\begin{itemize}
+    \item \textbf{Données d'entrée} : Séries temporelles de pannes par zone
+    \item \textbf{Sortie} : Prédiction de nombre de pannes par jour/semaine
+    \item \textbf{Composantes} : Tendance, saisonnalité, événements spéciaux
+    \item \textbf{Horizon} : Prédictions sur 4 semaines avec intervalles de confiance
+\end{itemize}
+
+\subsection{Flux de Données et Intégration}
+
+\subsubsection{Collecte de Données}
+\begin{itemize}
+    \item \textbf{API Météo} : Collecte automatique toutes les 6 heures via OpenWeatherMap
+    \item \textbf{Données Historiques} : Extraction quotidienne depuis la base de données
+    \item \textbf{Données de Maintenance} : Mise à jour en temps réel lors des interventions
+    \item \textbf{Validation} : Contrôle qualité et nettoyage automatique des données
+\end{itemize}
+
+\subsubsection{Traitement et Features Engineering}
+\begin{itemize}
+    \item \textbf{Préprocessing} : Normalisation, gestion des valeurs manquantes
+    \item \textbf{Features Engineering} : Création de features dérivées (moyennes mobiles, ratios)
+    \item \textbf{Sélection} : Choix des features les plus pertinentes via analyse statistique
+    \item \textbf{Validation} : Split train/test avec validation croisée
+\end{itemize}
+
+\subsection{Intégration dans le Système}
+
+\subsubsection{API de Prédiction}
+\begin{itemize}
+    \item \textbf{Endpoint REST} : \texttt{/api/predictions/} pour les prédictions en temps réel
+    \item \textbf{WebSocket} : Diffusion des alertes de prédiction aux responsables
+    \item \textbf{Cache Redis} : Stockage des prédictions récentes pour performance
+    \item \textbf{Monitoring} : Suivi des performances et métriques de précision
+\end{itemize}
+
+\subsubsection{Dashboard de Prédiction}
+\begin{itemize}
+    \item \textbf{Visualisations} : Graphiques de tendances, cartes de chaleur
+    \item \textbf{Alertes} : Notifications automatiques pour zones à risque
+    \item \textbf{Planification} : Suggestions d'optimisation des équipes
+    \item \textbf{Historique} : Comparaison prédictions/réalité pour amélioration
+\end{itemize}
+
+\section{Base de Données}
+
+\subsection{Schéma de la Base de Données}
+Le schéma de la base de données est conçu pour gérer efficacement les données du système SRM-MS :
+
+\begin{itemize}
+    \item \textbf{Utilisateurs} : 
+    \begin{itemize}
+        \item Profils utilisateurs (admin, responsable, technicien, client)
+        \item Informations de localisation et spécialisation
+        \item Historique des interventions
+        \item Préférences de notification
+    \end{itemize}
+    
+    \item \textbf{Pannes} : 
+    \begin{itemize}
+        \item Détails des pannes électriques et hydrauliques
+        \item Localisation géographique
+        \item Historique des interventions
+        \item Statut et progression
+    \end{itemize}
+    
+    \item \textbf{Prédictions ML} : 
+    \begin{itemize}
+        \item Modèles XGBoost et Prophet
+        \item Données météorologiques
+        \item Prédictions hebdomadaires et quotidiennes
+        \item Métriques de performance
+    \end{itemize}
+    
+    \item \textbf{Communication} : 
+    \begin{itemize}
+        \item Chat temps réel
+        \item Notifications push
+        \item Annonces publiques
+        \item Historique des échanges
+    \end{itemize}
+\end{itemize}
+
+\subsection{Relations et Contraintes}
+Les relations entre les entités sont définies avec des contraintes appropriées pour maintenir l'intégrité des données :
+
+\begin{itemize}
+    \item Relations one-to-many entre utilisateurs et pannes
+    \item Relations many-to-many pour les équipes et interventions
+    \item Contraintes d'unicité pour les identifiants
+    \item Validation des données géospatiales
+    \item Intégrité référentielle pour les prédictions
+    \item Contraintes de temps pour les interventions
+\end{itemize}
+

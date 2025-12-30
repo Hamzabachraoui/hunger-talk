@@ -15,8 +15,21 @@ class SettingsScreen extends StatelessWidget {
     final authProvider = context.watch<AuthProvider>();
     final user = authProvider.user;
 
-    return Scaffold(
-      appBar: AppBar(
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (didPop) return;
+        
+        // Naviguer en arrière dans l'historique si possible
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          // Sinon, retourner au dashboard
+          context.go('/dashboard');
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
         title: const Text('Paramètres'),
       ),
       body: ListView(
@@ -169,6 +182,7 @@ class SettingsScreen extends StatelessWidget {
             },
           ),
         ],
+      ),
       ),
     );
   }

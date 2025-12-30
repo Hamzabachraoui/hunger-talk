@@ -1,0 +1,102 @@
+\babel@toc {french}{}\relax 
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Diagramme de Gantt - Planification du projet SRM-MS (8 semaines)}}{32}{figure.caption.20}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Diagramme de cas d'utilisation - Administrateur}}{36}{figure.caption.24}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Diagramme de cas d'utilisation - Responsable}}{37}{figure.caption.26}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Diagramme de cas d'utilisation - Technicien}}{38}{figure.caption.28}%
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Diagramme de cas d'utilisation - Client}}{39}{figure.caption.30}%
+\contentsline {figure}{\numberline {4.5}{\ignorespaces Diagramme de classes - Gestion des Utilisateurs}}{41}{figure.caption.32}%
+\contentsline {figure}{\numberline {4.6}{\ignorespaces Diagramme de classes - Gestion des Pannes}}{42}{figure.caption.34}%
+\contentsline {figure}{\numberline {4.7}{\ignorespaces Diagramme de classes - Système ML}}{43}{figure.caption.36}%
+\contentsline {figure}{\numberline {4.8}{\ignorespaces Diagramme de classes - Portail Client et Communication}}{44}{figure.caption.38}%
+\contentsline {figure}{\numberline {4.9}{\ignorespaces Diagramme d'activité - Gestion des Pannes (Partie 1)}}{45}{figure.caption.39}%
+\contentsline {figure}{\numberline {4.10}{\ignorespaces Diagramme d'activité - Gestion des Pannes (Partie 2)}}{46}{figure.caption.40}%
+\contentsline {figure}{\numberline {4.11}{\ignorespaces Diagramme d'activité - Intervention Technique (Partie 1)}}{47}{figure.caption.41}%
+\contentsline {figure}{\numberline {4.12}{\ignorespaces Diagramme d'activité - Intervention Technique (Partie 2)}}{48}{figure.caption.42}%
+\contentsline {figure}{\numberline {4.13}{\ignorespaces Diagramme d'activité - Prédiction ML (Partie 1)}}{49}{figure.caption.43}%
+\contentsline {figure}{\numberline {4.14}{\ignorespaces Diagramme d'activité - Prédiction ML (Partie 2)}}{50}{figure.caption.44}%
+\contentsline {figure}{\numberline {4.15}{\ignorespaces Diagramme d'activité - Communication Client (Partie 1)}}{51}{figure.caption.45}%
+\contentsline {figure}{\numberline {4.16}{\ignorespaces Diagramme d'activité - Communication Client (Partie 2)}}{52}{figure.caption.46}%
+\contentsline {figure}{\numberline {4.17}{\ignorespaces Diagramme de Composants - Frontend et Backend SRM-MS}}{54}{figure.caption.48}%
+\contentsline {figure}{\numberline {4.18}{\ignorespaces Diagramme de Composants - Services ML SRM-MS}}{55}{figure.caption.50}%
+\contentsline {figure}{\numberline {4.19}{\ignorespaces Diagramme de Composants - Base de Données SRM-MS}}{56}{figure.caption.52}%
+\contentsline {figure}{\numberline {4.20}{\ignorespaces Diagramme de Composants - Infrastructure SRM-MS}}{57}{figure.caption.54}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {5.1}{\ignorespaces React.js}}{62}{figure.caption.61}%
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Django}}{63}{figure.caption.62}%
+\contentsline {figure}{\numberline {5.3}{\ignorespaces PostgreSQL}}{63}{figure.caption.63}%
+\contentsline {figure}{\numberline {5.4}{\ignorespaces Redis}}{63}{figure.caption.64}%
+\contentsline {figure}{\numberline {5.5}{\ignorespaces XGBoost}}{64}{figure.caption.65}%
+\contentsline {figure}{\numberline {5.6}{\ignorespaces Prophet}}{64}{figure.caption.66}%
+\contentsline {figure}{\numberline {5.7}{\ignorespaces Visual Studio Code}}{65}{figure.caption.67}%
+\contentsline {figure}{\numberline {5.8}{\ignorespaces Git}}{65}{figure.caption.68}%
+\contentsline {figure}{\numberline {5.9}{\ignorespaces GitHub}}{65}{figure.caption.69}%
+\contentsline {figure}{\numberline {5.10}{\ignorespaces Docker}}{66}{figure.caption.70}%
+\contentsline {figure}{\numberline {5.11}{\ignorespaces Nginx}}{66}{figure.caption.71}%
+\contentsline {figure}{\numberline {5.12}{\ignorespaces Gunicorn}}{67}{figure.caption.72}%
+\contentsline {figure}{\numberline {5.13}{\ignorespaces Interface de connexion au système Safegrid}}{67}{figure.caption.74}%
+\contentsline {figure}{\numberline {5.14}{\ignorespaces Barre de navigation principale de Safegrid}}{68}{figure.caption.76}%
+\contentsline {figure}{\numberline {5.15}{\ignorespaces Menu de navigation déroulant}}{69}{figure.caption.77}%
+\contentsline {figure}{\numberline {5.16}{\ignorespaces Dashboard principal du système Safegrid}}{70}{figure.caption.79}%
+\contentsline {figure}{\numberline {5.17}{\ignorespaces Vue détaillée du dashboard avec métriques avancées}}{70}{figure.caption.80}%
+\contentsline {figure}{\numberline {5.18}{\ignorespaces Interface administrateur avec accès complet}}{71}{figure.caption.82}%
+\contentsline {figure}{\numberline {5.19}{\ignorespaces Interface responsable avec gestion d'équipe}}{71}{figure.caption.83}%
+\contentsline {figure}{\numberline {5.20}{\ignorespaces Interface technicien pour interventions sur site}}{72}{figure.caption.84}%
+\contentsline {figure}{\numberline {5.21}{\ignorespaces Interface de signalement de panne - Étape 1}}{73}{figure.caption.86}%
+\contentsline {figure}{\numberline {5.22}{\ignorespaces Interface de signalement de panne - Étape 2}}{74}{figure.caption.87}%
+\contentsline {figure}{\numberline {5.23}{\ignorespaces Interface de signalement de panne - Étape 3}}{75}{figure.caption.88}%
+\contentsline {figure}{\numberline {5.24}{\ignorespaces Liste principale des pannes actives}}{76}{figure.caption.90}%
+\contentsline {figure}{\numberline {5.25}{\ignorespaces Vue détaillée d'une panne - Informations générales}}{76}{figure.caption.92}%
+\contentsline {figure}{\numberline {5.26}{\ignorespaces Vue détaillée d'une panne - Analyse technique}}{77}{figure.caption.93}%
+\contentsline {figure}{\numberline {5.27}{\ignorespaces Liste principale des interventions en cours}}{77}{figure.caption.95}%
+\contentsline {figure}{\numberline {5.28}{\ignorespaces Vue détaillée d'une intervention}}{78}{figure.caption.97}%
+\contentsline {figure}{\numberline {5.29}{\ignorespaces Interface d'affectation d'équipe à une intervention}}{79}{figure.caption.99}%
+\contentsline {figure}{\numberline {5.30}{\ignorespaces Liste principale des équipes techniques}}{79}{figure.caption.101}%
+\contentsline {figure}{\numberline {5.31}{\ignorespaces Vue détaillée d'une équipe technique}}{80}{figure.caption.103}%
+\contentsline {figure}{\numberline {5.32}{\ignorespaces Interface de création d'une nouvelle équipe}}{81}{figure.caption.105}%
+\contentsline {figure}{\numberline {5.33}{\ignorespaces Interface d'ajout de membre à une équipe}}{82}{figure.caption.106}%
+\contentsline {figure}{\numberline {5.34}{\ignorespaces Liste principale des utilisateurs du système}}{83}{figure.caption.108}%
+\contentsline {figure}{\numberline {5.35}{\ignorespaces Vue détaillée d'un utilisateur - Informations générales}}{83}{figure.caption.110}%
+\contentsline {figure}{\numberline {5.36}{\ignorespaces Vue détaillée d'un utilisateur - Gestion des droits}}{84}{figure.caption.111}%
+\contentsline {figure}{\numberline {5.37}{\ignorespaces Liste principale des clients du système}}{85}{figure.caption.113}%
+\contentsline {figure}{\numberline {5.38}{\ignorespaces Vue détaillée d'un client}}{85}{figure.caption.115}%
+\contentsline {figure}{\numberline {5.39}{\ignorespaces Liste principale des réclamations clients}}{86}{figure.caption.117}%
+\contentsline {figure}{\numberline {5.40}{\ignorespaces Vue détaillée d'une réclamation client}}{87}{figure.caption.119}%
+\contentsline {figure}{\numberline {5.41}{\ignorespaces Liste principale des annonces du système}}{87}{figure.caption.121}%
+\contentsline {figure}{\numberline {5.42}{\ignorespaces Interface de chat interne du système}}{88}{figure.caption.123}%
+\contentsline {figure}{\numberline {5.43}{\ignorespaces Interface de gestion des notifications}}{89}{figure.caption.125}%
+\contentsline {figure}{\numberline {5.44}{\ignorespaces Interface principale de prédiction des pannes}}{89}{figure.caption.127}%
+\contentsline {figure}{\numberline {5.45}{\ignorespaces Vue détaillée des prédictions avec métriques}}{90}{figure.caption.128}%
+\contentsline {figure}{\numberline {5.46}{\ignorespaces Interface d'analyse des tendances prédictives}}{90}{figure.caption.129}%
+\contentsline {figure}{\numberline {5.47}{\ignorespaces Vue des alertes prédictives et recommandations}}{91}{figure.caption.130}%
+\contentsline {figure}{\numberline {5.48}{\ignorespaces Interface de configuration des modèles prédictifs}}{91}{figure.caption.131}%
+\contentsline {figure}{\numberline {5.49}{\ignorespaces Interface de gestion du profil utilisateur}}{92}{figure.caption.133}%
+\contentsline {figure}{\numberline {5.50}{\ignorespaces Interface de paramètres de sécurité}}{92}{figure.caption.134}%
+\contentsline {figure}{\numberline {5.51}{\ignorespaces Interface de paramètres de notification}}{93}{figure.caption.135}%
+\contentsline {figure}{\numberline {5.52}{\ignorespaces Interface de paramètres d'apparence}}{93}{figure.caption.136}%
+\contentsline {figure}{\numberline {5.53}{\ignorespaces Liste principale des annonces du système}}{94}{figure.caption.138}%
+\contentsline {figure}{\numberline {5.54}{\ignorespaces Vue détaillée d'une annonce}}{94}{figure.caption.140}%
+\contentsline {figure}{\numberline {5.55}{\ignorespaces Interface de création d'une nouvelle annonce}}{95}{figure.caption.141}%
+\contentsline {figure}{\numberline {5.56}{\ignorespaces Page d'accueil principale du portail client}}{96}{figure.caption.143}%
+\contentsline {figure}{\numberline {5.57}{\ignorespaces Vue secondaire de la page d'accueil du portail}}{96}{figure.caption.144}%
+\contentsline {figure}{\numberline {5.58}{\ignorespaces Vue complémentaire de la page d'accueil}}{97}{figure.caption.145}%
+\contentsline {figure}{\numberline {5.59}{\ignorespaces Interface de connexion au portail client}}{98}{figure.caption.147}%
+\contentsline {figure}{\numberline {5.60}{\ignorespaces Interface d'inscription au portail client}}{99}{figure.caption.148}%
+\contentsline {figure}{\numberline {5.61}{\ignorespaces Interface d'inscription - Étape complémentaire}}{100}{figure.caption.149}%
+\contentsline {figure}{\numberline {5.62}{\ignorespaces Interface de récupération de mot de passe client}}{101}{figure.caption.150}%
+\contentsline {figure}{\numberline {5.63}{\ignorespaces Interface de déclaration de panne - Étape principale}}{102}{figure.caption.152}%
+\contentsline {figure}{\numberline {5.64}{\ignorespaces Interface de déclaration de panne - Détails techniques}}{102}{figure.caption.153}%
+\contentsline {figure}{\numberline {5.65}{\ignorespaces Interface de suivi des pannes signalées}}{103}{figure.caption.155}%
+\contentsline {figure}{\numberline {5.66}{\ignorespaces Interface de chat support client}}{104}{figure.caption.157}%
+\contentsline {figure}{\numberline {5.67}{\ignorespaces Page À propos - Présentation de l'entreprise}}{105}{figure.caption.159}%
+\contentsline {figure}{\numberline {5.68}{\ignorespaces Page À propos - Services proposés}}{105}{figure.caption.160}%
+\contentsline {figure}{\numberline {5.69}{\ignorespaces Page À propos - Équipe et expertise}}{106}{figure.caption.161}%
+\contentsline {figure}{\numberline {5.70}{\ignorespaces Page À propos - Engagements qualité}}{106}{figure.caption.162}%
+\contentsline {figure}{\numberline {5.71}{\ignorespaces Page À propos - Témoignages clients}}{107}{figure.caption.163}%
+\contentsline {figure}{\numberline {5.72}{\ignorespaces Page À propos - Contact et localisation}}{107}{figure.caption.164}%
+\contentsline {figure}{\numberline {5.73}{\ignorespaces Page À propos - FAQ et support}}{108}{figure.caption.165}%
+\contentsline {figure}{\numberline {5.74}{\ignorespaces Interface du portail client en langue arabe}}{108}{figure.caption.167}%
+\addvspace {10\p@ }

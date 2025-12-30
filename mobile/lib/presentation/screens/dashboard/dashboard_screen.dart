@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../providers/stock_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../widgets/nutrition_card.dart';
+import '../../widgets/loading_widget.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../data/services/nutrition_service.dart';
 
@@ -72,7 +73,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+        appBar: AppBar(
         title: const Text('Dashboard'),
         actions: [
           IconButton(
@@ -86,7 +87,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ],
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const LoadingWidget(message: 'Chargement des données...')
           : _error != null
               ? Center(
                   child: Column(

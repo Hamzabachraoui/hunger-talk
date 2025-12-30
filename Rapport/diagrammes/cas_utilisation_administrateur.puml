@@ -1,0 +1,119 @@
+@startuml Cas d'utilisation - Administrateur
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam actorStyle awesome
+skinparam usecase {
+    BackgroundColor #E8F4FD
+    BorderColor #2E86AB
+    FontColor #1A1A1A
+    FontSize 12
+}
+skinparam actor {
+    BackgroundColor #F0F8FF
+    BorderColor #2E86AB
+    FontColor #1A1A1A
+    FontSize 14
+}
+
+title **Diagramme de Cas d'Utilisation - Administrateur**\n*Système SRM-MS*
+
+actor "Administrateur" as ADMIN #2E86AB
+
+package "Gestion des Utilisateurs" {
+    usecase "Créer des comptes" as UC1
+    usecase "Gérer les rôles" as UC2
+    usecase "Configurer les permissions" as UC3
+    usecase "Suivre l'activité" as UC4
+    usecase "Gérer les profils" as UC5
+}
+
+package "Configuration Système" {
+    usecase "Configurer les paramètres" as UC6
+    usecase "Gérer les zones géographiques" as UC7
+    usecase "Configurer les notifications" as UC8
+    usecase "Gérer la sécurité" as UC9
+    usecase "Configurer l'authentification" as UC10
+}
+
+package "Gestion des Modèles ML" {
+    usecase "Gérer les modèles XGBoost" as UC11
+    usecase "Gérer les modèles Prophet" as UC12
+    usecase "Entraîner les modèles" as UC13
+    usecase "Évaluer les performances" as UC14
+    usecase "Configurer les prédictions" as UC15
+}
+
+package "Gestion des Clients" {
+    usecase "Gérer les comptes clients" as UC16
+    usecase "Configurer le portail client" as UC17
+    usecase "Gérer les annonces" as UC18
+    usecase "Superviser les réclamations" as UC19
+}
+
+package "Maintenance Système" {
+    usecase "Sauvegarder la base de données" as UC20
+    usecase "Gérer les logs" as UC21
+    usecase "Surveiller les performances" as UC22
+    usecase "Gérer les mises à jour" as UC23
+}
+
+package "Rapports Administratifs" {
+    usecase "Générer des rapports système" as UC24
+    usecase "Analyser les statistiques" as UC25
+    usecase "Exporter les données" as UC26
+    usecase "Surveiller les alertes" as UC27
+}
+
+' Relations Administrateur
+ADMIN --> UC1
+ADMIN --> UC2
+ADMIN --> UC3
+ADMIN --> UC4
+ADMIN --> UC5
+ADMIN --> UC6
+ADMIN --> UC7
+ADMIN --> UC8
+ADMIN --> UC9
+ADMIN --> UC10
+ADMIN --> UC11
+ADMIN --> UC12
+ADMIN --> UC13
+ADMIN --> UC14
+ADMIN --> UC15
+ADMIN --> UC16
+ADMIN --> UC17
+ADMIN --> UC18
+ADMIN --> UC19
+ADMIN --> UC20
+ADMIN --> UC21
+ADMIN --> UC22
+ADMIN --> UC23
+ADMIN --> UC24
+ADMIN --> UC25
+ADMIN --> UC26
+ADMIN --> UC27
+
+' Relations d'inclusion
+UC1 ..> UC2 : <<include>>
+UC2 ..> UC3 : <<include>>
+UC6 ..> UC7 : <<include>>
+UC7 ..> UC8 : <<include>>
+UC11 ..> UC12 : <<include>>
+UC12 ..> UC13 : <<include>>
+UC13 ..> UC14 : <<include>>
+UC16 ..> UC17 : <<include>>
+UC17 ..> UC18 : <<include>>
+UC20 ..> UC21 : <<include>>
+UC21 ..> UC22 : <<include>>
+UC24 ..> UC25 : <<include>>
+UC25 ..> UC26 : <<include>>
+
+' Relations d'extension
+UC4 ..> UC5 : <<extend>>
+UC9 ..> UC10 : <<extend>>
+UC14 ..> UC15 : <<extend>>
+UC18 ..> UC19 : <<extend>>
+UC22 ..> UC23 : <<extend>>
+UC26 ..> UC27 : <<extend>>
+
+@enduml 

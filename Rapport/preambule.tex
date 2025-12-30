@@ -1,0 +1,38 @@
+\documentclass{rapportCS}
+
+%------------ Debut Packages ----------------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[french]{babel}
+\usepackage{xcolor} % pour ajouter de la couleur (si besoin)
+\usepackage{multirow}
+\usepackage{makecell}
+\usepackage{float}
+\usepackage{tablefootnote}
+\usepackage{hyperref}
+\usepackage{bookmark}
+\usepackage{pdfpages}
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+\usepackage{lipsum}
+\usepackage{listings}
+\usepackage{subcaption}
+\usepackage{lscape}
+\usepackage{url}
+\usepackage{natbib}
+\usepackage{enumitem} % Package pour la personnalisation des listes
+\usepackage{pgfgantt} % Package pour les diagrammes de Gantt
+
+% Configuration de natbib
+\setcitestyle{numbers,square}
+
+% Pour personnaliser les entêtes et pieds de pages
+\usepackage{fancyhdr}
+
+% On définit le style pour les pages "normales"
+\pagestyle{fancy}
+\renewcommand{\chaptermark}[1]{\markboth{\chaptername \ \thechapter.\ #1}{}} % sert à personnaliser l'affichage de \leftmark (ici : le mot "Chapitre", le numéro, un point, et le titre du chapitre, sans écrire en majuscules)
+\renewcommand{\sectionmark}[1]{\markright{\thesection.\ #1}} % sert à personnaliser l'affichage de \rightmark (ici : le numéro et le titre de la section en cours, sans écrire en majuscules)
+\renewcommand{\thesection}{\arabic{section}}
+
+%------------ Fin Packages ----------------

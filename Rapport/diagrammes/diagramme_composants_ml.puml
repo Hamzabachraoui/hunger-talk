@@ -1,0 +1,85 @@
+@startuml Diagramme de Composants - Services ML SRM-MS
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam component {
+    BackgroundColor #F8F9FA
+    BorderColor #6C757D
+    FontColor #212529
+    FontSize 12
+}
+skinparam package {
+    BackgroundColor #E9ECEF
+    BorderColor #6C757D
+    FontColor #495057
+    FontSize 14
+}
+skinparam interface {
+    BackgroundColor #FFF3CD
+    BorderColor #FFC107
+    FontColor #856404
+    FontSize 11
+}
+
+title **Diagramme de Composants - Services ML SRM-MS**
+
+package "Backend API" {
+    component "Django REST API" as DjangoAPI {
+        component "Prédictions ML" as MLAPI
+    }
+}
+
+package "Services ML" {
+    component "Service Prédiction" as PredictionService {
+        component "XGBoost Engine" as XGBoost
+        component "Prophet Engine" as Prophet
+        component "Feature Engineering" as FeatureEng
+    }
+    
+    component "Service Données" as DataService {
+        component "Collecte Météo" as WeatherCollector
+        component "Préparation Données" as DataPrep
+        component "Validation Modèles" as ModelValidation
+    }
+}
+
+package "Base de Données" {
+    database "PostgreSQL" as PostgreSQL {
+        component "Tables ML" as MLDB
+        component "Tables Pannes" as BreakdownDB
+    }
+    
+    component "Redis Cache" as Redis {
+        component "Prédictions Cache" as PredictionCache
+    }
+}
+
+package "Services Externes" {
+    component "API Météo" as WeatherAPI {
+        interface "OpenWeatherMap" as WeatherInterface
+    }
+}
+
+' Relations ML
+DjangoAPI --> PredictionService : ML Requests
+PredictionService --> DataService : Data Processing
+DataService --> WeatherAPI : Weather Data
+
+DjangoAPI --> PostgreSQL : ORM
+DjangoAPI --> Redis : Cache
+
+PredictionService --> PostgreSQL : Store Models
+DataService --> PostgreSQL : Store Data
+
+' Interfaces ML
+DjangoAPI ..> MLAPI : uses
+PredictionService ..> XGBoost : uses
+PredictionService ..> Prophet : uses
+PredictionService ..> FeatureEng : uses
+
+DataService ..> WeatherCollector : uses
+DataService ..> DataPrep : uses
+DataService ..> ModelValidation : uses
+
+WeatherAPI ..> WeatherInterface : exposes
+
+@enduml 

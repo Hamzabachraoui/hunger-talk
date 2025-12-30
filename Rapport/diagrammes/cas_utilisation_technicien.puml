@@ -1,0 +1,129 @@
+@startuml Cas d'utilisation - Technicien
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam actorStyle awesome
+skinparam usecase {
+    BackgroundColor #F0FFF0
+    BorderColor #28A745
+    FontColor #1A1A1A
+    FontSize 12
+}
+skinparam actor {
+    BackgroundColor #E8F5E8
+    BorderColor #28A745
+    FontColor #1A1A1A
+    FontSize 14
+}
+
+title **Diagramme de Cas d'Utilisation - Technicien**\n*Système SRM-MS*
+
+actor "Technicien" as TECH #28A745
+
+package "Gestion des Pannes" {
+    usecase "Recevoir les alertes" as UC1
+    usecase "Consulter les détails" as UC2
+    usecase "Accepter l'intervention" as UC3
+    usecase "Mettre à jour le statut" as UC4
+    usecase "Signaler une panne" as UC5
+}
+
+package "Interventions" {
+    usecase "Planifier l'intervention" as UC6
+    usecase "Enregistrer les actions" as UC7
+    usecase "Prendre des photos" as UC8
+    usecase "Rédiger le rapport" as UC9
+    usecase "Valider la résolution" as UC10
+}
+
+package "Navigation et Localisation" {
+    usecase "Consulter la carte" as UC11
+    usecase "Optimiser l'itinéraire" as UC12
+    usecase "Mettre à jour la position" as UC13
+    usecase "Gérer les priorités" as UC14
+    usecase "Marquer la disponibilité" as UC15
+}
+
+package "Communication" {
+    usecase "Communiquer avec le client" as UC16
+    usecase "Notifier le responsable" as UC17
+    usecase "Demander de l'aide" as UC18
+    usecase "Escalader un problème" as UC19
+    usecase "Partager des informations" as UC20
+}
+
+package "Suivi et Rapports" {
+    usecase "Consulter l'historique" as UC21
+    usecase "Générer des rapports" as UC22
+    usecase "Analyser les performances" as UC23
+    usecase "Partager les bonnes pratiques" as UC24
+    usecase "Consulter les prédictions" as UC25
+}
+
+package "Gestion du Profil" {
+    usecase "Gérer le profil" as UC26
+    usecase "Mettre à jour les compétences" as UC27
+    usecase "Gérer les préférences" as UC28
+    usecase "Consulter les notifications" as UC29
+    usecase "Gérer la disponibilité" as UC30
+}
+
+' Relations Technicien
+TECH --> UC1
+TECH --> UC2
+TECH --> UC3
+TECH --> UC4
+TECH --> UC5
+TECH --> UC6
+TECH --> UC7
+TECH --> UC8
+TECH --> UC9
+TECH --> UC10
+TECH --> UC11
+TECH --> UC12
+TECH --> UC13
+TECH --> UC14
+TECH --> UC15
+TECH --> UC16
+TECH --> UC17
+TECH --> UC18
+TECH --> UC19
+TECH --> UC20
+TECH --> UC21
+TECH --> UC22
+TECH --> UC23
+TECH --> UC24
+TECH --> UC25
+TECH --> UC26
+TECH --> UC27
+TECH --> UC28
+TECH --> UC29
+TECH --> UC30
+
+' Relations d'inclusion
+UC1 ..> UC2 : <<include>>
+UC2 ..> UC3 : <<include>>
+UC3 ..> UC4 : <<include>>
+UC6 ..> UC7 : <<include>>
+UC7 ..> UC8 : <<include>>
+UC8 ..> UC9 : <<include>>
+UC9 ..> UC10 : <<include>>
+UC11 ..> UC12 : <<include>>
+UC12 ..> UC13 : <<include>>
+UC13 ..> UC14 : <<include>>
+UC16 ..> UC17 : <<include>>
+UC17 ..> UC18 : <<include>>
+UC21 ..> UC22 : <<include>>
+UC22 ..> UC23 : <<include>>
+UC26 ..> UC27 : <<include>>
+UC27 ..> UC28 : <<include>>
+
+' Relations d'extension
+UC5 ..> UC19 : <<extend>>
+UC18 ..> UC19 : <<extend>>
+UC19 ..> UC20 : <<extend>>
+UC23 ..> UC24 : <<extend>>
+UC24 ..> UC25 : <<extend>>
+UC28 ..> UC29 : <<extend>>
+UC29 ..> UC30 : <<extend>>
+
+@enduml 

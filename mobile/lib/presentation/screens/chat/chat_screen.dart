@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../providers/chat_provider.dart';
 import '../../widgets/message_bubble.dart';
+import '../../widgets/loading_widget.dart';
 import '../../../core/theme/app_colors.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -68,7 +69,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+        appBar: AppBar(
         title: const Row(
           children: [
             Icon(Icons.smart_toy, color: AppColors.primary),
@@ -87,7 +88,7 @@ class _ChatScreenState extends State<ChatScreen> {
       body: Consumer<ChatProvider>(
         builder: (context, chatProvider, _) {
           if (chatProvider.isLoading && chatProvider.messages.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
+            return const LoadingWidget(message: 'Chargement de l\'historique...');
           }
 
           if (chatProvider.error != null && chatProvider.messages.isEmpty) {

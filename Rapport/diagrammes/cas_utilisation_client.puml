@@ -1,0 +1,130 @@
+@startuml Cas d'utilisation - Client
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam actorStyle awesome
+skinparam usecase {
+    BackgroundColor #FFF8E1
+    BorderColor #FF9800
+    FontColor #1A1A1A
+    FontSize 12
+}
+skinparam actor {
+    BackgroundColor #FFF3E0
+    BorderColor #FF9800
+    FontColor #1A1A1A
+    FontSize 14
+}
+
+title **Diagramme de Cas d'Utilisation - Client**\n*Système SRM-MS*
+
+actor "Client" as CLIENT #FF9800
+
+package "Authentification" {
+    usecase "Se connecter" as UC1
+    usecase "S'inscrire" as UC2
+    usecase "Gérer le profil" as UC3
+    usecase "Réinitialiser le mot de passe" as UC4
+    usecase "Modifier les informations" as UC5
+}
+
+package "Signalement de Pannes" {
+    usecase "Déclarer une panne" as UC6
+    usecase "Décrire le problème" as UC7
+    usecase "Joindre des photos" as UC8
+    usecase "Préciser l'urgence" as UC9
+    usecase "Fournir la localisation" as UC10
+}
+
+package "Suivi des Pannes" {
+    usecase "Consulter mes pannes" as UC11
+    usecase "Voir le statut" as UC12
+    usecase "Suivre l'intervention" as UC13
+    usecase "Recevoir les notifications" as UC14
+    usecase "Consulter l'historique" as UC15
+}
+
+package "Communication" {
+    usecase "Chatter avec le support" as UC16
+    usecase "Poser des questions" as UC17
+    usecase "Demander des précisions" as UC18
+    usecase "Signaler un problème" as UC19
+    usecase "Donner un feedback" as UC20
+}
+
+package "Consultation" {
+    usecase "Consulter les annonces" as UC21
+    usecase "Voir les informations SRM-MS" as UC22
+    usecase "Consulter la page d'accueil" as UC23
+    usecase "Naviguer sur le site" as UC24
+    usecase "Lire les actualités" as UC25
+}
+
+package "Gestion du Compte" {
+    usecase "Modifier les préférences" as UC26
+    usecase "Gérer les notifications" as UC27
+    usecase "Consulter les données" as UC28
+    usecase "Exporter les informations" as UC29
+    usecase "Supprimer le compte" as UC30
+}
+
+' Relations Client
+CLIENT --> UC1
+CLIENT --> UC2
+CLIENT --> UC3
+CLIENT --> UC4
+CLIENT --> UC5
+CLIENT --> UC6
+CLIENT --> UC7
+CLIENT --> UC8
+CLIENT --> UC9
+CLIENT --> UC10
+CLIENT --> UC11
+CLIENT --> UC12
+CLIENT --> UC13
+CLIENT --> UC14
+CLIENT --> UC15
+CLIENT --> UC16
+CLIENT --> UC17
+CLIENT --> UC18
+CLIENT --> UC19
+CLIENT --> UC20
+CLIENT --> UC21
+CLIENT --> UC22
+CLIENT --> UC23
+CLIENT --> UC24
+CLIENT --> UC25
+CLIENT --> UC26
+CLIENT --> UC27
+CLIENT --> UC28
+CLIENT --> UC29
+CLIENT --> UC30
+
+' Relations d'inclusion
+UC1 ..> UC3 : <<include>>
+UC2 ..> UC3 : <<include>>
+UC3 ..> UC5 : <<include>>
+UC6 ..> UC7 : <<include>>
+UC7 ..> UC8 : <<include>>
+UC7 ..> UC9 : <<include>>
+UC7 ..> UC10 : <<include>>
+UC11 ..> UC12 : <<include>>
+UC12 ..> UC13 : <<include>>
+UC13 ..> UC14 : <<include>>
+UC16 ..> UC17 : <<include>>
+UC17 ..> UC18 : <<include>>
+UC21 ..> UC22 : <<include>>
+UC22 ..> UC23 : <<include>>
+UC23 ..> UC24 : <<include>>
+UC26 ..> UC27 : <<include>>
+UC27 ..> UC28 : <<include>>
+
+' Relations d'extension
+UC4 ..> UC5 : <<extend>>
+UC8 ..> UC19 : <<extend>>
+UC18 ..> UC19 : <<extend>>
+UC19 ..> UC20 : <<extend>>
+UC24 ..> UC25 : <<extend>>
+UC28 ..> UC29 : <<extend>>
+UC29 ..> UC30 : <<extend>>
+
+@enduml 

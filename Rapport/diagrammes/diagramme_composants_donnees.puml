@@ -1,0 +1,84 @@
+@startuml Diagramme de Composants - Base de Données SRM-MS
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam component {
+    BackgroundColor #F8F9FA
+    BorderColor #6C757D
+    FontColor #212529
+    FontSize 12
+}
+skinparam package {
+    BackgroundColor #E9ECEF
+    BorderColor #6C757D
+    FontColor #495057
+    FontSize 14
+}
+skinparam interface {
+    BackgroundColor #FFF3CD
+    BorderColor #FFC107
+    FontColor #856404
+    FontSize 11
+}
+
+title **Diagramme de Composants - Base de Données SRM-MS**
+
+package "Backend API" {
+    component "Django REST API" as DjangoAPI {
+        component "Authentification" as Auth
+        component "Gestion Pannes" as BreakdownAPI
+        component "Gestion Équipes" as TeamAPI
+        component "Communication" as ChatAPI
+        component "Rapports" as ReportAPI
+    }
+}
+
+package "Base de Données" {
+    database "PostgreSQL" as PostgreSQL {
+        component "Tables Utilisateurs" as UserDB
+        component "Tables Pannes" as BreakdownDB
+        component "Tables ML" as MLDB
+        component "Tables Communication" as ChatDB
+        component "Tables Rapports" as ReportDB
+    }
+    
+    component "Redis Cache" as Redis {
+        component "Session Cache" as SessionCache
+        component "Prédictions Cache" as PredictionCache
+        component "Notifications Cache" as NotifCache
+    }
+}
+
+package "Services Externes" {
+    component "Service Notifications" as NotificationService {
+        interface "SMS Gateway" as SMSInterface
+        interface "Email Service" as EmailInterface
+    }
+}
+
+' Relations Base de Données
+DjangoAPI --> PostgreSQL : ORM
+DjangoAPI --> Redis : Cache
+
+DjangoAPI --> NotificationService : Notifications
+
+' Interfaces Base de Données
+DjangoAPI ..> Auth : uses
+DjangoAPI ..> BreakdownAPI : uses
+DjangoAPI ..> TeamAPI : uses
+DjangoAPI ..> ChatAPI : uses
+DjangoAPI ..> ReportAPI : uses
+
+PostgreSQL ..> UserDB : contains
+PostgreSQL ..> BreakdownDB : contains
+PostgreSQL ..> MLDB : contains
+PostgreSQL ..> ChatDB : contains
+PostgreSQL ..> ReportDB : contains
+
+Redis ..> SessionCache : provides
+Redis ..> PredictionCache : provides
+Redis ..> NotifCache : provides
+
+NotificationService ..> SMSInterface : exposes
+NotificationService ..> EmailInterface : exposes
+
+@enduml 

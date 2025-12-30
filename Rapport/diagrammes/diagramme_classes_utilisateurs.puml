@@ -1,0 +1,106 @@
+@startuml Diagramme de Classes - Gestion des Utilisateurs
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam class {
+    BackgroundColor #F8F9FA
+    BorderColor #6C757D
+    FontColor #212529
+    FontSize 12
+}
+skinparam package {
+    BackgroundColor #E9ECEF
+    BorderColor #6C757D
+    FontColor #495057
+    FontSize 14
+}
+
+title **Diagramme de Classes - Gestion des Utilisateurs SRM-MS**
+
+package "Gestion des Utilisateurs" {
+    class CustomUser {
+        +id: UUID
+        +username: String
+        +email: String
+        +first_name: String
+        +last_name: String
+        +role: String {admin, responsable, technicien}
+        +status: String {active, inactive, suspended}
+        +phone_number: String
+        +address: Text
+        +latitude: Decimal
+        +longitude: Decimal
+        +specialization: String
+        +online_status: String
+        +is_available: Boolean
+        +created_at: DateTime
+        +updated_at: DateTime
+        --
+        +is_admin(): Boolean
+        +is_responsable(): Boolean
+        +is_technicien(): Boolean
+        +get_full_name(): String
+        +set_online_status(status, message)
+    }
+
+    class UserProfile {
+        +id: UUID
+        +user: CustomUser
+        +bio: Text
+        +website: URL
+        +emergency_contact: String
+        +emergency_phone: String
+        +email_notifications: Boolean
+        +sms_notifications: Boolean
+        +push_notifications: Boolean
+    }
+
+    class Team {
+        +id: UUID
+        +name: String
+        +description: Text
+        +team_type: String {permanent, temporary}
+        +specialization: String
+        +is_active: Boolean
+        +created_at: DateTime
+        +updated_at: DateTime
+        --
+        +member_count: Integer
+        +active_members: Integer
+    }
+
+    class TeamMembership {
+        +id: UUID
+        +team: Team
+        +member: CustomUser
+        +role: String {member, leader, deputy}
+        +joined_at: DateTime
+        +left_at: DateTime
+        +is_active: Boolean
+        +notes: Text
+    }
+
+    class Notification {
+        +id: UUID
+        +recipient: CustomUser
+        +title: String
+        +message: Text
+        +notification_type: String
+        +priority: String {low, medium, high, urgent}
+        +read: Boolean
+        +read_at: DateTime
+        +created_at: DateTime
+        +metadata: JSON
+        +action_url: URL
+        --
+        +mark_as_read()
+        +is_urgent(): Boolean
+    }
+}
+
+' Relations
+CustomUser ||--o{ UserProfile : "a un"
+CustomUser ||--o{ Notification : "reçoit"
+Team ||--o{ TeamMembership : "contient"
+CustomUser ||--o{ TeamMembership : "appartient à"
+
+@enduml 

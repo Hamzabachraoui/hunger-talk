@@ -1,0 +1,196 @@
+\babel@toc {french}{}\relax 
+\contentsline {chapter}{Introduction Générale}{10}{chapter*.5}%
+\contentsline {chapter}{\numberline {1}Étude Bibliographique}{13}{chapter.1}%
+\contentsline {section}{\numberline {1}Introduction}{13}{section.1.1}%
+\contentsline {section}{\numberline {2}Gaspillage alimentaire et gestion de stock au niveau des ménages}{13}{section.1.2}%
+\contentsline {subsection}{\numberline {2.1}Enjeux et ampleur du phénomène}{13}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {2.2}Pratiques domestiques et leviers d’action}{14}{subsection.1.2.2}%
+\contentsline {section}{\numberline {3}Suivi nutritionnel et applications mobiles (mHealth)}{14}{section.1.3}%
+\contentsline {subsection}{\numberline {3.1}Auto-surveillance et efficacité}{14}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {3.2}Vers des saisies plus naturelles et moins coûteuses}{14}{subsection.1.3.2}%
+\contentsline {section}{\numberline {4}Systèmes de recommandation appliqués à l’alimentation}{15}{section.1.4}%
+\contentsline {subsection}{\numberline {4.1}Fondements des systèmes de recommandation}{15}{subsection.1.4.1}%
+\contentsline {subsection}{\numberline {4.2}Spécificités du domaine alimentaire}{15}{subsection.1.4.2}%
+\contentsline {subsection}{\numberline {4.3}Données et apprentissage autour des recettes}{15}{subsection.1.4.3}%
+\contentsline {section}{\numberline {5}Agents conversationnels et interaction en langage naturel}{16}{section.1.5}%
+\contentsline {subsection}{\numberline {5.1}État de l’art des agents conversationnels en santé}{16}{subsection.1.5.1}%
+\contentsline {subsection}{\numberline {5.2}Chatbots et recommandation nutritionnelle}{16}{subsection.1.5.2}%
+\contentsline {section}{\numberline {6}Modèles de langage, Transformers et génération augmentée par récupération (RAG)}{16}{section.1.6}%
+\contentsline {subsection}{\numberline {6.1}Transformers et modèles de fondation}{16}{subsection.1.6.1}%
+\contentsline {subsection}{\numberline {6.2}Principe du RAG et intérêt pour la fiabilité}{17}{subsection.1.6.2}%
+\contentsline {subsection}{\numberline {6.3}Recherche dense, embeddings et indexation vectorielle}{17}{subsection.1.6.3}%
+\contentsline {section}{\numberline {7}Architecture logicielle et déploiement}{17}{section.1.7}%
+\contentsline {subsection}{\numberline {7.1}APIs et principes REST}{17}{subsection.1.7.1}%
+\contentsline {subsection}{\numberline {7.2}Reproductibilité et conteneurisation}{17}{subsection.1.7.2}%
+\contentsline {subsection}{\numberline {7.3}Technologies utilisées (documentation officielle)}{18}{subsection.1.7.3}%
+\contentsline {section}{\numberline {8}Synthèse et positionnement de Hunger-Talk}{18}{section.1.8}%
+\contentsline {chapter}{\numberline {2}Présentation de l'Entreprise SRM-MS}{19}{chapter.2}%
+\contentsline {section}{\numberline {1}Introduction}{19}{section.2.1}%
+\contentsline {section}{\numberline {2}Historique et Contexte}{19}{section.2.2}%
+\contentsline {subsection}{\numberline {2.1}Création et Évolution}{19}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2}Contexte Régional}{19}{subsection.2.2.2}%
+\contentsline {section}{\numberline {3}Mission et Vision}{20}{section.2.3}%
+\contentsline {subsection}{\numberline {3.1}Mission}{20}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {3.2}Vision}{20}{subsection.2.3.2}%
+\contentsline {section}{\numberline {4}Organisation et Structure}{20}{section.2.4}%
+\contentsline {subsection}{\numberline {4.1}Organisation Administrative}{20}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {4.2}Équipes Opérationnelles}{21}{subsection.2.4.2}%
+\contentsline {section}{\numberline {5}Division Système d'Information}{21}{section.2.5}%
+\contentsline {subsection}{\numberline {5.1}Présentation du Service}{21}{subsection.2.5.1}%
+\contentsline {subsection}{\numberline {5.2}Missions de la Division Système d'Information}{21}{subsection.2.5.2}%
+\contentsline {subsection}{\numberline {5.3}Contexte du Stage}{22}{subsection.2.5.3}%
+\contentsline {section}{\numberline {6}Activités Principales}{22}{section.2.6}%
+\contentsline {subsection}{\numberline {6.1}Gestion des Réseaux Électriques}{22}{subsection.2.6.1}%
+\contentsline {subsection}{\numberline {6.2}Gestion des Réseaux Hydrauliques}{22}{subsection.2.6.2}%
+\contentsline {subsection}{\numberline {6.3}Services aux Clients}{23}{subsection.2.6.3}%
+\contentsline {section}{\numberline {7}Positionnement et Défis}{23}{section.2.7}%
+\contentsline {subsection}{\numberline {7.1}Positionnement dans le Secteur}{23}{subsection.2.7.1}%
+\contentsline {subsection}{\numberline {7.2}Défis Actuels et Futurs}{23}{subsection.2.7.2}%
+\contentsline {section}{\numberline {8}Stratégie de Développement}{24}{section.2.8}%
+\contentsline {subsection}{\numberline {8.1}Investissements Technologiques}{24}{subsection.2.8.1}%
+\contentsline {subsection}{\numberline {8.2}Formation et Développement des Compétences}{24}{subsection.2.8.2}%
+\contentsline {section}{\numberline {9}Impact et Bénéfices}{24}{section.2.9}%
+\contentsline {subsection}{\numberline {9.1}Impact sur la Région}{24}{subsection.2.9.1}%
+\contentsline {subsection}{\numberline {9.2}Bénéfices pour les Parties Prenantes}{25}{subsection.2.9.2}%
+\contentsline {section}{\numberline {10}Conclusion}{25}{section.2.10}%
+\contentsline {chapter}{\numberline {3}Cahier des Charges et Planification}{26}{chapter.3}%
+\contentsline {section}{\numberline {1}Introduction}{26}{section.3.1}%
+\contentsline {section}{\numberline {2}Contexte et Objectifs du Projet}{26}{section.3.2}%
+\contentsline {subsection}{\numberline {2.1}Contexte du Projet}{26}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {2.2}Objectifs du Projet}{27}{subsection.3.2.2}%
+\contentsline {section}{\numberline {3}Spécifications Fonctionnelles}{27}{section.3.3}%
+\contentsline {subsection}{\numberline {3.1}Gestion des Pannes}{27}{subsection.3.3.1}%
+\contentsline {subsubsection}{Détection et Enregistrement}{27}{section*.6}%
+\contentsline {subsubsection}{Traitement et Suivi}{27}{section*.7}%
+\contentsline {subsection}{\numberline {3.2}Prédiction et Maintenance Prédictive}{27}{subsection.3.3.2}%
+\contentsline {subsubsection}{Modèles de Prédiction}{27}{section*.8}%
+\contentsline {subsubsection}{Planification de Maintenance}{28}{section*.9}%
+\contentsline {subsection}{\numberline {3.3}Gestion des Équipes}{28}{subsection.3.3.3}%
+\contentsline {subsubsection}{Disponibilité et Compétences}{28}{section*.10}%
+\contentsline {subsubsection}{Optimisation des Interventions}{28}{section*.11}%
+\contentsline {subsection}{\numberline {3.4}Interface Client}{28}{subsection.3.3.4}%
+\contentsline {subsubsection}{Portail Client}{28}{section*.12}%
+\contentsline {subsubsection}{Communication}{29}{section*.13}%
+\contentsline {subsection}{\numberline {3.5}Dashboard et Reporting}{29}{subsection.3.3.5}%
+\contentsline {subsubsection}{Dashboard Opérationnel}{29}{section*.14}%
+\contentsline {subsubsection}{Reporting et Analyse}{29}{section*.15}%
+\contentsline {section}{\numberline {4}Spécifications Techniques}{29}{section.3.4}%
+\contentsline {subsection}{\numberline {4.1}Architecture du Système}{29}{subsection.3.4.1}%
+\contentsline {subsubsection}{Architecture Générale}{29}{section*.16}%
+\contentsline {subsubsection}{Technologies}{30}{section*.17}%
+\contentsline {subsection}{\numberline {4.2}Intégrations}{30}{subsection.3.4.2}%
+\contentsline {subsubsection}{Systèmes Externes}{30}{section*.18}%
+\contentsline {subsubsection}{APIs et Services}{30}{section*.19}%
+\contentsline {section}{\numberline {5}Contraintes et Hypothèses}{30}{section.3.5}%
+\contentsline {subsection}{\numberline {5.1}Contraintes Techniques}{30}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {5.2}Contraintes Opérationnelles}{31}{subsection.3.5.2}%
+\contentsline {subsection}{\numberline {5.3}Hypothèses}{31}{subsection.3.5.3}%
+\contentsline {section}{\numberline {6}Planification du Projet}{31}{section.3.6}%
+\contentsline {subsection}{\numberline {6.1}Diagramme de Gantt}{31}{subsection.3.6.1}%
+\contentsline {subsection}{\numberline {6.2}Gestion des Risques}{33}{subsection.3.6.2}%
+\contentsline {subsubsection}{Risques Identifiés}{33}{section*.21}%
+\contentsline {subsubsection}{Mitigation des Risques}{34}{section*.22}%
+\contentsline {section}{\numberline {7}Critères de Succès}{34}{section.3.7}%
+\contentsline {subsection}{\numberline {7.1}Critères Fonctionnels}{34}{subsection.3.7.1}%
+\contentsline {subsection}{\numberline {7.2}Critères Techniques}{34}{subsection.3.7.2}%
+\contentsline {section}{\numberline {8}Conclusion}{34}{section.3.8}%
+\contentsline {chapter}{\numberline {4}Vue conceptuelle}{35}{chapter.4}%
+\contentsline {section}{\numberline {1}Introduction}{35}{section.4.1}%
+\contentsline {section}{\numberline {2}Modèle UML}{35}{section.4.2}%
+\contentsline {subsection}{\numberline {2.1}Diagramme de cas d'utilisation}{35}{subsection.4.2.1}%
+\contentsline {subsubsection}{Cas d'utilisation - Administrateur}{36}{section*.23}%
+\contentsline {subsubsection}{Cas d'utilisation - Responsable}{37}{section*.25}%
+\contentsline {subsubsection}{Cas d'utilisation - Technicien}{38}{section*.27}%
+\contentsline {subsubsection}{Cas d'utilisation - Client}{39}{section*.29}%
+\contentsline {subsection}{\numberline {2.2}Diagramme de classes}{40}{subsection.4.2.2}%
+\contentsline {subsubsection}{Gestion des Utilisateurs}{40}{section*.31}%
+\contentsline {subsubsection}{Gestion des Pannes}{42}{section*.33}%
+\contentsline {subsubsection}{Système de Prédiction ML}{42}{section*.35}%
+\contentsline {subsubsection}{Portail Client et Communication}{44}{section*.37}%
+\contentsline {subsection}{\numberline {2.3}Diagramme d'activité}{45}{subsection.4.2.3}%
+\contentsline {subsection}{\numberline {2.4}Diagrammes de Composants}{53}{subsection.4.2.4}%
+\contentsline {subsubsection}{Vue Frontend et Backend}{53}{section*.47}%
+\contentsline {subsubsection}{Vue Services ML}{55}{section*.49}%
+\contentsline {subsubsection}{Vue Base de Données}{56}{section*.51}%
+\contentsline {subsubsection}{Vue Infrastructure}{57}{section*.53}%
+\contentsline {section}{\numberline {3}Architecture du Système}{58}{section.4.3}%
+\contentsline {subsection}{\numberline {3.1}Architecture Globale}{58}{subsection.4.3.1}%
+\contentsline {section}{\numberline {4}Architecture du Système de Prédiction ML}{58}{section.4.4}%
+\contentsline {subsection}{\numberline {4.1}Architecture Générale du Système ML}{58}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.2}Composants du Système ML}{59}{subsection.4.4.2}%
+\contentsline {subsubsection}{Modèle XGBoost - Classification Probabiliste}{59}{section*.55}%
+\contentsline {subsubsection}{Modèle Prophet - Analyse Temporelle}{59}{section*.56}%
+\contentsline {subsection}{\numberline {4.3}Flux de Données et Intégration}{59}{subsection.4.4.3}%
+\contentsline {subsubsection}{Collecte de Données}{59}{section*.57}%
+\contentsline {subsubsection}{Traitement et Features Engineering}{59}{section*.58}%
+\contentsline {subsection}{\numberline {4.4}Intégration dans le Système}{60}{subsection.4.4.4}%
+\contentsline {subsubsection}{API de Prédiction}{60}{section*.59}%
+\contentsline {subsubsection}{Dashboard de Prédiction}{60}{section*.60}%
+\contentsline {section}{\numberline {5}Base de Données}{60}{section.4.5}%
+\contentsline {subsection}{\numberline {5.1}Schéma de la Base de Données}{60}{subsection.4.5.1}%
+\contentsline {subsection}{\numberline {5.2}Relations et Contraintes}{61}{subsection.4.5.2}%
+\contentsline {chapter}{\numberline {5}Développement de l'application}{62}{chapter.5}%
+\contentsline {section}{\numberline {1}Technologies et Outils Utilisés}{62}{section.5.1}%
+\contentsline {subsection}{\numberline {1.1}Langages de Programmation}{62}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {1.2}Base de Données et Cache}{63}{subsection.5.1.2}%
+\contentsline {subsection}{\numberline {1.3}Intelligence Artificielle et Machine Learning}{63}{subsection.5.1.3}%
+\contentsline {subsection}{\numberline {1.4}Outils de Développement}{65}{subsection.5.1.4}%
+\contentsline {subsection}{\numberline {1.5}Bibliothèques et Frameworks}{65}{subsection.5.1.5}%
+\contentsline {subsection}{\numberline {1.6}Outils de Déploiement et Monitoring}{66}{subsection.5.1.6}%
+\contentsline {section}{\numberline {2}Interfaces de l'Application}{67}{section.5.2}%
+\contentsline {subsection}{\numberline {2.1}Interface d'Administration Safegrid}{67}{subsection.5.2.1}%
+\contentsline {subsubsection}{Page de Connexion}{67}{section*.73}%
+\contentsline {subsubsection}{Barre de Navigation}{68}{section*.75}%
+\contentsline {subsubsection}{Dashboard et Tableaux de Bord}{70}{section*.78}%
+\contentsline {subsubsection}{Interfaces par Rôle Utilisateur}{71}{section*.81}%
+\contentsline {subsection}{\numberline {2.2}Gestion des Pannes}{72}{subsection.5.2.2}%
+\contentsline {subsubsection}{Signalement et Déclaration de Pannes}{72}{section*.85}%
+\contentsline {subsubsection}{Liste et Suivi des Pannes}{75}{section*.89}%
+\contentsline {subsubsection}{Détails et Analyse des Pannes}{76}{section*.91}%
+\contentsline {subsection}{\numberline {2.3}Gestion des Interventions}{77}{subsection.5.2.3}%
+\contentsline {subsubsection}{Liste et Suivi des Interventions}{77}{section*.94}%
+\contentsline {subsubsection}{Détails et Planification des Interventions}{78}{section*.96}%
+\contentsline {subsubsection}{Affectation d'Équipes}{78}{section*.98}%
+\contentsline {subsection}{\numberline {2.4}Gestion des Équipes}{79}{subsection.5.2.4}%
+\contentsline {subsubsection}{Liste et Organisation des Équipes}{79}{section*.100}%
+\contentsline {subsubsection}{Détails et Composition des Équipes}{80}{section*.102}%
+\contentsline {subsubsection}{Création et Modification d'Équipes}{80}{section*.104}%
+\contentsline {subsection}{\numberline {2.5}Gestion des Utilisateurs}{82}{subsection.5.2.5}%
+\contentsline {subsubsection}{Liste et Administration des Utilisateurs}{82}{section*.107}%
+\contentsline {subsubsection}{Détails et Gestion des Profils Utilisateurs}{83}{section*.109}%
+\contentsline {subsection}{\numberline {2.6}Gestion des Clients}{84}{subsection.5.2.6}%
+\contentsline {subsubsection}{Liste et Suivi des Clients}{84}{section*.112}%
+\contentsline {subsubsection}{Détails et Historique des Clients}{85}{section*.114}%
+\contentsline {subsection}{\numberline {2.7}Gestion des Réclamations}{86}{subsection.5.2.7}%
+\contentsline {subsubsection}{Liste et Suivi des Réclamations}{86}{section*.116}%
+\contentsline {subsubsection}{Détails et Traitement des Réclamations}{86}{section*.118}%
+\contentsline {subsection}{\numberline {2.8}Gestion des Annonces}{87}{subsection.5.2.8}%
+\contentsline {subsubsection}{Liste et Administration des Annonces}{87}{section*.120}%
+\contentsline {subsection}{\numberline {2.9}Système de Chat et Communication}{88}{subsection.5.2.9}%
+\contentsline {subsubsection}{Interface de Chat Interne}{88}{section*.122}%
+\contentsline {subsection}{\numberline {2.10}Système de Notifications}{88}{subsection.5.2.10}%
+\contentsline {subsubsection}{Gestion des Notifications}{88}{section*.124}%
+\contentsline {subsection}{\numberline {2.11}Système de Prédiction}{89}{subsection.5.2.11}%
+\contentsline {subsubsection}{Interfaces de Prédiction des Pannes}{89}{section*.126}%
+\contentsline {subsection}{\numberline {2.12}Paramètres et Configuration}{91}{subsection.5.2.12}%
+\contentsline {subsubsection}{Gestion des Paramètres Utilisateur}{91}{section*.132}%
+\contentsline {subsection}{\numberline {2.13}Système d'Annonces et Communication}{93}{subsection.5.2.13}%
+\contentsline {subsubsection}{Gestion des Annonces}{93}{section*.137}%
+\contentsline {subsubsection}{Détails et Création d'Annonces}{94}{section*.139}%
+\contentsline {subsection}{\numberline {2.14}Portail Client}{95}{subsection.5.2.14}%
+\contentsline {subsubsection}{Page d'Accueil et Présentation}{95}{section*.142}%
+\contentsline {subsubsection}{Authentification et Inscription Client}{97}{section*.146}%
+\contentsline {subsubsection}{Signalement de Pannes Client}{101}{section*.151}%
+\contentsline {subsubsection}{Suivi des Pannes Client}{103}{section*.154}%
+\contentsline {subsubsection}{Communication et Support Client}{103}{section*.156}%
+\contentsline {subsubsection}{Informations et À Propos}{104}{section*.158}%
+\contentsline {subsubsection}{Support Multilingue}{108}{section*.166}%
+\contentsline {subsection}{\numberline {2.15}Conclusion sur les Interfaces}{109}{subsection.5.2.15}%
+\contentsline {chapter}{\numberline {6}Conclusion Générale}{110}{chapter.6}%
+\contentsline {section}{\numberline {1}Conclusion}{110}{section.6.1}%
+\contentsline {section}{\numberline {2}Perspectives}{110}{section.6.2}%
+\contentsline {subsection}{\numberline {2.1}Évolutions Techniques}{110}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {2.2}Évolutions Fonctionnelles}{111}{subsection.6.2.2}%
+\contentsline {subsection}{\numberline {2.3}Évolutions Business}{111}{subsection.6.2.3}%
+\contentsline {section}{\numberline {3}Impact sur les Services Publics}{111}{section.6.3}%
+\contentsline {chapter}{Annexes}{112}{chapter*.168}%

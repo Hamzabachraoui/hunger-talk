@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../providers/recipe_provider.dart';
 import '../../widgets/recipe_card.dart';
@@ -37,8 +38,21 @@ class _RecipesScreenState extends State<RecipesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (didPop) return;
+        
+        // Naviguer en arrière dans l'historique si possible
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          // Sinon, retourner au dashboard
+          context.go('/dashboard');
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
         title: const Text('Recettes'),
         actions: [
           IconButton(
@@ -146,6 +160,7 @@ class _RecipesScreenState extends State<RecipesScreen> {
             ),
           );
         },
+      ),
       ),
     );
   }

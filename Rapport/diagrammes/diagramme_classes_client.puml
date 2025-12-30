@@ -1,0 +1,117 @@
+@startuml Diagramme de Classes - Portail Client SRM-MS
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam class {
+    BackgroundColor #F8F9FA
+    BorderColor #6C757D
+    FontColor #212529
+    FontSize 12
+}
+skinparam package {
+    BackgroundColor #E9ECEF
+    BorderColor #6C757D
+    FontColor #495057
+    FontSize 14
+}
+
+title **Diagramme de Classes - Portail Client SRM-MS**
+
+package "Portail Client" {
+    class Client {
+        +id: UUID
+        +numero: String
+        +last_name: String
+        +first_name: String
+        +address: String
+        +phone: String
+        +email: EmailField
+        +password: String
+        +created_at: DateTime
+    }
+
+    class ClientBreakdown {
+        +id: UUID
+        +client: Client
+        +title: String
+        +description: Text
+        +location: String
+        +priority: String {low, medium, high, critical}
+        +contact_phone: String
+        +contact_email: EmailField
+        +status: String {pending, in_progress, resolved, rejected}
+        +assigned_team: Team
+        +created_at: DateTime
+        +updated_at: DateTime
+    }
+
+    class Announcement {
+        +id: UUID
+        +title: String
+        +content: Text
+        +announcement_type: String {maintenance, outage, info, emergency, general}
+        +priority: String {low, medium, high, critical}
+        +status: String {draft, published, archived}
+        +author: CustomUser
+        +affected_areas: Text
+        +start_date: DateTime
+        +end_date: DateTime
+        +is_pinned: Boolean
+        +created_at: DateTime
+        +updated_at: DateTime
+        +published_at: DateTime
+    }
+}
+
+package "Communication" {
+    class ChatGroup {
+        +id: UUID
+        +client: CustomUser
+        +is_active: Boolean
+        +created_at: DateTime
+        +updated_at: DateTime
+    }
+
+    class ChatMessage {
+        +id: UUID
+        +group: ChatGroup
+        +sender: CustomUser
+        +content: Text
+        +message_type: String {text, image, file}
+        +is_read: Boolean
+        +created_at: DateTime
+    }
+
+    class MessageReadStatus {
+        +id: UUID
+        +message: ChatMessage
+        +admin_user: CustomUser
+        +is_read: Boolean
+        +read_at: DateTime
+        +created_at: DateTime
+    }
+
+    class AdminAvailability {
+        +id: UUID
+        +admin_user: CustomUser
+        +is_available: Boolean
+        +last_activity: DateTime
+        +created_at: DateTime
+        +updated_at: DateTime
+    }
+}
+
+' Relations
+Client ||--o{ ClientBreakdown : "déclare"
+ClientBreakdown }o--|| Team : "assigne"
+ClientBreakdown }o--|| CustomUser : "assigne"
+Announcement }o--|| CustomUser : "écrit"
+
+Client ||--o{ ChatGroup : "participe"
+ChatGroup ||--o{ ChatMessage : "contient"
+ChatMessage ||--o{ MessageReadStatus : "a"
+CustomUser ||--o{ AdminAvailability : "a"
+
+' Relations d'héritage
+CustomUser <|-- Client : "peut être"
+
+@enduml 

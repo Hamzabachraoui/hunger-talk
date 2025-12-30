@@ -1,0 +1,109 @@
+@startuml Diagramme de Classes - Gestion des Pannes SRM-MS
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam class {
+    BackgroundColor #F8F9FA
+    BorderColor #6C757D
+    FontColor #212529
+    FontSize 12
+}
+skinparam package {
+    BackgroundColor #E9ECEF
+    BorderColor #6C757D
+    FontColor #495057
+    FontSize 14
+}
+
+title **Diagramme de Classes - Gestion des Pannes SRM-MS**
+
+package "Gestion des Pannes" {
+    class Breakdown {
+        +id: UUID
+        +title: String
+        +description: Text
+        +breakdown_type: String {electricity, water, sanitation}
+        +breakdown_category: String
+        +urgency_level: String {low, medium, high, critical}
+        +status: String {pending, in_progress, resolved, closed}
+        +latitude: Float
+        +longitude: Float
+        +address: String
+        +neighborhood: String
+        +occurred_at: DateTime
+        +resolved_at: DateTime
+        +estimated_duration: Duration
+        +assigned_to: CustomUser
+        +assigned_team: Team
+        +reported_by: CustomUser
+        +notes: Text
+        +is_recurring: Boolean
+        +created_at: DateTime
+        +updated_at: DateTime
+        --
+        +coordinates: Tuple
+        +get_duration(): Duration
+        +is_overdue(): Boolean
+        +set_location(lat, lng)
+    }
+
+    class BreakdownPhoto {
+        +id: UUID
+        +breakdown: Breakdown
+        +photo: ImageField
+        +description: String
+        +taken_at: DateTime
+        +taken_by: CustomUser
+        +photo_type: String {before, after, during}
+        +created_at: DateTime
+    }
+
+    class Intervention {
+        +id: UUID
+        +breakdown: Breakdown
+        +technician: CustomUser
+        +team: Team
+        +intervention_type: String
+        +description: Text
+        +start_time: DateTime
+        +end_time: DateTime
+        +duration: Duration
+        +status: String
+        +is_successful: Boolean
+        +actions_taken: Text
+        +parts_used: Text
+        +cost: Decimal
+        +notes: Text
+        +created_at: DateTime
+        +updated_at: DateTime
+    }
+
+    class WeatherData {
+        +id: UUID
+        +latitude: Float
+        +longitude: Float
+        +location_name: String
+        +recorded_at: DateTime
+        +temperature: Float
+        +humidity: Float
+        +pressure: Float
+        +wind_speed: Float
+        +wind_direction: Float
+        +precipitation: Float
+        +visibility: Float
+        +weather_condition: String
+        +weather_description: String
+        +source: String
+        +created_at: DateTime
+    }
+}
+
+' Relations
+Breakdown ||--o{ BreakdownPhoto : "contient"
+Breakdown ||--o{ Intervention : "génère"
+Breakdown }o--|| CustomUser : "signale"
+Breakdown }o--|| CustomUser : "assigne"
+Breakdown }o--|| Team : "assigne"
+Intervention }o--|| CustomUser : "effectue"
+Intervention }o--|| Team : "effectue"
+
+@enduml 
