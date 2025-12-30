@@ -1,32 +1,57 @@
 import 'package:flutter/foundation.dart';
 import 'api_service.dart';
+import 'ollama_service.dart';
 import '../models/chat_message_model.dart';
 import '../../core/constants/app_constants.dart';
 
 class ChatService {
   final ApiService _apiService = ApiService();
+  final OllamaService _ollamaService = OllamaService();
 
+  /// Envoie un message via Ollama local (architecture hybride)
+  /// 
+  /// 1. Récupère le contexte RAG depuis Railway
+  /// 2. Appelle Ollama localement avec le contexte
+  /// 3. Retourne la réponse de l'IA
   Future<String> sendMessage(String message) async {
-    final data = {'message': message};
-    debugPrint('💬 [CHAT] Envoi de message: ${message.substring(0, message.length > 50 ? 50 : message.length)}...');
-    // Le chat nécessite plus de temps car l'IA peut prendre du temps à répondre
-    final response = await _apiService.post(
-      AppConstants.chat,
-      data,
-      timeout: AppConstants.chatTimeout,
-    );
-    debugPrint('💬 [CHAT] Réponse reçue: ${response.runtimeType}');
-    if (response == null || response is! Map<String, dynamic>) {
-      debugPrint('❌ [CHAT] Format de réponse invalide: ${response?.runtimeType ?? "null"}');
-      throw Exception('Format de réponse invalide: attendu Map, reçu ${response?.runtimeType ?? "null"}');
+    try {
+      debugPrint('💬 [CHAT] Envoi de message: ${message.substring(0, message.length > 50 ? 50 : message.length)}...');
+      
+      // 1. Récupérer le contexte RAG depuis Railway
+      debugPrint('🔍 [CHAT] Récupération du contexte depuis Railway...');
+      final contextData = {'message': message};
+      final contextResponse = await _apiService.post(
+        '/chat/context',
+        contextData,
+        timeout: AppConstants.apiTimeout,
+      );
+      
+      String? context;
+      String? systemPrompt;
+      
+      if (contextResponse != null && contextResponse is Map<String, dynamic>) {
+        context = contextResponse['context'] as String?;
+        systemPrompt = contextResponse['system_prompt'] as String?;
+        debugPrint('✅ [CHAT] Contexte récupéré depuis Railway (${context?.length ?? 0} caractères)');
+      } else {
+        debugPrint('⚠️ [CHAT] Contexte non disponible, envoi sans contexte');
+      }
+      
+      // 2. Appeler Ollama localement avec le contexte
+      debugPrint('🤖 [CHAT] Appel à Ollama local...');
+      final aiResponse = await _ollamaService.sendMessage(
+        message,
+        context: context,
+        systemPrompt: systemPrompt,
+      );
+      
+      debugPrint('✅ [CHAT] Réponse IA reçue (${aiResponse.length} caractères)');
+      return aiResponse;
+      
+    } catch (e) {
+      debugPrint('❌ [CHAT] Erreur lors de l\'envoi: $e');
+      rethrow;
     }
-    if (!response.containsKey('response')) {
-      debugPrint('❌ [CHAT] Clé "response" manquante. Clés disponibles: ${response.keys.toList()}');
-      throw Exception('Réponse invalide: clé "response" manquante. Réponse: $response');
-    }
-    final aiResponse = response['response'] as String? ?? '';
-    debugPrint('✅ [CHAT] Réponse IA reçue (${aiResponse.length} caractères)');
-    return aiResponse;
   }
 
   Future<List<ChatMessageModel>> getHistory() async {

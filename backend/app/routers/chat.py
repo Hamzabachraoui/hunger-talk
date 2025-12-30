@@ -24,6 +24,33 @@ from app.services.system_config_service import get_ollama_base_url, get_ollama_m
 router = APIRouter()
 
 
+@router.post("/context", response_model=dict, status_code=status.HTTP_200_OK)
+async def get_chat_context(
+    chat_data: ChatMessageCreate,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Retourne le contexte RAG pour un message sans appeler Ollama.
+    Utilisé par l'app mobile pour obtenir le contexte avant d'appeler Ollama localement.
+    """
+    try:
+        rag_service = RAGService(db, current_user)
+        full_context = rag_service.build_full_context(chat_data.message)
+        system_prompt = rag_service.build_system_prompt()
+        
+        return {
+            "context": full_context,
+            "system_prompt": system_prompt
+        }
+    except Exception as e:
+        logger.error(f"Erreur lors de la construction du contexte: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Erreur lors de la construction du contexte: {str(e)}"
+        )
+
+
 @router.post("/", response_model=ChatMessageSimple, status_code=status.HTTP_200_OK)
 async def chat_with_ai(
     chat_data: ChatMessageCreate,
