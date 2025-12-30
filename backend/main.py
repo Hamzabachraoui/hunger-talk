@@ -58,7 +58,7 @@ async def log_requests(http_request, call_next):
         raise
 
 # Importer les routers
-from app.routers import auth, stock, chat, recipes, recommendations, nutrition, notifications, shopping_list, user
+from app.routers import auth, stock, chat, recipes, recommendations, nutrition, notifications, shopping_list, user, system_config
 
 # Inclure les routers
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
@@ -70,6 +70,7 @@ app.include_router(nutrition.router, prefix="/api/nutrition", tags=["nutrition"]
 app.include_router(notifications.router, prefix="/api/notifications", tags=["notifications"])
 app.include_router(shopping_list.router, prefix="/api/shopping-list", tags=["shopping-list"])
 app.include_router(user.router, prefix="/api/user", tags=["user"])
+app.include_router(system_config.router, tags=["system-config"])
 
 
 @app.on_event("startup")

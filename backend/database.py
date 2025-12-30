@@ -51,7 +51,7 @@ def init_db():
         from app.models import (
             User, Category, StockItem, Recipe, RecipeIngredient, RecipeStep,
             NutritionData, UserPreferences, ChatMessage, ShoppingListItem,
-            Notification, CookingHistory
+            Notification, CookingHistory, SystemConfig
         )
         
         # Tester la connexion avant de créer les tables

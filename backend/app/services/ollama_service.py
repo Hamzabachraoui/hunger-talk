@@ -12,9 +12,16 @@ logger = logging.getLogger(__name__)
 class OllamaService:
     """Service pour communiquer avec Ollama"""
     
-    def __init__(self):
-        self.base_url = settings.OLLAMA_BASE_URL
-        self.model = settings.OLLAMA_MODEL
+    def __init__(self, base_url: Optional[str] = None, model: Optional[str] = None):
+        """
+        Initialise le service Ollama
+        
+        Args:
+            base_url: URL de base Ollama (par défaut: depuis settings ou DB)
+            model: Modèle Ollama à utiliser (par défaut: depuis settings)
+        """
+        self.base_url = base_url or settings.OLLAMA_BASE_URL
+        self.model = model or settings.OLLAMA_MODEL
         self.timeout = 120.0  # 2 minutes pour les réponses longues
     
     async def generate(
@@ -61,13 +68,12 @@ class OllamaService:
             }
             
             # Appel à Ollama
-            # Ajouter les headers pour éviter le 403 sur ngrok gratuit
+            # Headers simples - Cloudflare Tunnel ne nécessite pas de header spécial
             headers = {
                 "User-Agent": "Railway-Backend/1.0",
-                "Accept": "application/json"
+                "Accept": "application/json",
+                "Content-Type": "application/json"
             }
-            if "ngrok" in self.base_url or "ngrok-free.dev" in self.base_url:
-                headers["ngrok-skip-browser-warning"] = "true"
             
             async with httpx.AsyncClient(timeout=self.timeout, follow_redirects=True) as client:
                 response = await client.post(
@@ -75,17 +81,6 @@ class OllamaService:
                     json=payload,
                     headers=headers
                 )
-                
-                # Si on reçoit un 403, c'est probablement la page d'avertissement ngrok
-                if response.status_code == 403:
-                    logger.warning(f"⚠️ ngrok retourne 403, peut-être la page d'avertissement. Réessayons avec d'autres headers...")
-                    # Réessayer avec un header différent
-                    headers["ngrok-skip-browser-warning"] = "any"
-                    response = await client.post(
-                        f"{self.base_url}/api/chat",
-                        json=payload,
-                        headers=headers
-                    )
                 
                 response.raise_for_status()
                 result = response.json()
@@ -124,22 +119,14 @@ class OllamaService:
             True si Ollama est disponible, False sinon
         """
         try:
-            # Ajouter les headers pour éviter le 403 sur ngrok gratuit
+            # Headers simples pour la vérification
             headers = {
                 "User-Agent": "Railway-Backend/1.0",
                 "Accept": "application/json"
             }
-            if "ngrok" in self.base_url or "ngrok-free.dev" in self.base_url:
-                headers["ngrok-skip-browser-warning"] = "true"
             
             async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
                 response = await client.get(f"{self.base_url}/api/tags", headers=headers)
-                
-                # Si on reçoit un 403, c'est probablement la page d'avertissement ngrok
-                if response.status_code == 403:
-                    logger.warning(f"⚠️ ngrok retourne 403, réessayons avec d'autres headers...")
-                    headers["ngrok-skip-browser-warning"] = "any"
-                    response = await client.get(f"{self.base_url}/api/tags", headers=headers)
                 
                 if response.status_code == 200:
                     logger.info(f"✅ Ollama est accessible à {self.base_url}")

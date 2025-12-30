@@ -17,8 +17,9 @@ from app.models.user import User
 from app.models.chat_message import ChatMessage
 from app.schemas.chat import ChatMessageCreate, ChatMessageResponse, ChatMessageSimple
 from app.core.dependencies import get_current_user
-from app.services.ollama_service import ollama_service
+from app.services.ollama_service import OllamaService
 from app.services.rag_service import RAGService
+from app.services.system_config_service import get_ollama_base_url, get_ollama_model
 
 router = APIRouter()
 
@@ -42,11 +43,14 @@ async def chat_with_ai(
     
     try:
         # Construire le contexte RAG
-        # Note: On skip la vérification de disponibilité car ngrok gratuit retourne 403
-        # même avec le header. On essaie directement l'appel.
         rag_service = RAGService(db, current_user)
         full_context = rag_service.build_full_context(chat_data.message)
         system_prompt = rag_service.build_system_prompt()
+        
+        # Récupérer l'URL Ollama depuis la base de données
+        ollama_url = get_ollama_base_url(db)
+        ollama_model = get_ollama_model(db)
+        ollama_service = OllamaService(base_url=ollama_url, model=ollama_model)
         
         # Appeler Ollama
         try:

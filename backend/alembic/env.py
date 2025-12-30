@@ -26,6 +26,7 @@ from app.models.chat_message import ChatMessage
 from app.models.shopping_list import ShoppingListItem
 from app.models.notification import Notification
 from app.models.cooking_history import CookingHistory
+from app.models.system_config import SystemConfig
 
 # this is the Alembic Config object
 config = context.config
