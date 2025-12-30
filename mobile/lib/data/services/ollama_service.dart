@@ -57,11 +57,6 @@ class OllamaService {
     try {
       final ollamaUrl = await _getOllamaUrl();
       
-      // Construire le prompt complet avec le contexte si fourni
-      final fullPrompt = context != null && context.isNotEmpty
-          ? '$context\n\nQuestion: $message'
-          : message;
-
       debugPrint('💬 [OLLAMA] Envoi du message à Ollama ($ollamaUrl)...');
       
       final url = Uri.parse('$ollamaUrl/api/chat');
