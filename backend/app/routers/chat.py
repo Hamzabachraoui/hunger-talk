@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from datetime import datetime
 import time
 import uuid
+import httpx
 
 import sys
 from pathlib import Path
@@ -40,23 +41,9 @@ async def chat_with_ai(
     start_time = time.time()
     
     try:
-        # Vérifier que Ollama est disponible
-        is_available = await ollama_service.check_availability()
-        if not is_available:
-            ollama_url = ollama_service.base_url
-            error_detail = (
-                f"L'IA n'est pas disponible à {ollama_url}. "
-                "Vérifiez que :\n"
-                "1. Ollama est démarré sur votre machine\n"
-                "2. Le tunnel (ngrok) est actif\n"
-                "3. La variable OLLAMA_BASE_URL dans Railway est correcte"
-            )
-            raise HTTPException(
-                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail=error_detail
-            )
-        
         # Construire le contexte RAG
+        # Note: On skip la vérification de disponibilité car ngrok gratuit retourne 403
+        # même avec le header. On essaie directement l'appel.
         rag_service = RAGService(db, current_user)
         full_context = rag_service.build_full_context(chat_data.message)
         system_prompt = rag_service.build_system_prompt()
