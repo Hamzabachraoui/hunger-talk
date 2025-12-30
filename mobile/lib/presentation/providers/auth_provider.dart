@@ -20,7 +20,7 @@ class AuthProvider with ChangeNotifier {
   String? get token => _token;
   bool get isLoading => _isLoading;
   String? get error => _error;
-  bool get isAuthenticated => _token != null && _user != null;
+  bool get isAuthenticated => _token != null; // Token suffit pour authentification
   bool get isInitialized => _isInitialized;
 
   // Future qui se complète quand l'authentification est chargée
@@ -36,7 +36,15 @@ class AuthProvider with ChangeNotifier {
       _token = await _secureStorage.read(key: 'auth_token');
       if (_token != null) {
         debugPrint('✅ [AUTH PROVIDER] Token trouvé dans le storage (${_token!.substring(0, 20)}...)');
-        // TODO: Charger les données utilisateur depuis l'API
+        // Créer un UserModel minimal - les détails seront chargés si nécessaire
+        // Le token est suffisant pour l'authentification
+        _user ??= UserModel(
+            id: '',
+            email: '',
+            firstName: '',
+            lastName: '',
+            createdAt: DateTime.now(),
+          );
       } else {
         debugPrint('⚠️ [AUTH PROVIDER] Aucun token trouvé dans le storage');
       }
