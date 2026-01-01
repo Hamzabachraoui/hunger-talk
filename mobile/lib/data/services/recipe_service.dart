@@ -47,5 +47,19 @@ class RecipeService {
     );
     debugPrint('✅ [RECIPE] Recette cuisinée avec succès');
   }
+
+  Future<RecipeModel> createRecipe(Map<String, dynamic> recipeData) async {
+    debugPrint('🍳 [RECIPE] Création d\'une nouvelle recette...');
+    final response = await _apiService.post(
+      AppConstants.recipes,
+      recipeData,
+    );
+    if (response == null || response is! Map<String, dynamic>) {
+      debugPrint('❌ [RECIPE] Format de réponse invalide: ${response?.runtimeType ?? "null"}');
+      throw Exception('Format de réponse invalide: attendu Map, reçu ${response?.runtimeType ?? "null"}');
+    }
+    debugPrint('✅ [RECIPE] Recette créée avec succès');
+    return RecipeModel.fromJson(response);
+  }
 }
 

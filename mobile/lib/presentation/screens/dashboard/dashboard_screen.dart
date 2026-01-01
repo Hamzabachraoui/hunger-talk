@@ -177,7 +177,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                             ),
                                           ),
                                           TextButton(
-                                            onPressed: () => context.go('/stock'),
+                                            onPressed: () => context.push('/stock'),
                                             child: const Text('Voir'),
                                           ),
                                         ],
@@ -269,7 +269,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 label: 'Ajouter au stock',
                                 icon: Icons.add_circle_outline,
                                 color: AppColors.primary,
-                                onTap: () => context.go('/stock'),
+                                onTap: () => context.push('/stock'),
                               ),
                             ),
                             const SizedBox(width: 12),
@@ -278,7 +278,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 label: 'Chat IA',
                                 icon: Icons.chat_bubble_outline,
                                 color: AppColors.secondary,
-                                onTap: () => context.go('/chat'),
+                                onTap: () => context.push('/chat'),
                               ),
                             ),
                           ],
@@ -291,7 +291,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 label: 'Recettes',
                                 icon: Icons.restaurant_outlined,
                                 color: AppColors.accent,
-                                onTap: () => context.go('/recipes'),
+                                onTap: () => context.push('/recipes'),
                               ),
                             ),
                           ],
@@ -311,7 +311,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               context.go('/stock');
               break;
             case 2:
-              context.go('/chat');
+              context.push('/chat');
               break;
             case 3:
               context.go('/recipes');

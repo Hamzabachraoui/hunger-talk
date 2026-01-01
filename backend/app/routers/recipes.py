@@ -21,6 +21,7 @@ from app.models.cooking_history import CookingHistory
 from app.schemas.recipe import (
     RecipeSummary,
     RecipeDetail,
+    RecipeCreate,
     CookRecipeRequest,
     CookRecipeResponse
 )
@@ -254,6 +255,128 @@ async def get_recipe_details(
         recipe_dict["missing_ingredients"] = availability["missing_ingredients"]
         recipe_dict["missing_ingredients_list"] = availability["missing_ingredients_list"]
         recipe_dict["can_cook"] = availability["can_cook"]
+    
+    return RecipeDetail(**recipe_dict)
+
+
+@router.post("/", response_model=RecipeDetail, status_code=status.HTTP_201_CREATED)
+async def create_recipe(
+    recipe_data: RecipeCreate,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Créer une nouvelle recette.
+    
+    La recette créée sera associée à l'utilisateur connecté.
+    """
+    # Calculer total_time si non fourni
+    total_time = recipe_data.total_time
+    if total_time is None and recipe_data.preparation_time is not None and recipe_data.cooking_time is not None:
+        total_time = recipe_data.preparation_time + recipe_data.cooking_time
+    
+    # Créer la recette
+    recipe = Recipe(
+        name=recipe_data.name,
+        description=recipe_data.description,
+        preparation_time=recipe_data.preparation_time,
+        cooking_time=recipe_data.cooking_time,
+        total_time=total_time,
+        difficulty=recipe_data.difficulty,
+        servings=recipe_data.servings,
+        image_url=recipe_data.image_url,
+        is_active=True
+    )
+    
+    db.add(recipe)
+    db.flush()  # Pour obtenir l'ID de la recette
+    
+    # Ajouter les ingrédients
+    for idx, ingredient_data in enumerate(recipe_data.ingredients):
+        ingredient = RecipeIngredient(
+            recipe_id=recipe.id,
+            ingredient_name=ingredient_data.ingredient_name,
+            quantity=ingredient_data.quantity,
+            unit=ingredient_data.unit,
+            optional=ingredient_data.optional,
+            order_index=idx
+        )
+        db.add(ingredient)
+    
+    # Ajouter les étapes
+    for step_data in recipe_data.steps:
+        step = RecipeStep(
+            recipe_id=recipe.id,
+            step_number=step_data.step_number,
+            instruction=step_data.instruction,
+            image_url=step_data.image_url
+        )
+        db.add(step)
+    
+    db.commit()
+    db.refresh(recipe)
+    
+    # Construire la réponse avec les détails
+    ingredients = db.query(RecipeIngredient).filter(RecipeIngredient.recipe_id == recipe.id).all()
+    steps = db.query(RecipeStep).filter(RecipeStep.recipe_id == recipe.id).all()
+    nutrition = db.query(NutritionData).filter(NutritionData.recipe_id == recipe.id).first()
+    
+    ingredients_data = [{
+        "id": ing.id,
+        "ingredient_name": ing.ingredient_name,
+        "quantity": ing.quantity,
+        "unit": ing.unit,
+        "optional": ing.optional
+    } for ing in ingredients]
+    
+    steps_data = [{
+        "id": step.id,
+        "step_number": step.step_number,
+        "instruction": step.instruction,
+        "image_url": step.image_url
+    } for step in steps]
+    
+    nutrition_data = None
+    if nutrition:
+        nutrition_data = {
+            "id": nutrition.id,
+            "calories": nutrition.calories,
+            "proteins": nutrition.proteins,
+            "carbohydrates": nutrition.carbohydrates,
+            "fats": nutrition.fats,
+            "fiber": nutrition.fiber,
+            "sugar": nutrition.sugar,
+            "sodium": nutrition.sodium,
+            "per_serving": nutrition.per_serving
+        }
+    
+    recipe_dict = {
+        "id": recipe.id,
+        "name": recipe.name,
+        "description": recipe.description,
+        "preparation_time": recipe.preparation_time,
+        "cooking_time": recipe.cooking_time,
+        "total_time": recipe.total_time,
+        "difficulty": recipe.difficulty,
+        "servings": recipe.servings,
+        "image_url": recipe.image_url,
+        "created_at": recipe.created_at,
+        "updated_at": recipe.updated_at,
+        "is_active": recipe.is_active,
+        "ingredients": ingredients_data,
+        "steps": steps_data,
+        "nutrition": nutrition_data,
+        "can_cook": False,
+        "missing_ingredients_list": []
+    }
+    
+    # Vérifier la disponibilité avec le stock de l'utilisateur
+    availability = check_recipe_availability(recipe, current_user.id, db)
+    recipe_dict["match_score"] = availability["match_score"]
+    recipe_dict["available_ingredients"] = availability["available_ingredients"]
+    recipe_dict["missing_ingredients"] = availability["missing_ingredients"]
+    recipe_dict["missing_ingredients_list"] = availability["missing_ingredients_list"]
+    recipe_dict["can_cook"] = availability["can_cook"]
     
     return RecipeDetail(**recipe_dict)
 

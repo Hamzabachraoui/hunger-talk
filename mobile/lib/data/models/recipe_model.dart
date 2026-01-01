@@ -125,10 +125,20 @@ class RecipeIngredient extends Equatable {
       id = DateTime.now().millisecondsSinceEpoch.toString();
     }
 
+    // Gérer quantity qui peut être num ou String
+    double quantity = 0.0;
+    if (json['quantity'] != null) {
+      if (json['quantity'] is num) {
+        quantity = (json['quantity'] as num).toDouble();
+      } else if (json['quantity'] is String) {
+        quantity = double.tryParse(json['quantity'] as String) ?? 0.0;
+      }
+    }
+
     return RecipeIngredient(
       id: id,
       name: json['ingredient_name'] as String? ?? json['name'] as String? ?? '',
-      quantity: (json['quantity'] as num?)?.toDouble() ?? 0.0,
+      quantity: quantity,
       unit: json['unit'] as String? ?? '',
       optional: json['optional'] is bool ? (json['optional'] as bool) : (json['optional'] == 1 || json['optional'] == 'true'),
     );

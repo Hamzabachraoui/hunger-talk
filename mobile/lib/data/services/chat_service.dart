@@ -11,9 +11,10 @@ class ChatService {
   /// Envoie un message via Ollama local (architecture hybride)
   /// 
   /// 1. Récupère le contexte RAG depuis Railway
-  /// 2. Appelle Ollama localement avec le contexte
+  /// 2. Appelle Ollama localement avec le contexte et streaming
   /// 3. Retourne la réponse de l'IA
-  Future<String> sendMessage(String message) async {
+  /// [onChunk] est appelé à chaque chunk reçu pour mettre à jour l'UI en temps réel
+  Future<String> sendMessage(String message, {Function(String)? onChunk}) async {
     try {
       debugPrint('💬 [CHAT] Envoi de message: ${message.substring(0, message.length > 50 ? 50 : message.length)}...');
       
@@ -37,12 +38,13 @@ class ChatService {
         debugPrint('⚠️ [CHAT] Contexte non disponible, envoi sans contexte');
       }
       
-      // 2. Appeler Ollama localement avec le contexte
-      debugPrint('🤖 [CHAT] Appel à Ollama local...');
+      // 2. Appeler Ollama localement avec le contexte et streaming
+      debugPrint('🤖 [CHAT] Appel à Ollama local avec streaming...');
       final aiResponse = await _ollamaService.sendMessage(
         message,
         context: context,
         systemPrompt: systemPrompt,
+        onChunk: onChunk, // Passer le callback pour les mises à jour progressives
       );
       
       debugPrint('✅ [CHAT] Réponse IA reçue (${aiResponse.length} caractères)');

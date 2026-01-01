@@ -1,63 +1,156 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'api_service.dart';
+import 'dart:io';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'ollama_discovery_service.dart';
 
 /// Service pour communiquer directement avec Ollama local
+/// OLLAMA EST MAINTENANT TOUJOURS LOCAL - Plus de connexion Railway pour Ollama
 class OllamaService {
-  final ApiService _apiService;
   String? _ollamaBaseUrl;
+  bool _isDiscovering = false;
 
-  OllamaService({ApiService? apiService})
-      : _apiService = apiService ?? ApiService();
+  OllamaService();
 
-  /// Récupère l'URL Ollama depuis Railway et la cache
+  /// Découvre automatiquement l'IP Ollama et la sauvegarde
+  /// Cette méthode est appelée au démarrage de l'application si aucune URL n'est sauvegardée
+  Future<bool> autoDiscoverAndSetUrl() async {
+    // Éviter les découvertes multiples simultanées
+    if (_isDiscovering) {
+      debugPrint('⚠️ [OLLAMA] Découverte déjà en cours, attente...');
+      return false;
+    }
+
+    // Si une URL est déjà définie, ne pas refaire la découverte
+    if (_ollamaBaseUrl != null && _ollamaBaseUrl!.isNotEmpty) {
+      debugPrint('ℹ️ [OLLAMA] URL déjà définie, découverte non nécessaire');
+      return true;
+    }
+
+    _isDiscovering = true;
+    try {
+      debugPrint('🔍 [OLLAMA] Lancement de la découverte automatique...');
+      final discoveredUrl = await OllamaDiscoveryService.discoverOllamaIp();
+      
+      if (discoveredUrl != null && discoveredUrl.isNotEmpty) {
+        await setOllamaUrl(discoveredUrl);
+        debugPrint('✅ [OLLAMA] Découverte automatique réussie: $discoveredUrl');
+        return true;
+      } else {
+        debugPrint('⚠️ [OLLAMA] Découverte automatique n\'a pas trouvé d\'URL');
+        return false;
+      }
+    } catch (e) {
+      debugPrint('❌ [OLLAMA] Erreur lors de la découverte automatique: $e');
+      return false;
+    } finally {
+      _isDiscovering = false;
+    }
+  }
+
+  /// Récupère l'URL Ollama locale (plus de Railway pour Ollama)
+  /// 
+  /// Pour Android émulateur : utilise 10.0.2.2 (pointe vers localhost du PC)
+  /// Pour téléphone physique : utilise l'IP locale du PC (détectée automatiquement ou configurée manuellement)
+  /// Pour iOS : utilise localhost directement
   Future<String> _getOllamaUrl() async {
     if (_ollamaBaseUrl != null) {
       return _ollamaBaseUrl!;
     }
 
+    // Vérifier si une URL est sauvegardée dans les préférences
     try {
-      debugPrint('🔍 [OLLAMA] Récupération de l\'URL Ollama depuis Railway...');
-      final response = await _apiService.get('/system-config/ollama');
-      
-      if (response != null && response is Map<String, dynamic>) {
-        final url = response['ollama_base_url'] as String?;
-        if (url != null && url.isNotEmpty) {
-          _ollamaBaseUrl = url;
-          debugPrint('✅ [OLLAMA] URL Ollama récupérée: $url');
-          return url;
-        }
+      final prefs = await SharedPreferences.getInstance();
+      final savedUrl = prefs.getString('ollama_base_url');
+      if (savedUrl != null && savedUrl.isNotEmpty) {
+        _ollamaBaseUrl = savedUrl;
+        debugPrint('✅ [OLLAMA] URL Ollama chargée depuis les préférences: $savedUrl');
+        return _ollamaBaseUrl!;
       }
-      
-      // Valeur par défaut si non configurée
-      debugPrint('⚠️ [OLLAMA] URL non configurée, utilisation de localhost');
-      _ollamaBaseUrl = 'http://192.168.11.101:11434';
-      return _ollamaBaseUrl!;
     } catch (e) {
-      debugPrint('❌ [OLLAMA] Erreur lors de la récupération de l\'URL: $e');
-      // Valeur par défaut en cas d'erreur
-      _ollamaBaseUrl = 'http://192.168.11.101:11434';
-      return _ollamaBaseUrl!;
+      debugPrint('⚠️ [OLLAMA] Erreur lors de la lecture des préférences: $e');
+    }
+
+    // Si aucune URL sauvegardée, essayer la découverte automatique
+    // Timeout plus long pour permettre au scan réseau de fonctionner
+    if (!_isDiscovering) {
+      debugPrint('🔍 [OLLAMA] Aucune URL sauvegardée, tentative de découverte automatique...');
+      try {
+        final discoveredUrl = await OllamaDiscoveryService.discoverOllamaIp()
+            .timeout(const Duration(seconds: 15)); // Timeout plus long pour le scan réseau
+        if (discoveredUrl != null && discoveredUrl.isNotEmpty) {
+          await setOllamaUrl(discoveredUrl);
+          debugPrint('✅ [OLLAMA] Découverte automatique réussie: $discoveredUrl');
+          return _ollamaBaseUrl!;
+        }
+      } catch (e) {
+        debugPrint('⚠️ [OLLAMA] Découverte automatique échouée ou timeout: $e');
+        debugPrint('💡 [OLLAMA] Astuce: Assurez-vous que le serveur PC est démarré (demarrer_ollama_ip_server.ps1)');
+        // Continuer avec les valeurs par défaut
+      }
+    }
+
+    // URL par défaut selon la plateforme
+    String defaultUrl;
+    
+    if (Platform.isAndroid) {
+      // Android émulateur : 10.0.2.2 pointe vers localhost du PC hôte
+      // Pour téléphone physique, 10.0.2.2 ne fonctionnera pas - la découverte automatique est nécessaire
+      defaultUrl = 'http://10.0.2.2:11434';
+      debugPrint('🤖 [OLLAMA] Android détecté - URL par défaut (émulateur): $defaultUrl');
+      debugPrint('⚠️ [OLLAMA] Si vous utilisez un téléphone physique, la découverte automatique doit fonctionner');
+      debugPrint('⚠️ [OLLAMA] Sinon, démarrez le serveur PC: .\\demarrer_ollama_ip_server.ps1');
+    } else if (Platform.isIOS) {
+      // iOS : localhost fonctionne directement
+      defaultUrl = 'http://localhost:11434';
+      debugPrint('🤖 [OLLAMA] iOS détecté - URL: $defaultUrl');
+    } else {
+      // Autres plateformes (web, desktop, etc.)
+      defaultUrl = 'http://localhost:11434';
+      debugPrint('🤖 [OLLAMA] Autre plateforme - URL: $defaultUrl');
+    }
+
+    _ollamaBaseUrl = defaultUrl;
+    debugPrint('✅ [OLLAMA] URL Ollama locale configurée (par défaut): $_ollamaBaseUrl');
+    return _ollamaBaseUrl!;
+  }
+
+  /// Permet de définir manuellement l'URL Ollama (utile pour téléphone physique)
+  /// L'URL sera sauvegardée dans les préférences
+  Future<void> setOllamaUrl(String url) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('ollama_base_url', url);
+      _ollamaBaseUrl = url;
+      debugPrint('🔧 [OLLAMA] URL Ollama mise à jour et sauvegardée: $url');
+    } catch (e) {
+      debugPrint('❌ [OLLAMA] Erreur lors de la sauvegarde de l\'URL: $e');
+      // Mettre à jour quand même en mémoire
+      _ollamaBaseUrl = url;
     }
   }
 
-  /// Envoie un message à Ollama et récupère la réponse
+  /// Envoie un message à Ollama local et récupère la réponse
   /// 
   /// [message] : Le message de l'utilisateur
   /// [context] : Contexte RAG (stock, recettes, etc.) - récupéré depuis Railway
   /// [systemPrompt] : Prompt système pour Ollama
   /// 
-  /// Retourne la réponse de l'IA
+  /// Retourne la réponse de l'IA avec streaming
+  /// 
+  /// NOTE: Ollama est maintenant TOUJOURS local, plus de connexion Railway
+  /// [onChunk] est appelé à chaque chunk reçu pour mettre à jour l'UI en temps réel
   Future<String> sendMessage(
     String message, {
     String? context,
     String? systemPrompt,
+    Function(String)? onChunk,
   }) async {
     try {
       final ollamaUrl = await _getOllamaUrl();
       
-      debugPrint('💬 [OLLAMA] Envoi du message à Ollama ($ollamaUrl)...');
+      debugPrint('💬 [OLLAMA] Envoi du message à Ollama LOCAL ($ollamaUrl)...');
       
       final url = Uri.parse('$ollamaUrl/api/chat');
       
@@ -91,23 +184,85 @@ class OllamaService {
       final payload = {
         'model': 'llama3.1:8b',
         'messages': messages,
-        'stream': false,
+        'stream': true, // Activer le streaming pour des réponses plus rapides
+        'options': {
+          'num_predict': 400, // Limiter à ~400 tokens pour des réponses plus rapides
+        },
       };
 
-      final response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(payload),
-      ).timeout(const Duration(seconds: 120));
+      final request = http.Request('POST', url);
+      request.headers['Content-Type'] = 'application/json';
+      request.body = jsonEncode(payload);
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body) as Map<String, dynamic>;
-        final aiResponse = data['message']?['content'] as String? ?? '';
-        debugPrint('✅ [OLLAMA] Réponse reçue (${aiResponse.length} caractères)');
-        return aiResponse;
+      final streamedResponse = await request.send().timeout(const Duration(seconds: 300));
+      
+      if (streamedResponse.statusCode == 200) {
+        final buffer = StringBuffer();
+        String currentLine = '';
+        
+        await for (final chunk in streamedResponse.stream.transform(utf8.decoder)) {
+          // Accumuler les chunks car ils peuvent arriver partiels
+          currentLine += chunk;
+          
+          // Traiter les lignes complètes (séparées par \n)
+          final lines = currentLine.split('\n');
+          // Garder la dernière ligne incomplète pour le prochain chunk
+          currentLine = lines.removeLast();
+          
+          for (final line in lines) {
+            if (line.trim().isEmpty) continue;
+            
+            if (line.startsWith('data: ')) {
+              try {
+                final jsonStr = line.substring(6); // Enlever "data: "
+                if (jsonStr.trim() == '[DONE]') {
+                  debugPrint('✅ [OLLAMA] Stream terminé');
+                  continue;
+                }
+                
+                final data = jsonDecode(jsonStr) as Map<String, dynamic>;
+                final content = data['message']?['content'] as String?;
+                
+                if (content != null && content.isNotEmpty) {
+                  buffer.write(content);
+                  // Notifier le callback avec le contenu accumulé
+                  if (onChunk != null) {
+                    onChunk(buffer.toString());
+                  }
+                }
+              } catch (e) {
+                // Ignorer les erreurs de parsing pour les chunks partiels ou malformés
+                debugPrint('⚠️ [OLLAMA] Erreur parsing chunk: $e (line: ${line.substring(0, line.length > 50 ? 50 : line.length)})');
+              }
+            }
+          }
+        }
+        
+        // Traiter la dernière ligne si elle existe
+        if (currentLine.trim().isNotEmpty && currentLine.startsWith('data: ')) {
+          try {
+            final jsonStr = currentLine.substring(6);
+            if (jsonStr.trim() != '[DONE]') {
+              final data = jsonDecode(jsonStr) as Map<String, dynamic>;
+              final content = data['message']?['content'] as String?;
+              if (content != null && content.isNotEmpty) {
+                buffer.write(content);
+                if (onChunk != null) {
+                  onChunk(buffer.toString());
+                }
+              }
+            }
+          } catch (e) {
+            debugPrint('⚠️ [OLLAMA] Erreur parsing dernière ligne: $e');
+          }
+        }
+        
+        final fullResponse = buffer.toString();
+        debugPrint('✅ [OLLAMA] Réponse complète reçue (${fullResponse.length} caractères)');
+        return fullResponse;
       } else {
-        debugPrint('❌ [OLLAMA] Erreur HTTP: ${response.statusCode}');
-        throw Exception('Erreur Ollama: ${response.statusCode}');
+        debugPrint('❌ [OLLAMA] Erreur HTTP: ${streamedResponse.statusCode}');
+        throw Exception('Erreur Ollama: ${streamedResponse.statusCode}');
       }
     } catch (e) {
       debugPrint('❌ [OLLAMA] Erreur lors de l\'appel: $e');

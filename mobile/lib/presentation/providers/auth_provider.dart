@@ -181,11 +181,12 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  // Méthode pour forcer la déconnexion (utilisée en cas d'erreur 403)
+  // Méthode pour forcer la déconnexion (utilisée en cas d'erreur 401/403)
   Future<void> forceLogout() async {
-    debugPrint('🔐 [AUTH PROVIDER] Déconnexion forcée (token invalide)');
+    debugPrint('🔐 [AUTH PROVIDER] Déconnexion forcée (token invalide ou expiré)');
     _token = null;
     _user = null;
+    // Le token est déjà supprimé du storage par ApiService, mais on s'assure qu'il est bien supprimé
     await _secureStorage.delete(key: 'auth_token');
     notifyListeners();
   }

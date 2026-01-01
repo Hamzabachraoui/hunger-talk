@@ -9,6 +9,7 @@ import '../../presentation/screens/stock/stock_screen.dart';
 import '../../presentation/screens/stock/add_edit_stock_item_screen.dart';
 import '../../presentation/screens/chat/chat_screen.dart';
 import '../../presentation/screens/recipes/recipes_screen.dart';
+import '../../presentation/screens/recipes/add_recipe_screen.dart';
 import '../../presentation/screens/settings/settings_screen.dart';
 import '../../data/models/stock_item_model.dart';
 
@@ -81,6 +82,13 @@ class AppRouter {
         path: '/recipes',
         name: 'recipes',
         builder: (context, state) => const RecipesScreen(),
+        routes: [
+          GoRoute(
+            path: 'add',
+            name: 'recipes-add',
+            builder: (context, state) => const AddRecipeScreen(),
+          ),
+        ],
       ),
       GoRoute(
         path: '/settings',

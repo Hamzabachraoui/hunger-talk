@@ -49,18 +49,47 @@ class ChatProvider with ChangeNotifier {
     _messages.add(userMessage);
     notifyListeners();
 
+    // Créer le message IA vide qui sera mis à jour progressivement avec le streaming
+    final aiMessageId = (DateTime.now().millisecondsSinceEpoch + 1).toString();
+    final aiMessage = ChatMessageModel(
+      id: aiMessageId,
+      message: '',
+      isUser: false,
+      timestamp: DateTime.now(),
+    );
+    _messages.add(aiMessage);
+    notifyListeners();
+
     try {
-      debugPrint('💬 [CHAT PROVIDER] Envoi du message...');
-      final response = await _chatService.sendMessage(message);
+      debugPrint('💬 [CHAT PROVIDER] Envoi du message avec streaming...');
       
-      // Ajouter la réponse de l'IA
-      final aiMessage = ChatMessageModel(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        message: response,
-        isUser: false,
-        timestamp: DateTime.now(),
+      final response = await _chatService.sendMessage(
+        message,
+        onChunk: (partialResponse) {
+          // Mettre à jour le message IA progressivement
+          final index = _messages.indexWhere((m) => m.id == aiMessageId);
+          if (index != -1) {
+            _messages[index] = ChatMessageModel(
+              id: aiMessageId,
+              message: partialResponse,
+              isUser: false,
+              timestamp: _messages[index].timestamp,
+            );
+            notifyListeners();
+          }
+        },
       );
-      _messages.add(aiMessage);
+      
+      // Mettre à jour avec la réponse finale (au cas où il y aurait un dernier chunk)
+      final finalIndex = _messages.indexWhere((m) => m.id == aiMessageId);
+      if (finalIndex != -1 && _messages[finalIndex].message != response) {
+        _messages[finalIndex] = ChatMessageModel(
+          id: aiMessageId,
+          message: response,
+          isUser: false,
+          timestamp: _messages[finalIndex].timestamp,
+        );
+      }
       
       debugPrint('✅ [CHAT PROVIDER] Message envoyé avec succès');
       _isSending = false;
@@ -69,6 +98,10 @@ class ChatProvider with ChangeNotifier {
     } catch (e, stackTrace) {
       debugPrint('❌ [CHAT PROVIDER] Erreur lors de l\'envoi: $e');
       debugPrint('   Stack: $stackTrace');
+      
+      // Supprimer le message IA vide en cas d'erreur
+      _messages.removeWhere((m) => m.id == aiMessageId);
+      
       _error = e.toString();
       _isSending = false;
       notifyListeners();

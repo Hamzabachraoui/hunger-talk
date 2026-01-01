@@ -76,6 +76,10 @@ class _RecipesScreenState extends State<RecipesScreen> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.push('/recipes/add'),
+        child: const Icon(Icons.add),
+      ),
       body: Consumer<RecipeProvider>(
         builder: (context, recipeProvider, _) {
           if (recipeProvider.isLoading) {

@@ -120,7 +120,20 @@ class _StockScreenState extends State<StockScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (!didPop) {
+          // Si on peut revenir en arrière, on le fait
+          if (context.canPop()) {
+            context.pop();
+          } else {
+            // Sinon, on retourne au dashboard
+            context.go('/dashboard');
+          }
+        }
+      },
+      child: Scaffold(
         appBar: AppBar(
         title: const Text('Mon Stock'),
         actions: [
@@ -240,7 +253,8 @@ class _StockScreenState extends State<StockScreen> {
             stockProvider.loadStock();
           }
         },
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add        ),
+      ),
       ),
     );
   }

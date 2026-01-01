@@ -72,6 +72,29 @@ class RecipeProvider with ChangeNotifier {
     }
   }
 
+  Future<bool> createRecipe(Map<String, dynamic> recipeData) async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      debugPrint('🍳 [RECIPE PROVIDER] Création d\'une nouvelle recette...');
+      final newRecipe = await _recipeService.createRecipe(recipeData);
+      _recipes.add(newRecipe);
+      _isLoading = false;
+      notifyListeners();
+      debugPrint('✅ [RECIPE PROVIDER] Recette créée avec succès: ${newRecipe.name}');
+      return true;
+    } catch (e, stackTrace) {
+      debugPrint('❌ [RECIPE PROVIDER] Erreur lors de la création: $e');
+      debugPrint('   Stack: $stackTrace');
+      _error = e.toString();
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
   void clearError() {
     _error = null;
     notifyListeners();

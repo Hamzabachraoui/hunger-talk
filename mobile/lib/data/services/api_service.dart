@@ -8,6 +8,7 @@ import '../../core/config/app_config.dart';
 class ApiService {
   final FlutterSecureStorage _storage;
   final http.Client _client;
+  static Function()? _onUnauthorizedCallback;
 
   ApiService({
     FlutterSecureStorage? storage,
@@ -15,8 +16,13 @@ class ApiService {
   })  : _storage = storage ?? const FlutterSecureStorage(),
         _client = client ?? http.Client();
 
-  // Liste des endpoints POST qui nécessitent un trailing slash (routes racine FastAPI)
-  static const List<String> _postRootEndpoints = [
+  // Méthode statique pour enregistrer un callback appelé lors d'une erreur 401
+  static void setOnUnauthorizedCallback(Function() callback) {
+    _onUnauthorizedCallback = callback;
+  }
+
+  // Liste des endpoints qui nécessitent un trailing slash (routes racine FastAPI)
+  static const List<String> _rootEndpoints = [
     '/stock',
     '/chat',
     '/recipes',
@@ -26,35 +32,30 @@ class ApiService {
 
   // Normaliser l'URL pour gérer les trailing slashes
   // FastAPI redirige automatiquement /api/stock vers /api/stock/ avec 307
-  // Pour éviter cela, on ajoute le trailing slash directement pour les routes racine POST
+  // Pour éviter cela, on ajoute le trailing slash directement pour les routes racine
   String _normalizeUrl(String endpoint, {bool isPostOnRoot = false}) {
     // Si l'endpoint commence par /, on le garde
     if (!endpoint.startsWith('/')) {
       endpoint = '/$endpoint';
     }
     
-    // Pour POST sur routes racine, ajouter trailing slash
-    if (isPostOnRoot && !endpoint.endsWith('/')) {
-      // Enlever les query params pour l'analyse
-      final endpointWithoutQuery = endpoint.split('?').first;
-      
-      // Vérifier si c'est une route racine connue OU si c'est 1 seul segment
-      final segments = endpointWithoutQuery.split('/').where((s) => s.isNotEmpty).toList();
-      final isKnownRootRoute = _postRootEndpoints.contains(endpointWithoutQuery);
-      final isSingleSegment = segments.length == 1;
-      
-      debugPrint('   🔧 Analyse: $endpointWithoutQuery');
-      debugPrint('   🔧 Segments: $segments (count: ${segments.length})');
-      debugPrint('   🔧 Is known root: $isKnownRootRoute');
-      debugPrint('   🔧 Is single segment: $isSingleSegment');
-      
-      if (isKnownRootRoute || isSingleSegment) {
-        // Reconstruire avec le trailing slash et les query params si présents
-        final queryPart = endpoint.contains('?') ? endpoint.substring(endpoint.indexOf('?')) : '';
-        endpoint = '$endpointWithoutQuery/$queryPart';
+    // Enlever les query params pour l'analyse
+    final endpointWithoutQuery = endpoint.split('?').first;
+    final queryPart = endpoint.contains('?') ? endpoint.substring(endpoint.indexOf('?')) : '';
+    
+    // Vérifier si c'est une route racine connue
+    final isKnownRootRoute = _rootEndpoints.contains(endpointWithoutQuery);
+    
+    // Ajouter trailing slash si:
+    // 1. C'est une requête POST sur route racine (isPostOnRoot), OU
+    // 2. C'est une route racine connue (GET ou POST) et on n'a pas déjà un trailing slash
+    final shouldAddTrailingSlash = (isPostOnRoot || isKnownRootRoute) && 
+                                    !endpointWithoutQuery.endsWith('/');
+    
+    if (shouldAddTrailingSlash) {
+      endpoint = '$endpointWithoutQuery/$queryPart';
+      if (kDebugMode) {
         debugPrint('   ✅ Trailing slash ajouté: $endpoint');
-      } else {
-        debugPrint('   ⚠️ Pas une route racine, trailing slash non ajouté');
       }
     }
     
@@ -93,7 +94,7 @@ class ApiService {
 
   Future<dynamic> get(String endpoint, {bool requiresAuth = true}) async {
     try {
-      // Pour GET, normaliser l'URL (sans trailing slash sauf si nécessaire)
+      // Pour GET, normaliser l'URL (ajouter trailing slash uniquement pour routes racine connues)
       final normalizedUrl = _normalizeUrl(endpoint);
       final url = Uri.parse(normalizedUrl);
       
@@ -157,7 +158,7 @@ class ApiService {
       // IMPORTANT: Uri.parse() peut modifier l'URL, vérifier après parsing
       var url = Uri.parse(normalizedUrl);
       final finalPath = url.path;
-      final shouldHaveTrailing = isRootRoute && _postRootEndpoints.contains(endpoint.split('?').first);
+      final shouldHaveTrailing = isRootRoute && _rootEndpoints.contains(endpoint.split('?').first);
       
       debugPrint('   URL après Uri.parse(): ${url.toString()}');
       debugPrint('   Path après parsing: $finalPath');
@@ -287,9 +288,21 @@ class ApiService {
       debugPrint('🔒 [API] Unauthorized/Forbidden (${response.statusCode})');
       debugPrint('   Body: ${response.body}');
       
-      // Supprimer le token invalide du storage
-      await _storage.delete(key: 'auth_token');
-      debugPrint('🗑️ [API] Token supprimé du storage (erreur ${response.statusCode})');
+      // Vérifier si le token existe encore (pour éviter de supprimer plusieurs fois)
+      final existingToken = await _storage.read(key: 'auth_token');
+      if (existingToken != null) {
+        // Supprimer le token invalide du storage
+        await _storage.delete(key: 'auth_token');
+        debugPrint('🗑️ [API] Token supprimé du storage (erreur ${response.statusCode})');
+        
+        // Notifier le callback si défini (pour synchroniser avec AuthProvider)
+        if (_onUnauthorizedCallback != null) {
+          debugPrint('📢 [API] Notification de déconnexion à AuthProvider');
+          _onUnauthorizedCallback!();
+        }
+      } else {
+        debugPrint('⚠️ [API] Token déjà supprimé du storage');
+      }
       
       try {
         final error = jsonDecode(response.body);

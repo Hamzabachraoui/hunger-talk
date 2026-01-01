@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../providers/chat_provider.dart';
 import '../../widgets/message_bubble.dart';
@@ -68,23 +69,36 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (!didPop) {
+          // Si on peut revenir en arrière, on le fait
+          if (context.canPop()) {
+            context.pop();
+          } else {
+            // Sinon, on retourne au dashboard
+            context.go('/dashboard');
+          }
+        }
+      },
+      child: Scaffold(
         appBar: AppBar(
-        title: const Row(
-          children: [
-            Icon(Icons.smart_toy, color: AppColors.primary),
-            SizedBox(width: 8),
-            Text('Assistant IA'),
+          title: const Row(
+            children: [
+              Icon(Icons.smart_toy, color: AppColors.primary),
+              SizedBox(width: 8),
+              Text('Assistant IA'),
+            ],
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.history),
+              onPressed: () => context.read<ChatProvider>().loadHistory(),
+              tooltip: 'Recharger l\'historique',
+            ),
           ],
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.history),
-            onPressed: () => context.read<ChatProvider>().loadHistory(),
-            tooltip: 'Recharger l\'historique',
-          ),
-        ],
-      ),
       body: Consumer<ChatProvider>(
         builder: (context, chatProvider, _) {
           if (chatProvider.isLoading && chatProvider.messages.isEmpty) {
@@ -236,6 +250,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ],
           );
         },
+      ),
       ),
     );
   }

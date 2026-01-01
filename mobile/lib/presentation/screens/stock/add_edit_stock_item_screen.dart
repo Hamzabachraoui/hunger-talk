@@ -21,13 +21,26 @@ class _AddEditStockItemScreenState extends State<AddEditStockItemScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _quantityController = TextEditingController();
-  final _unitController = TextEditingController();
   final _notesController = TextEditingController();
   
   DateTime? _expiryDate;
   int? _selectedCategoryId;
   List<dynamic> _categories = [];
   bool _isLoadingCategories = true;
+  String _selectedUnit = 'g';
+
+  static const List<String> _availableUnits = [
+    'g',
+    'kg',
+    'ml',
+    'L',
+    'pièce',
+    'unité',
+    'boîte',
+    'paquet',
+    'bouteille',
+    'sachet',
+  ];
 
   final CategoryService _categoryService = CategoryService();
 
@@ -39,12 +52,10 @@ class _AddEditStockItemScreenState extends State<AddEditStockItemScreen> {
     if (widget.item != null) {
       _nameController.text = widget.item!.name;
       _quantityController.text = widget.item!.quantity.toString();
-      _unitController.text = widget.item!.unit;
+      _selectedUnit = widget.item!.unit;
       _expiryDate = widget.item!.expiryDate;
       _selectedCategoryId = widget.item!.categoryId;
       _notesController.text = widget.item!.notes ?? '';
-    } else {
-      _unitController.text = 'g';
     }
   }
 
@@ -91,7 +102,7 @@ class _AddEditStockItemScreenState extends State<AddEditStockItemScreen> {
       id: widget.item?.id ?? '',
       name: _nameController.text.trim(),
       quantity: quantity,
-      unit: _unitController.text.trim(),
+      unit: _selectedUnit,
       categoryId: _selectedCategoryId,
       expiryDate: _expiryDate,
       addedAt: widget.item?.addedAt ?? DateTime.now(),
@@ -130,14 +141,26 @@ class _AddEditStockItemScreenState extends State<AddEditStockItemScreen> {
   void dispose() {
     _nameController.dispose();
     _quantityController.dispose();
-    _unitController.dispose();
     _notesController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (!didPop) {
+          // Si on peut revenir en arrière, on le fait
+          if (context.canPop()) {
+            context.pop();
+          } else {
+            // Sinon, on retourne au stock
+            context.go('/stock');
+          }
+        }
+      },
+      child: Scaffold(
         appBar: AppBar(
         title: Text(widget.item != null ? 'Modifier le produit' : 'Ajouter un produit'),
         actions: [
@@ -193,15 +216,28 @@ class _AddEditStockItemScreenState extends State<AddEditStockItemScreen> {
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: TextFormField(
-                      controller: _unitController,
+                    child: DropdownButtonFormField<String>(
+                      value: _selectedUnit,
                       decoration: const InputDecoration(
                         labelText: 'Unité *',
                         prefixIcon: Icon(Icons.straighten),
                       ),
+                      items: _availableUnits.map((unit) {
+                        return DropdownMenuItem<String>(
+                          value: unit,
+                          child: Text(unit),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() {
+                            _selectedUnit = value;
+                          });
+                        }
+                      },
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Veuillez entrer une unité';
+                          return 'Veuillez sélectionner une unité';
                         }
                         return null;
                       },
@@ -288,6 +324,7 @@ class _AddEditStockItemScreenState extends State<AddEditStockItemScreen> {
             ],
           ),
         ),
+      ),
       ),
     );
   }

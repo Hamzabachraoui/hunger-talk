@@ -59,9 +59,25 @@ class RecipeBase(BaseModel):
     image_url: Optional[str] = None
 
 
+class RecipeIngredientCreate(BaseModel):
+    """Schéma pour créer un ingrédient de recette"""
+    ingredient_name: str
+    quantity: Decimal
+    unit: str
+    optional: bool = False
+
+
+class RecipeStepCreate(BaseModel):
+    """Schéma pour créer une étape de recette"""
+    step_number: int
+    instruction: str
+    image_url: Optional[str] = None
+
+
 class RecipeCreate(RecipeBase):
     """Schéma pour créer une recette"""
-    pass
+    ingredients: List[RecipeIngredientCreate] = []
+    steps: List[RecipeStepCreate] = []
 
 
 class RecipeUpdate(BaseModel):
