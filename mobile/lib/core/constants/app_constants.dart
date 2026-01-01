@@ -30,6 +30,7 @@ class AppConstants {
   static const String shoppingList = '/shopping-list';
   
   static const String userPreferences = '/user/preferences';
+  static const String userProfile = '/user/me';
 
   // Storage Keys
   static const String tokenKey = 'auth_token';

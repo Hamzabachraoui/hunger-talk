@@ -23,6 +23,12 @@ class _UserPreferencesScreenState extends State<UserPreferencesScreen> {
   double? _targetProteins;
   double? _targetCarbohydrates;
   double? _targetLipids;
+  
+  // Controllers pour les champs texte
+  final TextEditingController _caloriesController = TextEditingController();
+  final TextEditingController _proteinsController = TextEditingController();
+  final TextEditingController _carbohydratesController = TextEditingController();
+  final TextEditingController _lipidsController = TextEditingController();
 
   final List<String> _availableRestrictions = [
     'Végétarien',
@@ -51,30 +57,68 @@ class _UserPreferencesScreenState extends State<UserPreferencesScreen> {
     _loadPreferences();
   }
 
+  double? _parseNumber(dynamic value) {
+    if (value == null) return null;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) {
+      final parsed = double.tryParse(value);
+      return parsed;
+    }
+    // Pour Decimal ou autres types numériques
+    try {
+      return double.parse(value.toString());
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<void> _loadPreferences() async {
     setState(() => _isLoading = true);
     try {
       final prefs = await _preferencesService.getPreferences();
+      
+      // Parser les valeurs numériques
+      final calories = _parseNumber(prefs['daily_calorie_goal'] ?? prefs['target_calories']);
+      final proteins = _parseNumber(prefs['daily_protein_goal'] ?? prefs['target_proteins']);
+      final carbs = _parseNumber(prefs['daily_carb_goal'] ?? prefs['target_carbohydrates']);
+      final lipids = _parseNumber(prefs['daily_fat_goal'] ?? prefs['target_lipids']);
+      
       setState(() {
         _dietaryRestrictions = List<String>.from(prefs['dietary_restrictions'] ?? []);
         _allergies = List<String>.from(prefs['allergies'] ?? []);
-        _targetCalories = prefs['target_calories']?.toDouble();
-        _targetProteins = prefs['target_proteins']?.toDouble();
-        _targetCarbohydrates = prefs['target_carbohydrates']?.toDouble();
-        _targetLipids = prefs['target_lipids']?.toDouble();
+        _targetCalories = calories;
+        _targetProteins = proteins;
+        _targetCarbohydrates = carbs;
+        _targetLipids = lipids;
         _isLoading = false;
       });
+      
+      // Mettre à jour les controllers après avoir mis à jour l'état
+      _caloriesController.text = _targetCalories?.toString() ?? '';
+      _proteinsController.text = _targetProteins?.toString() ?? '';
+      _carbohydratesController.text = _targetCarbohydrates?.toString() ?? '';
+      _lipidsController.text = _targetLipids?.toString() ?? '';
     } catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Erreur: $e'),
+            content: Text('Erreur lors du chargement: $e'),
             backgroundColor: AppColors.error,
           ),
         );
       }
     }
+  }
+
+  @override
+  void dispose() {
+    _caloriesController.dispose();
+    _proteinsController.dispose();
+    _carbohydratesController.dispose();
+    _lipidsController.dispose();
+    super.dispose();
   }
 
   Future<void> _savePreferences() async {
@@ -85,10 +129,10 @@ class _UserPreferencesScreenState extends State<UserPreferencesScreen> {
       await _preferencesService.updatePreferences({
         'dietary_restrictions': _dietaryRestrictions,
         'allergies': _allergies,
-        'target_calories': _targetCalories,
-        'target_proteins': _targetProteins,
-        'target_carbohydrates': _targetCarbohydrates,
-        'target_lipids': _targetLipids,
+        'daily_calorie_goal': _targetCalories,
+        'daily_protein_goal': _targetProteins,
+        'daily_carb_goal': _targetCarbohydrates,
+        'daily_fat_goal': _targetLipids,
       });
 
       if (mounted) {
@@ -217,7 +261,7 @@ class _UserPreferencesScreenState extends State<UserPreferencesScreen> {
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
-                      initialValue: _targetCalories?.toString(),
+                      controller: _caloriesController,
                       decoration: const InputDecoration(
                         labelText: 'Calories (kcal)',
                         prefixIcon: Icon(Icons.local_fire_department),
@@ -231,7 +275,7 @@ class _UserPreferencesScreenState extends State<UserPreferencesScreen> {
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
-                      initialValue: _targetProteins?.toString(),
+                      controller: _proteinsController,
                       decoration: const InputDecoration(
                         labelText: 'Protéines (g)',
                         prefixIcon: Icon(Icons.fitness_center),
@@ -245,7 +289,7 @@ class _UserPreferencesScreenState extends State<UserPreferencesScreen> {
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
-                      initialValue: _targetCarbohydrates?.toString(),
+                      controller: _carbohydratesController,
                       decoration: const InputDecoration(
                         labelText: 'Glucides (g)',
                         prefixIcon: Icon(Icons.energy_savings_leaf),
@@ -259,7 +303,7 @@ class _UserPreferencesScreenState extends State<UserPreferencesScreen> {
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
-                      initialValue: _targetLipids?.toString(),
+                      controller: _lipidsController,
                       decoration: const InputDecoration(
                         labelText: 'Lipides (g)',
                         prefixIcon: Icon(Icons.water_drop),

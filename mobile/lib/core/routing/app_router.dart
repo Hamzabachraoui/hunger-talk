@@ -11,6 +11,7 @@ import '../../presentation/screens/chat/chat_screen.dart';
 import '../../presentation/screens/recipes/recipes_screen.dart';
 import '../../presentation/screens/recipes/add_recipe_screen.dart';
 import '../../presentation/screens/settings/settings_screen.dart';
+import '../../presentation/screens/profile/profile_screen.dart';
 import '../../data/models/stock_item_model.dart';
 
 class AppRouter {
@@ -94,6 +95,11 @@ class AppRouter {
         path: '/settings',
         name: 'settings',
         builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: '/profile',
+        name: 'profile',
+        builder: (context, state) => const ProfileScreen(),
       ),
     ],
   );

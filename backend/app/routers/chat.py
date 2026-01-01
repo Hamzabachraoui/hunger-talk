@@ -3,7 +3,8 @@ Router pour le chat avec l'IA
 """
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from datetime import datetime
+from datetime import datetime, timedelta
+from sqlalchemy import and_
 import time
 import uuid
 import httpx
@@ -22,6 +23,18 @@ from app.services.rag_service import RAGService
 from app.services.system_config_service import get_ollama_base_url, get_ollama_model
 
 router = APIRouter()
+
+
+def cleanup_old_messages(db: Session, hours: int = 24):
+    """
+    Supprime les messages de chat de plus de 24 heures.
+    """
+    cutoff_time = datetime.utcnow() - timedelta(hours=hours)
+    deleted_count = db.query(ChatMessage).filter(
+        ChatMessage.timestamp < cutoff_time
+    ).delete()
+    db.commit()
+    return deleted_count
 
 
 @router.post("/context", response_model=dict, status_code=status.HTTP_200_OK)
@@ -99,6 +112,9 @@ async def chat_with_ai(
         # Calculer le temps de réponse
         response_time_ms = int((time.time() - start_time) * 1000)
         
+        # Nettoyer les messages de plus de 24h avant d'ajouter un nouveau message
+        cleanup_old_messages(db, hours=24)
+        
         # Sauvegarder le message et la réponse en base de données
         chat_message = ChatMessage(
             id=uuid.uuid4(),
@@ -139,9 +155,20 @@ async def get_chat_history(
 ):
     """
     Récupérer l'historique des messages de chat de l'utilisateur.
+    Les messages de plus de 24 heures sont automatiquement supprimés.
     """
+    # Nettoyer les messages de plus de 24h avant de récupérer l'historique
+    cleanup_old_messages(db, hours=24)
+    
+    # Calculer la date limite (24h avant maintenant)
+    cutoff_time = datetime.utcnow() - timedelta(hours=24)
+    
+    # Récupérer uniquement les messages de moins de 24h
     messages = db.query(ChatMessage).filter(
-        ChatMessage.user_id == current_user.id
+        and_(
+            ChatMessage.user_id == current_user.id,
+            ChatMessage.timestamp >= cutoff_time
+        )
     ).order_by(
         ChatMessage.timestamp.desc()
     ).limit(limit).all()

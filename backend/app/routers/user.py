@@ -19,6 +19,7 @@ from app.schemas.user_preferences import (
     UserPreferencesUpdate,
     UserPreferencesResponse
 )
+from app.schemas.user import User as UserSchema, UserUpdate
 from app.core.dependencies import get_current_user
 
 router = APIRouter()
@@ -72,6 +73,63 @@ async def get_user_preferences(
         max_cooking_time=preferences.max_cooking_time,
         created_at=preferences.created_at,
         updated_at=preferences.updated_at
+    )
+
+
+@router.get("/me", response_model=UserSchema)
+async def get_current_user_profile(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Récupérer le profil de l'utilisateur connecté.
+    """
+    return UserSchema(
+        id=current_user.id,
+        email=current_user.email,
+        first_name=current_user.first_name,
+        last_name=current_user.last_name,
+        is_active=current_user.is_active,
+        created_at=current_user.created_at,
+        updated_at=current_user.updated_at,
+        last_login=current_user.last_login
+    )
+
+
+@router.put("/me", response_model=UserSchema)
+async def update_current_user_profile(
+    user_update: UserUpdate,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Mettre à jour le profil de l'utilisateur connecté.
+    """
+    # Mettre à jour les champs fournis
+    if user_update.first_name is not None:
+        current_user.first_name = user_update.first_name
+    if user_update.last_name is not None:
+        current_user.last_name = user_update.last_name
+    
+    try:
+        db.commit()
+        db.refresh(current_user)
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Erreur lors de la mise à jour du profil: {str(e)}"
+        )
+    
+    return UserSchema(
+        id=current_user.id,
+        email=current_user.email,
+        first_name=current_user.first_name,
+        last_name=current_user.last_name,
+        is_active=current_user.is_active,
+        created_at=current_user.created_at,
+        updated_at=current_user.updated_at,
+        last_login=current_user.last_login
     )
 
 
@@ -156,5 +214,62 @@ async def update_user_preferences(
         max_cooking_time=preferences.max_cooking_time,
         created_at=preferences.created_at,
         updated_at=preferences.updated_at
+    )
+
+
+@router.get("/me", response_model=UserSchema)
+async def get_current_user_profile(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Récupérer le profil de l'utilisateur connecté.
+    """
+    return UserSchema(
+        id=current_user.id,
+        email=current_user.email,
+        first_name=current_user.first_name,
+        last_name=current_user.last_name,
+        is_active=current_user.is_active,
+        created_at=current_user.created_at,
+        updated_at=current_user.updated_at,
+        last_login=current_user.last_login
+    )
+
+
+@router.put("/me", response_model=UserSchema)
+async def update_current_user_profile(
+    user_update: UserUpdate,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Mettre à jour le profil de l'utilisateur connecté.
+    """
+    # Mettre à jour les champs fournis
+    if user_update.first_name is not None:
+        current_user.first_name = user_update.first_name
+    if user_update.last_name is not None:
+        current_user.last_name = user_update.last_name
+    
+    try:
+        db.commit()
+        db.refresh(current_user)
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Erreur lors de la mise à jour du profil: {str(e)}"
+        )
+    
+    return UserSchema(
+        id=current_user.id,
+        email=current_user.email,
+        first_name=current_user.first_name,
+        last_name=current_user.last_name,
+        is_active=current_user.is_active,
+        created_at=current_user.created_at,
+        updated_at=current_user.updated_at,
+        last_login=current_user.last_login
     )
 

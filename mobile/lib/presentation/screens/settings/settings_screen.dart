@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 
@@ -12,10 +13,11 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = context.watch<AuthProvider>();
-    final user = authProvider.user;
+    try {
+      final authProvider = context.watch<AuthProvider>();
+      final user = authProvider.user;
 
-    return PopScope(
+      return PopScope(
       canPop: false,
       onPopInvoked: (didPop) {
         if (didPop) return;
@@ -38,41 +40,54 @@ class SettingsScreen extends StatelessWidget {
           if (user != null)
             Padding(
               padding: const EdgeInsets.all(16),
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 30,
-                        backgroundColor: AppColors.primary,
-                        child: Text(
-                          user.firstName[0].toUpperCase(),
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+              child: InkWell(
+                onTap: () {
+                  context.push('/profile');
+                },
+                borderRadius: BorderRadius.circular(12),
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 30,
+                          backgroundColor: AppColors.primary,
+                          child: Text(
+                            (user.firstName.isNotEmpty 
+                              ? user.firstName[0].toUpperCase() 
+                              : user.email.isNotEmpty 
+                                ? user.email[0].toUpperCase() 
+                                : '?'),
+                            style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              user.fullName,
-                              style: Theme.of(context).textTheme.titleLarge,
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              user.email,
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                          ],
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                user.firstName.isNotEmpty || user.lastName.isNotEmpty
+                                  ? user.fullName.trim()
+                                  : 'Nom non défini',
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                user.email,
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                        const Icon(Icons.chevron_right),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -185,5 +200,41 @@ class SettingsScreen extends StatelessWidget {
       ),
       ),
     );
+    } catch (e, stackTrace) {
+      debugPrint('❌ [SETTINGS] Erreur lors du build: $e');
+      debugPrint('   Stack: $stackTrace');
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Paramètres'),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.error_outline, size: 64, color: AppColors.error),
+              const SizedBox(height: 16),
+              const Text(
+                'Erreur lors du chargement des paramètres',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                e.toString(),
+                style: const TextStyle(color: AppColors.error),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  // Retourner au dashboard
+                  context.go('/dashboard');
+                },
+                child: const Text('Retour au dashboard'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
   }
 }

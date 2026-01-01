@@ -182,11 +182,11 @@ class OllamaService {
       });
       
       final payload = {
-        'model': 'llama3.1:8b',
+        'model': 'llama3.2:3b', // Modèle plus léger pour des réponses plus rapides
         'messages': messages,
         'stream': true, // Activer le streaming pour des réponses plus rapides
         'options': {
-          'num_predict': 400, // Limiter à ~400 tokens pour des réponses plus rapides
+          'num_predict': 300, // Limiter à ~300 tokens pour des réponses plus rapides
         },
       };
 
@@ -194,13 +194,22 @@ class OllamaService {
       request.headers['Content-Type'] = 'application/json';
       request.body = jsonEncode(payload);
 
+      debugPrint('📤 [OLLAMA] Requête envoyée avec streaming (modèle: llama3.2:3b)');
       final streamedResponse = await request.send().timeout(const Duration(seconds: 300));
+      
+      debugPrint('📥 [OLLAMA] Réponse reçue, status: ${streamedResponse.statusCode}');
       
       if (streamedResponse.statusCode == 200) {
         final buffer = StringBuffer();
         String currentLine = '';
+        int chunkCount = 0;
         
         await for (final chunk in streamedResponse.stream.transform(utf8.decoder)) {
+          chunkCount++;
+          if (chunkCount == 1) {
+            debugPrint('📦 [OLLAMA] Premier chunk reçu: ${chunk.substring(0, chunk.length > 100 ? 100 : chunk.length)}');
+          }
+          
           // Accumuler les chunks car ils peuvent arriver partiels
           currentLine += chunk;
           
@@ -212,56 +221,91 @@ class OllamaService {
           for (final line in lines) {
             if (line.trim().isEmpty) continue;
             
+            // Ollama peut envoyer soit "data: {...}" soit directement du JSON
+            String jsonStr = line;
             if (line.startsWith('data: ')) {
-              try {
-                final jsonStr = line.substring(6); // Enlever "data: "
-                if (jsonStr.trim() == '[DONE]') {
-                  debugPrint('✅ [OLLAMA] Stream terminé');
-                  continue;
-                }
-                
-                final data = jsonDecode(jsonStr) as Map<String, dynamic>;
-                final content = data['message']?['content'] as String?;
-                
-                if (content != null && content.isNotEmpty) {
-                  buffer.write(content);
-                  // Notifier le callback avec le contenu accumulé
-                  if (onChunk != null) {
-                    onChunk(buffer.toString());
-                  }
-                }
-              } catch (e) {
-                // Ignorer les erreurs de parsing pour les chunks partiels ou malformés
-                debugPrint('⚠️ [OLLAMA] Erreur parsing chunk: $e (line: ${line.substring(0, line.length > 50 ? 50 : line.length)})');
+              jsonStr = line.substring(6); // Enlever "data: "
+            }
+            
+            if (jsonStr.trim() == '[DONE]') {
+              debugPrint('✅ [OLLAMA] Stream terminé avec [DONE]');
+              continue;
+            }
+            
+            try {
+              final data = jsonDecode(jsonStr) as Map<String, dynamic>;
+              
+              // Ollama peut avoir différentes structures
+              String? content;
+              if (data['message'] != null && data['message'] is Map) {
+                content = data['message']?['content'] as String?;
+              } else if (data['content'] != null) {
+                content = data['content'] as String?;
               }
+              
+              if (content != null && content.isNotEmpty) {
+                buffer.write(content);
+                debugPrint('📝 [OLLAMA] Chunk reçu: ${content.length} caractères (total: ${buffer.length})');
+                // Notifier le callback avec le contenu accumulé
+                if (onChunk != null) {
+                  onChunk(buffer.toString());
+                }
+              } else {
+                // Log pour déboguer les chunks vides
+                if (data['done'] == true) {
+                  debugPrint('✅ [OLLAMA] Stream terminé (done: true)');
+                } else {
+                  debugPrint('⚠️ [OLLAMA] Chunk sans contenu: ${data.keys.join(", ")}');
+                }
+              }
+            } catch (e) {
+              // Log plus détaillé pour les erreurs de parsing
+              debugPrint('⚠️ [OLLAMA] Erreur parsing chunk: $e');
+              debugPrint('   Ligne reçue: ${line.substring(0, line.length > 200 ? 200 : line.length)}');
             }
           }
         }
         
+        debugPrint('🔚 [OLLAMA] Fin du stream ($chunkCount chunks reçus)');
+        
         // Traiter la dernière ligne si elle existe
-        if (currentLine.trim().isNotEmpty && currentLine.startsWith('data: ')) {
-          try {
-            final jsonStr = currentLine.substring(6);
-            if (jsonStr.trim() != '[DONE]') {
+        if (currentLine.trim().isNotEmpty) {
+          String jsonStr = currentLine;
+          if (currentLine.startsWith('data: ')) {
+            jsonStr = currentLine.substring(6);
+          }
+          
+          if (jsonStr.trim() != '[DONE]') {
+            try {
               final data = jsonDecode(jsonStr) as Map<String, dynamic>;
-              final content = data['message']?['content'] as String?;
+              String? content;
+              if (data['message'] != null && data['message'] is Map) {
+                content = data['message']?['content'] as String?;
+              } else if (data['content'] != null) {
+                content = data['content'] as String?;
+              }
               if (content != null && content.isNotEmpty) {
                 buffer.write(content);
                 if (onChunk != null) {
                   onChunk(buffer.toString());
                 }
               }
+            } catch (e) {
+              debugPrint('⚠️ [OLLAMA] Erreur parsing dernière ligne: $e');
             }
-          } catch (e) {
-            debugPrint('⚠️ [OLLAMA] Erreur parsing dernière ligne: $e');
           }
         }
         
         final fullResponse = buffer.toString();
         debugPrint('✅ [OLLAMA] Réponse complète reçue (${fullResponse.length} caractères)');
+        if (fullResponse.isEmpty) {
+          debugPrint('⚠️ [OLLAMA] ATTENTION: Réponse vide, vérifiez les logs ci-dessus');
+        }
         return fullResponse;
       } else {
+        final errorBody = await streamedResponse.stream.transform(utf8.decoder).join();
         debugPrint('❌ [OLLAMA] Erreur HTTP: ${streamedResponse.statusCode}');
+        debugPrint('   Body: $errorBody');
         throw Exception('Erreur Ollama: ${streamedResponse.statusCode}');
       }
     } catch (e) {
