@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../data/models/user_model.dart';
 import '../../data/services/auth_service.dart';
+import '../../data/services/user_profile_service.dart';
 
 class AuthProvider with ChangeNotifier {
   final AuthService _authService = AuthService();
@@ -35,16 +36,18 @@ class AuthProvider with ChangeNotifier {
       debugPrint('🔐 [AUTH PROVIDER] Chargement du token depuis le storage...');
       _token = await _secureStorage.read(key: 'auth_token');
       if (_token != null) {
-        debugPrint('✅ [AUTH PROVIDER] Token trouvé dans le storage (${_token!.substring(0, 20)}...)');
-        // Créer un UserModel minimal - les détails seront chargés si nécessaire
+        debugPrint('✅ [AUTH PROVIDER] Token trouvé dans le storage (${_token!.substring(0, _token!.length > 20 ? 20 : _token!.length)}...)');
+        // Créer un UserModel minimal - le profil sera chargé si nécessaire
         // Le token est suffisant pour l'authentification
         _user ??= UserModel(
-            id: '',
-            email: '',
-            firstName: '',
-            lastName: '',
-            createdAt: DateTime.now(),
-          );
+          id: '',
+          email: '',
+          firstName: '',
+          lastName: '',
+          createdAt: DateTime.now(),
+        );
+        // Charger le profil utilisateur en arrière-plan (non bloquant)
+        _loadUserProfileInBackground();
       } else {
         debugPrint('⚠️ [AUTH PROVIDER] Aucun token trouvé dans le storage');
       }
@@ -61,6 +64,23 @@ class AuthProvider with ChangeNotifier {
       }
       notifyListeners();
     }
+  }
+
+  // Charger le profil utilisateur en arrière-plan (non bloquant pour le démarrage)
+  void _loadUserProfileInBackground() {
+    Future.microtask(() async {
+      try {
+        final profileService = UserProfileService();
+        final user = await profileService.getProfile();
+        _user = user;
+        debugPrint('✅ [AUTH PROVIDER] Profil utilisateur chargé: ${user.email}');
+        notifyListeners();
+      } catch (e) {
+        debugPrint('⚠️ [AUTH PROVIDER] Erreur lors du chargement du profil (non bloquant): $e');
+        // Ne pas mettre à jour l'utilisateur si le chargement échoue
+        // Le token reste valide et l'authentification fonctionne quand même
+      }
+    });
   }
 
   Future<bool> login(String email, String password) async {

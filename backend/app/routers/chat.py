@@ -16,7 +16,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 from database import get_db
 from app.models.user import User
 from app.models.chat_message import ChatMessage
-from app.schemas.chat import ChatMessageCreate, ChatMessageResponse, ChatMessageSimple
+from app.schemas.chat import ChatMessageCreate, ChatMessageResponse, ChatMessageSimple, ChatMessageSave
 from app.core.dependencies import get_current_user
 from app.services.ollama_service import OllamaService
 from app.services.rag_service import RAGService
@@ -144,6 +144,52 @@ async def chat_with_ai(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Erreur lors du traitement du message : {str(e)}"
+        )
+
+
+@router.post("/save", response_model=ChatMessageResponse, status_code=status.HTTP_201_CREATED)
+async def save_chat_message(
+    chat_data: ChatMessageSave,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Sauvegarder un message de chat déjà traité par Ollama local.
+    Utilisé par l'application mobile dans l'architecture hybride.
+    """
+    try:
+        # Nettoyer les messages de plus de 24h avant d'ajouter un nouveau message
+        cleanup_old_messages(db, hours=24)
+        
+        # Sauvegarder le message et la réponse en base de données
+        chat_message = ChatMessage(
+            id=uuid.uuid4(),
+            user_id=current_user.id,
+            message=chat_data.message,
+            response=chat_data.response,
+            model_used=chat_data.ai_model or "llama3.2:3b",
+            response_time_ms=chat_data.response_time_ms,
+            timestamp=datetime.utcnow()
+        )
+        
+        db.add(chat_message)
+        db.commit()
+        db.refresh(chat_message)
+        
+        return ChatMessageResponse(
+            id=chat_message.id,
+            user_id=chat_message.user_id,
+            message=chat_message.message,
+            response=chat_message.response,
+            timestamp=chat_message.timestamp,
+            ai_model=chat_message.model_used,
+            response_time_ms=chat_message.response_time_ms
+        )
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Erreur lors de la sauvegarde du message : {str(e)}"
         )
 
 

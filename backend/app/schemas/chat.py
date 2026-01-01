@@ -36,3 +36,10 @@ class ChatMessageSimple(BaseModel):
     class Config:
         protected_namespaces = ()
 
+
+class ChatMessageSave(BaseModel):
+    """Schéma pour sauvegarder un message déjà traité (pour architecture hybride)"""
+    message: str = Field(..., min_length=1, max_length=2000)
+    response: str
+    ai_model: Optional[str] = None
+    response_time_ms: Optional[int] = None

@@ -29,6 +29,8 @@ class _UserPreferencesScreenState extends State<UserPreferencesScreen> {
   final TextEditingController _proteinsController = TextEditingController();
   final TextEditingController _carbohydratesController = TextEditingController();
   final TextEditingController _lipidsController = TextEditingController();
+  final TextEditingController _customRestrictionController = TextEditingController();
+  final TextEditingController _customAllergyController = TextEditingController();
 
   final List<String> _availableRestrictions = [
     'Végétarien',
@@ -38,6 +40,16 @@ class _UserPreferencesScreenState extends State<UserPreferencesScreen> {
     'Cacher',
     'Sans gluten',
     'Sans lactose',
+    'Pescétarien',
+    'Flexitarien',
+    'Paleo',
+    'Cétogène',
+    'Sans sucre',
+    'Sans sel',
+    'Faible en glucides',
+    'Riche en protéines',
+    'Crudivore',
+    'Frugivore',
   ];
 
   final List<String> _availableAllergies = [
@@ -49,6 +61,19 @@ class _UserPreferencesScreenState extends State<UserPreferencesScreen> {
     'Blé',
     'Noix',
     'Poisson',
+    'Crustacés',
+    'Mollusques',
+    'Sésame',
+    'Moutarde',
+    'Céleri',
+    'Lupin',
+    'Sulfites',
+    'Amandes',
+    'Noisettes',
+    'Noix de cajou',
+    'Pistaches',
+    'Noix de pécan',
+    'Noix de macadamia',
   ];
 
   @override
@@ -112,12 +137,46 @@ class _UserPreferencesScreenState extends State<UserPreferencesScreen> {
     }
   }
 
+  void _addCustomRestriction() {
+    final text = _customRestrictionController.text.trim();
+    if (text.isNotEmpty && !_dietaryRestrictions.contains(text)) {
+      setState(() {
+        _dietaryRestrictions.add(text);
+        _customRestrictionController.clear();
+      });
+    }
+  }
+
+  void _addCustomAllergy() {
+    final text = _customAllergyController.text.trim();
+    if (text.isNotEmpty && !_allergies.contains(text)) {
+      setState(() {
+        _allergies.add(text);
+        _customAllergyController.clear();
+      });
+    }
+  }
+
+  void _removeRestriction(String restriction) {
+    setState(() {
+      _dietaryRestrictions.remove(restriction);
+    });
+  }
+
+  void _removeAllergy(String allergy) {
+    setState(() {
+      _allergies.remove(allergy);
+    });
+  }
+
   @override
   void dispose() {
     _caloriesController.dispose();
     _proteinsController.dispose();
     _carbohydratesController.dispose();
     _lipidsController.dispose();
+    _customRestrictionController.dispose();
+    _customAllergyController.dispose();
     super.dispose();
   }
 
@@ -224,6 +283,55 @@ class _UserPreferencesScreenState extends State<UserPreferencesScreen> {
                         );
                       }).toList(),
                     ),
+                    const SizedBox(height: 16),
+                    // Valeurs personnalisées pour restrictions
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _customRestrictionController,
+                            decoration: InputDecoration(
+                              labelText: 'Ajouter une restriction personnalisée',
+                              hintText: 'Ex: Sans arachides',
+                              prefixIcon: const Icon(Icons.add_circle_outline),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            onSubmitted: (_) => _addCustomRestriction(),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        IconButton(
+                          onPressed: _addCustomRestriction,
+                          icon: const Icon(Icons.add),
+                          style: IconButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.all(16),
+                          ),
+                        ),
+                      ],
+                    ),
+                    // Afficher les restrictions personnalisées (celles qui ne sont pas dans la liste)
+                    if (_dietaryRestrictions.any((r) => !_availableRestrictions.contains(r)))
+                      Padding(
+                        padding: const EdgeInsets.only(top: 12),
+                        child: Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: _dietaryRestrictions
+                              .where((r) => !_availableRestrictions.contains(r))
+                              .map((restriction) {
+                            return Chip(
+                              label: Text(restriction),
+                              deleteIcon: const Icon(Icons.close, size: 18),
+                              onDeleted: () => _removeRestriction(restriction),
+                              backgroundColor: AppColors.primary.withOpacity(0.1),
+                            );
+                          }).toList(),
+                        ),
+                      ),
                     const SizedBox(height: 32),
 
                     // Allergies
@@ -252,6 +360,55 @@ class _UserPreferencesScreenState extends State<UserPreferencesScreen> {
                         );
                       }).toList(),
                     ),
+                    const SizedBox(height: 16),
+                    // Valeurs personnalisées pour allergies
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _customAllergyController,
+                            decoration: InputDecoration(
+                              labelText: 'Ajouter une allergie personnalisée',
+                              hintText: 'Ex: Fraises',
+                              prefixIcon: const Icon(Icons.add_circle_outline),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            onSubmitted: (_) => _addCustomAllergy(),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        IconButton(
+                          onPressed: _addCustomAllergy,
+                          icon: const Icon(Icons.add),
+                          style: IconButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.all(16),
+                          ),
+                        ),
+                      ],
+                    ),
+                    // Afficher les allergies personnalisées (celles qui ne sont pas dans la liste)
+                    if (_allergies.any((a) => !_availableAllergies.contains(a)))
+                      Padding(
+                        padding: const EdgeInsets.only(top: 12),
+                        child: Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: _allergies
+                              .where((a) => !_availableAllergies.contains(a))
+                              .map((allergy) {
+                            return Chip(
+                              label: Text(allergy),
+                              deleteIcon: const Icon(Icons.close, size: 18),
+                              onDeleted: () => _removeAllergy(allergy),
+                              backgroundColor: Colors.red.withOpacity(0.1),
+                            );
+                          }).toList(),
+                        ),
+                      ),
                     const SizedBox(height: 32),
 
                     // Objectifs nutritionnels

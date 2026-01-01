@@ -12,9 +12,11 @@ class ChatService {
   /// 
   /// 1. Récupère le contexte RAG depuis Railway
   /// 2. Appelle Ollama localement avec le contexte et streaming
-  /// 3. Retourne la réponse de l'IA
+  /// 3. Sauvegarde le message dans le backend
+  /// 4. Retourne la réponse de l'IA
   /// [onChunk] est appelé à chaque chunk reçu pour mettre à jour l'UI en temps réel
   Future<String> sendMessage(String message, {Function(String)? onChunk}) async {
+    final stopwatch = Stopwatch()..start();
     try {
       debugPrint('💬 [CHAT] Envoi de message: ${message.substring(0, message.length > 50 ? 50 : message.length)}...');
       
@@ -47,7 +49,30 @@ class ChatService {
         onChunk: onChunk, // Passer le callback pour les mises à jour progressives
       );
       
-      debugPrint('✅ [CHAT] Réponse IA reçue (${aiResponse.length} caractères)');
+      stopwatch.stop();
+      final responseTimeMs = stopwatch.elapsedMilliseconds;
+      
+      debugPrint('✅ [CHAT] Réponse IA reçue (${aiResponse.length} caractères) en ${responseTimeMs}ms');
+      
+      // 3. Sauvegarder le message dans le backend
+      try {
+        debugPrint('💾 [CHAT] Sauvegarde du message dans le backend...');
+        await _apiService.post(
+          '/chat/save',
+          {
+            'message': message,
+            'response': aiResponse,
+            'ai_model': 'llama3.2:3b',
+            'response_time_ms': responseTimeMs,
+          },
+          timeout: AppConstants.apiTimeout,
+        );
+        debugPrint('✅ [CHAT] Message sauvegardé avec succès');
+      } catch (e) {
+        // Ne pas faire échouer l'envoi si la sauvegarde échoue
+        debugPrint('⚠️ [CHAT] Erreur lors de la sauvegarde (non bloquant): $e');
+      }
+      
       return aiResponse;
       
     } catch (e) {
