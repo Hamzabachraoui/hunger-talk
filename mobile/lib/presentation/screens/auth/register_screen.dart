@@ -84,7 +84,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 // Logo
                 Center(
                   child: Image.asset(
-                    'assets/images/logo.png',
+                    'assets/images/logo_app.png',
                     height: 100,
                     width: 100,
                     fit: BoxFit.contain,

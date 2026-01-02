@@ -148,10 +148,9 @@ class _RecipesScreenState extends State<RecipesScreen> {
                 final recipe = recipes[index];
                 return RecipeCard(
                   recipe: recipe,
-                  onTap: () async {
+                  onTap: () {
                     final recipeId = recipe.id;
-                    await recipeProvider.loadRecipeDetails(recipeId);
-                    if (!context.mounted) return;
+                    // Naviguer directement, les détails seront chargés dans RecipeDetailsScreen
                     Navigator.push(
                       context,
                       MaterialPageRoute(

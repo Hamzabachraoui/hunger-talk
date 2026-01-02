@@ -69,8 +69,11 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: false
-  image_path: "assets/images/logo.png"
+  image_path: "assets/images/icon_app_padded.png"
   min_sdk_android: 21
+  # Fond blanc pour les icônes adaptatives Android
   adaptive_icon_background: "#FFFFFF"
-  adaptive_icon_foreground: "assets/images/logo.png"
+  adaptive_icon_foreground: "assets/images/icon_app_padded.png"
+  # Garder la transparence si présente
+  remove_alpha: false
 

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../providers/recipe_provider.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../data/services/recipe_parser_service.dart';
 
 class AddRecipeScreen extends StatefulWidget {
   final String? suggestion;
@@ -34,10 +35,49 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
   @override
   void initState() {
     super.initState();
-    // Si une suggestion est fournie, pré-remplir la description
+    // Si une suggestion est fournie, parser et remplir les champs automatiquement
     if (widget.suggestion != null && widget.suggestion!.isNotEmpty) {
-      _descriptionController.text = widget.suggestion!;
+      _parseAndFillRecipe(widget.suggestion!);
     }
+  }
+
+  void _parseAndFillRecipe(String suggestion) {
+    final parser = RecipeParserService();
+    final parsed = parser.parseRecipeFromText(suggestion);
+    
+    setState(() {
+      if (parsed.name != null && parsed.name!.isNotEmpty) {
+        _nameController.text = parsed.name!;
+      }
+      
+      if (parsed.description != null && parsed.description!.isNotEmpty) {
+        _descriptionController.text = parsed.description!;
+      }
+      
+      if (parsed.prepTime != null) {
+        _prepTimeController.text = parsed.prepTime.toString();
+      }
+      
+      if (parsed.cookingTime != null) {
+        _cookingTimeController.text = parsed.cookingTime.toString();
+      }
+      
+      if (parsed.difficulty != null) {
+        _difficulty = parsed.difficulty;
+      }
+      
+      if (parsed.servings != null) {
+        _servingsController.text = parsed.servings.toString();
+      }
+      
+      // Ajouter les ingrédients parsés
+      _ingredients.clear();
+      _ingredients.addAll(parsed.ingredients);
+      
+      // Ajouter les étapes parsées
+      _steps.clear();
+      _steps.addAll(parsed.steps);
+    });
   }
 
   @override
@@ -254,19 +294,63 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                     color: AppColors.primary.withValues(alpha: 0.1),
                     child: Padding(
                       padding: const EdgeInsets.all(12),
-                      child: Row(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Icon(Icons.lightbulb_outline, color: AppColors.primary),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              'Suggestion de l\'IA',
-                              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                color: AppColors.primary,
-                                fontWeight: FontWeight.bold,
+                          Row(
+                            children: [
+                              const Icon(Icons.lightbulb_outline, color: AppColors.primary),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  'Suggestion de l\'IA',
+                                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                    color: AppColors.primary,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           ),
+                          if (_ingredients.isNotEmpty || _steps.isNotEmpty) ...[
+                            const SizedBox(height: 8),
+                            Wrap(
+                              spacing: 12,
+                              runSpacing: 8,
+                              children: [
+                                if (_ingredients.isNotEmpty)
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(Icons.check_circle, size: 16, color: AppColors.success),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        '${_ingredients.length} ingrédient(s)',
+                                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                          color: AppColors.success,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                if (_steps.isNotEmpty)
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(Icons.check_circle, size: 16, color: AppColors.success),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        '${_steps.length} étape(s)',
+                                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                          color: AppColors.success,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                              ],
+                            ),
+                          ],
                         ],
                       ),
                     ),

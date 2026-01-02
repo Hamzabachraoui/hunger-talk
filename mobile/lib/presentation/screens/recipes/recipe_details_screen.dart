@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 
@@ -7,12 +8,47 @@ import '../../providers/stock_provider.dart';
 import '../../../data/models/recipe_model.dart';
 import '../../../core/theme/app_colors.dart';
 
-class RecipeDetailsScreen extends StatelessWidget {
+class RecipeDetailsScreen extends StatefulWidget {
   final String recipeId;
 
   const RecipeDetailsScreen({super.key, required this.recipeId});
 
-  Future<void> _cookRecipe(BuildContext context, RecipeModel recipe) async {
+  @override
+  State<RecipeDetailsScreen> createState() => _RecipeDetailsScreenState();
+}
+
+class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
+  bool _hasLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Charger les détails de la recette au montage
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_hasLoaded) {
+        _loadRecipeDetails();
+      }
+    });
+  }
+
+  void _loadRecipeDetails() {
+    final recipeProvider = context.read<RecipeProvider>();
+    // Vérifier si la recette est déjà chargée et correspond
+    if (recipeProvider.selectedRecipe?.id == widget.recipeId) {
+      setState(() => _hasLoaded = true);
+      return;
+    }
+    // Charger les détails
+    recipeProvider.loadRecipeDetails(widget.recipeId).then((_) {
+      if (mounted) {
+        setState(() => _hasLoaded = true);
+      }
+    }).catchError((error) {
+      debugPrint('❌ [RECIPE DETAILS] Erreur lors du chargement: $error');
+    });
+  }
+
+  Future<void> _cookRecipe(RecipeModel recipe) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -37,7 +73,7 @@ class RecipeDetailsScreen extends StatelessWidget {
     if (confirmed == true && context.mounted) {
       final recipeProvider = context.read<RecipeProvider>();
       final stockProvider = context.read<StockProvider>();
-      final success = await recipeProvider.cookRecipe(recipeId);
+      final success = await recipeProvider.cookRecipe(widget.recipeId);
 
       if (!context.mounted) return;
       
@@ -87,13 +123,20 @@ class RecipeDetailsScreen extends StatelessWidget {
         }
       },
       child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Détails de la recette'),
+        ),
         body: Consumer<RecipeProvider>(
         builder: (context, recipeProvider, _) {
-          final recipe = recipeProvider.selectedRecipe;
+          // Vérifier si on charge ou si la recette chargée correspond
+          final isLoading = !_hasLoaded || recipeProvider.isLoading;
+          final recipe = recipeProvider.selectedRecipe?.id == widget.recipeId 
+                         ? recipeProvider.selectedRecipe 
+                         : null;
 
-          if (recipeProvider.isLoading || recipe == null) {
-            return const Scaffold(
-              body: Center(child: CircularProgressIndicator()),
+          if (isLoading || recipe == null) {
+            return const Center(
+              child: CircularProgressIndicator(),
             );
           }
 
@@ -118,7 +161,10 @@ class RecipeDetailsScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     ElevatedButton(
-                      onPressed: () => recipeProvider.loadRecipeDetails(recipeId),
+                      onPressed: () {
+                        _hasLoaded = false;
+                        _loadRecipeDetails();
+                      },
                       child: const Text('Réessayer'),
                     ),
                   ],
@@ -312,7 +358,7 @@ class RecipeDetailsScreen extends StatelessWidget {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton.icon(
-                            onPressed: () => _cookRecipe(context, recipe),
+                            onPressed: () => _cookRecipe(recipe),
                             icon: const Icon(Icons.restaurant_menu),
                             label: const Text('Cuisiner cette recette'),
                             style: ElevatedButton.styleFrom(
