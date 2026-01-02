@@ -19,7 +19,8 @@ from app.schemas.user_preferences import (
     UserPreferencesUpdate,
     UserPreferencesResponse
 )
-from app.schemas.user import User as UserSchema, UserUpdate
+from app.schemas.user import User as UserSchema, UserUpdate, PasswordChange
+from app.core.security import verify_password, get_password_hash
 from app.core.dependencies import get_current_user
 
 router = APIRouter()

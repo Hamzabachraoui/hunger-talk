@@ -78,7 +78,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined),
-            onPressed: () => context.go('/settings'),
+            onPressed: () => context.push('/settings'),
           ),
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -308,13 +308,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
               context.go('/dashboard');
               break;
             case 1:
-              context.go('/stock');
+              context.push('/stock');
               break;
             case 2:
               context.push('/chat');
               break;
             case 3:
-              context.go('/recipes');
+              context.push('/recipes');
               break;
           }
         },

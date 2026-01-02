@@ -22,8 +22,36 @@ class ChatProvider with ChangeNotifier {
 
     try {
       debugPrint('💬 [CHAT PROVIDER] Chargement de l\'historique...');
-      _messages = await _chatService.getHistory();
-      debugPrint('✅ [CHAT PROVIDER] ${_messages.length} message(s) chargé(s)');
+      final backendMessages = await _chatService.getHistory();
+      
+      // Convertir chaque message backend (qui contient message + response) en deux messages séparés
+      _messages = [];
+      for (final backendMsg in backendMessages) {
+        // Ajouter le message utilisateur
+        if (backendMsg.message.isNotEmpty) {
+          _messages.add(ChatMessageModel(
+            id: '${backendMsg.id}_user',
+            message: backendMsg.message,
+            isUser: true,
+            timestamp: backendMsg.timestamp,
+          ));
+        }
+        
+        // Ajouter la réponse IA
+        if (backendMsg.response != null && backendMsg.response!.isNotEmpty) {
+          _messages.add(ChatMessageModel(
+            id: '${backendMsg.id}_ai',
+            message: backendMsg.response!,
+            isUser: false,
+            timestamp: backendMsg.timestamp,
+          ));
+        }
+      }
+      
+      // Trier par timestamp pour avoir l'ordre chronologique (les plus anciens en premier)
+      _messages.sort((a, b) => a.timestamp.compareTo(b.timestamp));
+      
+      debugPrint('✅ [CHAT PROVIDER] ${_messages.length} message(s) chargé(s) depuis ${backendMessages.length} conversation(s)');
       _isLoading = false;
       notifyListeners();
     } catch (e, stackTrace) {
@@ -89,9 +117,21 @@ class ChatProvider with ChangeNotifier {
           isUser: false,
           timestamp: _messages[finalIndex].timestamp,
         );
+        notifyListeners();
       }
       
       debugPrint('✅ [CHAT PROVIDER] Message envoyé avec succès');
+      
+      // Recharger l'historique pour obtenir les IDs du backend et s'assurer que tout est synchronisé
+      // Cela remplace les messages temporaires par les messages sauvegardés du backend
+      try {
+        await loadHistory();
+        debugPrint('✅ [CHAT PROVIDER] Historique rechargé après envoi');
+      } catch (e) {
+        debugPrint('⚠️ [CHAT PROVIDER] Erreur lors du rechargement de l\'historique: $e');
+        // Ne pas faire échouer l'envoi si le rechargement échoue
+      }
+      
       _isSending = false;
       notifyListeners();
       return true;

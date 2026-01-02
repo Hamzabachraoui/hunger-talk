@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:go_router/go_router.dart';
 import '../../core/theme/app_colors.dart';
 
 class MessageBubble extends StatelessWidget {
@@ -43,16 +44,33 @@ class MessageBubble extends StatelessWidget {
                 fontSize: 16,
               ),
             ),
-            const SizedBox(height: 4),
-              Text(
-                DateFormat('HH:mm').format(timestamp),
-                style: TextStyle(
-                  color: isUser
-                      ? Colors.white.withValues(alpha: 0.7)
-                      : AppColors.textTertiary,
-                  fontSize: 12,
+            if (!isUser) ...[
+              const SizedBox(height: 8),
+              OutlinedButton.icon(
+                onPressed: () {
+                  // Ouvrir l'écran de création de recette avec le message comme référence
+                  context.push('/recipes/add', extra: {
+                    'suggestion': message,
+                  });
+                },
+                icon: const Icon(Icons.add_circle_outline, size: 18),
+                label: const Text('Créer une recette depuis cette suggestion'),
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  minimumSize: const Size(0, 36),
                 ),
               ),
+            ],
+            const SizedBox(height: 4),
+            Text(
+              DateFormat('HH:mm').format(timestamp),
+              style: TextStyle(
+                color: isUser
+                    ? Colors.white.withValues(alpha: 0.7)
+                    : AppColors.textTertiary,
+                fontSize: 12,
+              ),
+            ),
           ],
         ),
       ),

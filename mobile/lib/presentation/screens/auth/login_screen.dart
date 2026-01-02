@@ -61,7 +61,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Logo ou titre
+                  // Logo
+                  Image.asset(
+                    'assets/images/logo.png',
+                    height: 120,
+                    width: 120,
+                    fit: BoxFit.contain,
+                  ),
+                  const SizedBox(height: 16),
+                  // Titre
                   Text(
                     'Hunger-Talk',
                     style: Theme.of(context).textTheme.displayLarge?.copyWith(
@@ -124,7 +132,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 8),
+                  
+                  // Lien mot de passe oublié
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () => context.push('/forgot-password'),
+                      child: const Text('Mot de passe oublié ?'),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
 
                   // Bouton de connexion
                   Consumer<AuthProvider>(

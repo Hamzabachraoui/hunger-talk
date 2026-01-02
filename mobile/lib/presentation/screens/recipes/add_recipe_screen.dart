@@ -6,7 +6,9 @@ import '../../providers/recipe_provider.dart';
 import '../../../core/theme/app_colors.dart';
 
 class AddRecipeScreen extends StatefulWidget {
-  const AddRecipeScreen({super.key});
+  final String? suggestion;
+  
+  const AddRecipeScreen({super.key, this.suggestion});
 
   @override
   State<AddRecipeScreen> createState() => _AddRecipeScreenState();
@@ -28,6 +30,15 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
   
   static const List<String> _difficulties = ['Facile', 'Moyen', 'Difficile'];
   static const List<String> _units = ['g', 'kg', 'ml', 'L', 'pièce', 'unité', 'boîte', 'paquet', 'bouteille', 'sachet', 'tasse', 'cuillère à soupe'];
+
+  @override
+  void initState() {
+    super.initState();
+    // Si une suggestion est fournie, pré-remplir la description
+    if (widget.suggestion != null && widget.suggestion!.isNotEmpty) {
+      _descriptionController.text = widget.suggestion!;
+    }
+  }
 
   @override
   void dispose() {
@@ -213,7 +224,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Nouvelle recette'),
+          title: Text(widget.suggestion != null ? 'Créer une recette depuis la suggestion' : 'Nouvelle recette'),
           actions: [
             if (_isSaving)
               const Padding(
@@ -238,6 +249,30 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                if (widget.suggestion != null) ...[
+                  Card(
+                    color: AppColors.primary.withValues(alpha: 0.1),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.lightbulb_outline, color: AppColors.primary),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              'Suggestion de l\'IA',
+                              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                ],
                 TextFormField(
                   controller: _nameController,
                   decoration: const InputDecoration(
@@ -257,8 +292,9 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                   decoration: const InputDecoration(
                     labelText: 'Description',
                     prefixIcon: Icon(Icons.description),
+                    hintText: 'La suggestion de l\'IA est pré-remplie ci-dessus',
                   ),
-                  maxLines: 3,
+                  maxLines: 5,
                 ),
                 const SizedBox(height: 16),
                 Row(

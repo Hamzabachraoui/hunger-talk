@@ -58,3 +58,19 @@ class UserLogin(BaseModel):
     email: EmailStr
     password: str
 
+
+class PasswordResetRequest(BaseModel):
+    """Schéma pour demander une réinitialisation de mot de passe"""
+    email: EmailStr
+
+
+class PasswordReset(BaseModel):
+    """Schéma pour réinitialiser le mot de passe"""
+    email: EmailStr
+    new_password: str = Field(..., min_length=8)
+
+
+class PasswordChange(BaseModel):
+    """Schéma pour changer le mot de passe (utilisateur connecté)"""
+    current_password: str
+    new_password: str = Field(..., min_length=8)

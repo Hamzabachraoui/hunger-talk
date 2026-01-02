@@ -51,16 +51,26 @@ dev_dependencies:
   flutter_lints: ^3.0.1
   build_runner: ^2.4.7
   json_serializable: ^6.7.1
+  flutter_launcher_icons: ^0.13.1
 
 flutter:
   uses-material-design: true
 
-  # Assets (dossiers créés automatiquement si nécessaire)
-  # assets:
-  #   - assets/images/
-  #   - assets/icons/
-  #   - assets/animations/
+  # Assets
+  assets:
+    - assets/images/
+    #   - assets/icons/
+    #   - assets/animations/
 
   # Fonts - Utilisation de Google Fonts (Inter) via le package google_fonts
   # Les polices sont chargées dynamiquement, pas besoin de les inclure ici
+
+# Configuration de l'icône de l'application
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/images/logo.png"
+  min_sdk_android: 21
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/images/logo.png"
 

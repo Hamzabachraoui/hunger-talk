@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../presentation/screens/auth/login_screen.dart';
 import '../../presentation/screens/auth/register_screen.dart';
+import '../../presentation/screens/auth/forgot_password_screen.dart';
 import '../../presentation/screens/dashboard/dashboard_screen.dart';
 import '../../presentation/screens/stock/stock_screen.dart';
 import '../../presentation/screens/stock/add_edit_stock_item_screen.dart';
@@ -20,7 +21,9 @@ class AppRouter {
   // Vérifier si l'utilisateur est authentifié
   static Future<String?> _checkAuth(BuildContext context, GoRouterState state) async {
     final token = await _storage.read(key: 'auth_token');
-    final isLoginPage = state.uri.path == '/login' || state.uri.path == '/register';
+    final isLoginPage = state.uri.path == '/login' || 
+                        state.uri.path == '/register' || 
+                        state.uri.path == '/forgot-password';
     
     // Si pas de token et pas sur la page de login, rediriger vers login
     if (token == null && !isLoginPage) {
@@ -48,6 +51,11 @@ class AppRouter {
         path: '/register',
         name: 'register',
         builder: (context, state) => const RegisterScreen(),
+      ),
+      GoRoute(
+        path: '/forgot-password',
+        name: 'forgot-password',
+        builder: (context, state) => const ForgotPasswordScreen(),
       ),
       GoRoute(
         path: '/dashboard',
@@ -87,7 +95,11 @@ class AppRouter {
           GoRoute(
             path: 'add',
             name: 'recipes-add',
-            builder: (context, state) => const AddRecipeScreen(),
+            builder: (context, state) {
+              final extra = state.extra as Map<String, dynamic>?;
+              final suggestion = extra?['suggestion'] as String?;
+              return AddRecipeScreen(suggestion: suggestion);
+            },
           ),
         ],
       ),

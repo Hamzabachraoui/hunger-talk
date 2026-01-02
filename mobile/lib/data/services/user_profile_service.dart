@@ -36,5 +36,19 @@ class UserProfileService {
     debugPrint('✅ [PROFILE] Profil mis à jour');
     return UserModel.fromJson(response);
   }
+
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    debugPrint('🔐 [PROFILE] Changement de mot de passe...');
+    final data = {
+      'current_password': currentPassword,
+      'new_password': newPassword,
+    };
+    
+    await _apiService.put('/user/me/password', data);
+    debugPrint('✅ [PROFILE] Mot de passe modifié');
+  }
 }
 

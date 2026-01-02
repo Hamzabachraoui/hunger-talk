@@ -19,7 +19,7 @@ class RecipeDetailsScreen extends StatelessWidget {
         title: const Text('Cuisiner cette recette'),
         content: Text(
           'Voulez-vous cuisiner "${recipe.name}" ?\n\n'
-          'Les ingrédients seront soustraits de votre stock.',
+          'Les ingrédients seront soustraits de votre stock et les valeurs nutritionnelles seront ajoutées au dashboard.',
         ),
         actions: [
           TextButton(
@@ -46,9 +46,17 @@ class RecipeDetailsScreen extends StatelessWidget {
         stockProvider.loadStock();
         
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Recette cuisinée avec succès !'),
+          SnackBar(
+            content: const Text('Recette cuisinée avec succès ! Les données nutritionnelles ont été mises à jour dans le dashboard.'),
             backgroundColor: AppColors.success,
+            duration: const Duration(seconds: 3),
+            action: SnackBarAction(
+              label: 'Voir dashboard',
+              textColor: Colors.white,
+              onPressed: () {
+                context.go('/dashboard');
+              },
+            ),
           ),
         );
         Navigator.pop(context);
@@ -70,9 +78,9 @@ class RecipeDetailsScreen extends StatelessWidget {
       onPopInvoked: (didPop) {
         if (didPop) return;
         
-        // Naviguer en arrière dans l'historique si possible
-        if (context.canPop()) {
-          context.pop();
+        // Retourner en arrière avec Navigator (car ouvert via Navigator.push)
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context);
         } else {
           // Sinon, retourner aux recettes
           context.go('/recipes');
